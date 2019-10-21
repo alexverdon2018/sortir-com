@@ -140,7 +140,7 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
-    
+
     public function getRoles()
     {
         // TODO: Implement getRoles() method.

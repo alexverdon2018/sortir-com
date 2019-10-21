@@ -7,6 +7,7 @@
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
+###< mourad ###
 
 ###> symfony/phpunit-bridge ###
 .phpunit

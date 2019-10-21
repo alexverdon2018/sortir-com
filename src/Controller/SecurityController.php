@@ -16,4 +16,17 @@ class SecurityController extends AbstractController
             'controller_name' => 'SecurityController',
         ]);
     }
+
+     /**
+     * @Route("/login", name="login")
+     */
+    public function login(Request $request)
+    {
+
+        return $this->render('security/login.html.twig', array(
+            'last_username' => $lastUsername,
+            'error'         => $error,
+        ));
+
+    }
 }

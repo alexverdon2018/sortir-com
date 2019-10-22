@@ -155,7 +155,10 @@ class Utilisateur implements UserInterface
 
     public function getRoles()
     {
-        // TODO: Implement getRoles() method.
+        /**
+         * TODO: Check if admin or user then return expected role
+         */
+        return array('ROLE_ADMIN');
     }
 
     /**

@@ -17,11 +17,6 @@ class Sortie
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $idSortie;
-
-    /**
      * @ORM\Column(type="string", length=150)
      */
     private $nom;
@@ -68,25 +63,14 @@ class Sortie
     private $site;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Rejoindre", inversedBy="saSortie")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur")
+     * @ORM\JoinColumn(nullable=false)
      */
-    private $rejoindre;
+    private $organisateur;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdSortie(): ?int
-    {
-        return $this->idSortie;
-    }
-
-    public function setIdSortie(int $idSortie): self
-    {
-        $this->idSortie = $idSortie;
-
-        return $this;
     }
 
     public function getNom(): ?string
@@ -197,15 +181,16 @@ class Sortie
         return $this;
     }
 
-    public function getRejoindre(): ?Rejoindre
+    public function getOrganisateur(): ?Utilisateur
     {
-        return $this->rejoindre;
+        return $this->organisateur;
     }
 
-    public function setRejoindre(?Rejoindre $rejoindre): self
+    public function setOrganisateur(?Utilisateur $organisateur): self
     {
-        $this->rejoindre = $rejoindre;
+        $this->organisateur = $organisateur;
 
         return $this;
     }
+
 }

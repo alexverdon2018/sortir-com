@@ -51,8 +51,8 @@ class UtilisateurFixture extends Fixture
         // on créé 10 personnes
         for ($i = 0; $i < 10; $i++) {
             $user = new Utilisateur();
-            $user->setNom($faker->name);
-            $user->setPrenom($faker->name);
+            $user->setNom($faker->lastName);
+            $user->setPrenom($faker->firstName);
             $user->setMail($faker->email);
             $user->setActif(true);
             $user->setAdmin(false);

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -18,6 +19,8 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $id;
+
+    private $passwordEncoder;
 
     /**
      * @ORM\Column(type="string", length=50)
@@ -141,10 +144,14 @@ class Utilisateur implements UserInterface
         return $this->password;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(string $password, UserPasswordEncoderInterface $passwordEncoder): self
     {
-        $this->password = $password;
+        $this->passwordEncoder = $passwordEncoder;
 
+        setPassword($this->passwordEncoder->encodePassword(
+            $this,
+            $password
+        ));
         return $this;
     }
 

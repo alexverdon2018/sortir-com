@@ -1,0 +1,16 @@
+<div class="nav navbar shadow">
+    <div>
+        <a href="{{ path('accueil') }}"><h1>Sortir.com</h1></a>
+    </div>
+    <div>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a class="btn btn-secondary" href="{{ path('administration') }}">Admin</a>
+        {% endif %}
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-success" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
+            <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+        {% else %}
+            <a class="btn btn-primary" href="{{ path('app_login') }}">Connexion</a>
+        {% endif %}
+    </div>
+</div>

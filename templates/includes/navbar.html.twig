@@ -4,7 +4,7 @@
     </div>
     <div>
         {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
-            <a class="btn btn-success" href="profil">Mon Profil</a>
+            <a class="btn btn-success" href="{{ app.user.id }}">Mon Profil</a>
             <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion</a>
         {% else %}
             <a class="btn btn-primary" href="login">Connexion</a>

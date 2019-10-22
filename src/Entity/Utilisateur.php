@@ -59,6 +59,11 @@ class Utilisateur implements UserInterface
      */
     private $site;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Rejoindre", inversedBy="sonUtilisateur")
+     */
+    private $rejoindre;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -194,6 +199,18 @@ class Utilisateur implements UserInterface
     public function setSite(?site $site): self
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function getRejoindre(): ?Rejoindre
+    {
+        return $this->rejoindre;
+    }
+
+    public function setRejoindre(?Rejoindre $rejoindre): self
+    {
+        $this->rejoindre = $rejoindre;
 
         return $this;
     }

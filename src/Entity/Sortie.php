@@ -61,15 +61,16 @@ class Sortie
      */
     private $etat;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\utilisateur")
-     */
-    private $utilisateur;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\site")
      */
     private $site;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Rejoindre", inversedBy="saSortie")
+     */
+    private $rejoindre;
 
     public function getId(): ?int
     {
@@ -184,18 +185,6 @@ class Sortie
         return $this;
     }
 
-    public function getUtilisateur(): ?utilisateur
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?utilisateur $utilisateur): self
-    {
-        $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
-
     public function getSite(): ?site
     {
         return $this->site;
@@ -204,6 +193,18 @@ class Sortie
     public function setSite(?site $site): self
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function getRejoindre(): ?Rejoindre
+    {
+        return $this->rejoindre;
+    }
+
+    public function setRejoindre(?Rejoindre $rejoindre): self
+    {
+        $this->rejoindre = $rejoindre;
 
         return $this;
     }

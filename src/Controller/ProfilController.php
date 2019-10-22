@@ -5,14 +5,20 @@ namespace App\Controller;
 use App\Entity\Utilisateur;
 use App\Form\UpdateUtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
-use http\Env\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use \Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ProfilController extends AbstractController
 {
     /**
-     * @Route("/profil/{id}", name="profil_detail")
+     * @Route("/profil/detai/{id}", name="profil_detail")
+     * @param $id
+     * @param EntityManagerInterface $emi
+     * @return Response
      */
     public function detail($id, EntityManagerInterface $emi)
     {
@@ -26,21 +32,25 @@ class ProfilController extends AbstractController
         ]);
     }
 
-//    /**
-//     * @Route("/profil/update/{id}", name="profil_update")
-//     */
-//    public function update(Request $request, EntityManagerInterface $em) {
-//        $user = new User();
-//        $formUser = $this->createForm(UpdateUtilisateurType::class, $user);
-//        $formUser->handleRequest($request);
-//        if ($formUser->isSubmitted() && $formUser->isValid()) {
-//            $em->persist($user);
-//            $em->flush();
-//            $this->addFlash('success', "Profil modifié avec succès !");
-//            return $this->redirectToRoute("profil_detail", ["id"=>$user->getId()]);
-//        }
-//        return $this->render("profil/update.html.twig", [
-//            'formUser' => $formUser->createView()
-//        ]);
-//    }
+    /**
+     * @Route("/profil/update", name="profil_update")
+     * @param Request $request
+     * @param EntityManagerInterface $emi
+     * @return RedirectResponse|Response
+     */
+    public function update(Request $request, EntityManagerInterface $emi, UserPasswordEncoderInterface $passwordEncoder) {
+        $user = $emi->getRepository(Utilisateur::class)->find($this->getUser()->getId());
+        $formUser = $this->createForm(UpdateUtilisateurType::class, $user);
+        $formUser->handleRequest($request);
+        if ($formUser->isSubmitted() && $formUser->isValid()) {
+            $hashed = $passwordEncoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($hashed);
+            $emi->persist($user);
+            $emi->flush();
+            return $this->redirectToRoute("profil_detail", ["id"=>$user->getId()]);
+        }
+        return $this->render("profil/update.html.twig", [
+            'formUser' => $formUser->createView()
+        ]);
+    }
 }

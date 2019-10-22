@@ -150,10 +150,11 @@ class Utilisateur implements UserInterface
 
     public function getRoles()
     {
-        /**
-         * TODO: Check if admin or user then return expected role
-         */
-        return array('ROLE_ADMIN');
+        $roles = array('ROLE_USER');
+        if ($this->getAdmin()) {
+            $roles = array('ROLE_ADMIN');
+        }
+        return $roles;
     }
 
     /**

@@ -1,20 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AccueilController!{% endblock %}
+{% block title %}{{ parent() }} | Accueil{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
-
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/sortir-com/src/Controller/AccueilController.php'|file_link(0) }}">src/Controller/AccueilController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/sortir-com/templates/accueil/index.html.twig'|file_link(0) }}">templates/accueil/index.html.twig</a></code></li>
-    </ul>
+<div class="container-fluid pt-4">
+    <div class="row justify-content-center">
+        <div class="col col-md-11 col-lg-10">
+            <h2>Bienvenue !</h2>
+            <hr>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin pretium dapibus magna, vitae suscipit dui accumsan et. Etiam nec nisi neque. Vestibulum non erat nec turpis accumsan facilisis. Proin sit amet urna nec quam sollicitudin imperdiet. Morbi id nulla ex. Mauris porta ultrices nisl, eget iaculis urna pharetra sit amet. Nunc feugiat laoreet purus vehicula sodales.</p>
+            <p>Sed suscipit congue auctor. Aliquam viverra, est ac eleifend vehicula, massa augue iaculis felis, id rutrum nisl neque at metus. In volutpat elit in leo aliquet, id suscipit erat bibendum. Sed et condimentum odio. Nam ac ultricies tellus. Sed vel sapien ex. Nam tellus leo, mollis sed lacus sit amet, venenatis volutpat eros. Aenean consequat, nunc vel viverra feugiat, orci sapien blandit quam, id cursus neque magna quis magna. Maecenas dignissim, massa id vehicula cursus, neque ligula pretium libero, et vehicula ex risus ac risus. Praesent eu eleifend orci.</p>
+            <p>Proin sit amet pulvinar ex. Maecenas facilisis semper varius. Mauris pulvinar purus ut fermentum interdum. Sed erat nibh, semper ac scelerisque ut, malesuada et lorem. Etiam feugiat volutpat vulputate. Suspendisse potenti. Nulla sagittis tellus vitae leo viverra tempor. Etiam sed mauris laoreet, semper augue eget, egestas leo. Vivamus eu augue sed libero gravida cursus nec sit amet massa. Nullam ut tristique ligula, non dignissim nisl. Aliquam mauris magna, porta vitae sapien vitae, porttitor pharetra elit. Etiam eu consectetur ex, non vehicula tortor. Vestibulum vitae est varius, malesuada lacus non, mollis ex. Suspendisse quis quam vel lectus malesuada varius. Etiam id turpis sit amet justo semper volutpat. Integer et diam dolor.</p>
+        </div>
+    </div>
 </div>
 {% endblock %}

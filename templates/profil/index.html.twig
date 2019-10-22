@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Profil{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid pt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Mon profil</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row justify-content-around">
+            <div class="col-12 col-md-4 col-lg-2">
+                <img src="ee">
+            </div>
+            <div class="col-12 col-md-4 col-lg-6">
+                <div class="row mt-3">
+                    <div class="col-2">Nom :</div>
+                    <div class="col">{{ app.user.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">Prénom :</div>
+                    <div class="col">{{ app.user.prenom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">Mail :</div>
+                    <div class="col">{{ app.user.mail }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-2">Téléphone :</div>
+                    <div class="col">{{ app.user.telephone }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

@@ -1,4 +1,13 @@
-<div class="nav navbar">
-    <a href="/sortir-com/public/"><h1>Sortir.com</h1></a>
-    <a class="btn btn-primary" href="login" ">Connexion</a>
+<div class="nav navbar shadow">
+    <div>
+        <a href="accueil"><h1>Sortir.com</h1></a>
+    </div>
+    <div>
+        {% if is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+            <a class="btn btn-success" href="profil">Mon Profil</a>
+            <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+        {% else %}
+            <a class="btn btn-primary" href="login">Connexion</a>
+        {% endif %}
+    </div>
 </div>

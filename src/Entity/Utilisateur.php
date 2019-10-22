@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
+ * @UniqueEntity(fields={"mail"}, message="There is already an account with this mail")
  */
 class Utilisateur implements UserInterface
 {
@@ -51,6 +53,11 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="string", length=255)
      */
     private $password;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\site")
+     */
+    private $site;
 
     public function getId(): ?int
     {
@@ -177,6 +184,18 @@ class Utilisateur implements UserInterface
     public function eraseCredentials()
     {
         // TODO: Implement eraseCredentials() method.
+    }
+
+    public function getSite(): ?site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?site $site): self
+    {
+        $this->site = $site;
+
+        return $this;
     }
 
 }

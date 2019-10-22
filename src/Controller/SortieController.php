@@ -2,18 +2,81 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
+use App\Form\SortieType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+
+
+/**
+ * @Route("/sortie")
+ */
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/sortie", name="sortie")
+     * Créer une sortie
+     * @Route("/add", name="sortie_create")
      */
-    public function index()
+    public function create(EntityManagerInterface $em, Request $request)
     {
-        return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'SortieController',
+        {
+            //traiter un formulaire
+            $sortie = new Sortie();
+            $sortieForm = $this->createForm(SortieType::class, $sortie);
+            $sortieForm->handleRequest($request);
+
+            if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+                $sortie->setDateHeureDebut(new \DateTime());
+
+                //sauvegarder les données dans la base
+                $em->persist($sortie);
+                $em->flush();
+                $this->addFlash('success', "La sortie a été ajoutée");
+
+                return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+
+            }
+            return $this->render("sortie/add.html.twig", [
+                "sortieForm" => $sortieForm->createView()
+            ]);
+        }
+    }
+
+    /**
+     * Affichage du détail d'une Sortie
+     * @Route("/{id}", name="sortie_detail",
+     *     requirements={"id"="\d+"}, methods={"POST","GET"})
+     */
+    public function detail($id, Request $request) {
+        //recuperer la fiche de la sortie dans la base de données
+        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
+        $sortie=$sortieRepo->find($id);
+
+        if($sortie==null) {
+            throw $this->createNotFoundException("Sortie inconnu");
+        }
+
+        return $this->render("sortie/detail.html.twig", [
+            "sortie"=>$sortie
         ]);
     }
+
+    /**
+     * Liste des sorties
+     * @Route("/", name="sortie_liste_site")
+     */
+    public function liste_lieu()
+    {
+        //recuperer les sites depuis la base de données
+        $siteRepo = $this->getDoctrine()->getRepository(Site::class);
+        $sites = $siteRepo->findBadSites();
+
+        return $this->render('sortie/liste_site.html.twig', [
+            "sites" => $sites
+        ]);
+    }
+
 }

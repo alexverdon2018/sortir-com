@@ -21,7 +21,7 @@ class Ville
     /**
      * @ORM\Column(type="integer")
      */
-    private $idVille;
+    private $idVille; /*test*/
 
     /**
      * @ORM\Column(type="string", length=150)

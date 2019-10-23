@@ -23,7 +23,7 @@ class SortieController extends AbstractController
      * Créer une sortie
      * @Route("/add", name="sortie_create")
      */
-    public function create(EntityManagerInterface $em, Request $request)
+    public function add(EntityManagerInterface $em, Request $request)
     {
         {
             //traiter un formulaire
@@ -33,8 +33,14 @@ class SortieController extends AbstractController
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
                 $sortie->setDateHeureDebut(new \DateTime());
-                $site = $em->getRepository(Site::class)->find(2);
-                $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+                $site = $em->getRepository(Site::class)->find(1);
+                if($sortieForm->get('enregistrer')->isClicked()){
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+                }
+                else{
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+                }
+
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
 
                 $sortie->setSite($site);
@@ -50,7 +56,8 @@ class SortieController extends AbstractController
 
             }
             return $this->render("sortie/add.html.twig", [
-                "sortieForm" => $sortieForm->createView()
+                "sortieForm" => $sortieForm->createView(),
+                "sortie" => $sortie
             ]);
         }
     }
@@ -139,9 +146,10 @@ class SortieController extends AbstractController
     /**
      * @Route("/publier/{id}", name="sortie_publier")
      */
-    public function publier($id, EntityManagerInterface $emi) {
+    public function publier($id, EntityManagerInterface $emi, Request $request) {
         $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
         $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $referer = $request->headers->get('referer');
 
         if ($sortie !== null && $etat !== null) {
 
@@ -149,11 +157,10 @@ class SortieController extends AbstractController
             $emi->persist($sortie);
             $emi->flush();
             $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
-            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+            return $this->redirect($referer);
 
         }
-
-        return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+        return $this->redirect($referer);
     }
 
 }

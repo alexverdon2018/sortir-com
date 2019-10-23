@@ -74,4 +74,51 @@ class SortieController extends AbstractController
         ]);
     }
 
+    /**
+     * Modifier une sortie
+     * @Route("/{id}/edit", name="sortie_edit", requirements={"id"="\d+"})
+     */
+    public function edit($id, Request $request, EntityManagerInterface $em) {
+        $sortie = $em->getRepository(Sortie::class)->find($id);
+
+        if($sortie == null) {
+            throw $this->createNotFoundException('Sortie inconnu');
+        }
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', "La sortie a été modifié");
+            return $this->redirectToRoute("sortie_detail",
+                ['id' => $sortie->getId()]);
+        }
+        return $this->render("sortie/edit.html.twig", [
+            "sortieForm" => $sortieForm->createView()
+        ]);
+
+    }
+
+    /**
+     * Supprimer une sortie
+     * @Route("/{id}", name="sortie_delete", methods={"DELETE"})
+     */
+    public function delete(Request $request, EntityManagerInterface $em, $id) {
+        $sortie = $em->getRepository(Sortie::class)->find($id);
+
+        if($sortie == null) {
+            throw $this->createNotFoundException('La Sortie est inconnu ou déjà supprimée');
+        }
+
+        if($this->isCsrfTokenValid('delete'.$sortie->getId(),
+            $request->request->get('_token'))) {
+            $em->remove($sortie);
+            $em->flush();
+            $this->addFlash('success', 'La sortie a été supprimée');
+        }
+
+        return $this->redirectToRoute("liste_sorties");
+    }
+
 }

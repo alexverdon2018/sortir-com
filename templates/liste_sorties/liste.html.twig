@@ -6,10 +6,10 @@
 
     <div class="container-fluid pt-3">
 
-        {% for flashMessage in app.session.flashbag.get() %}
-
-            {{ flashMessage }}
-
+        {% for label, messages in app.flashes %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
         {% endfor %}
 
         <div class="row">

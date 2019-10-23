@@ -105,10 +105,10 @@
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
 
-                                <a href="{{ path('liste_publier_sortie', {'id':sortie.id}) }}">- Publier</a>
+                                <a href="{{ path('sortie_publier', {'id':sortie.id}) }}">- Publier</a>
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <a href=""> - Modifier</a>
+                                    <a href="{{ path('sortie_edit', {'id':sortie.id}) }}"> - Modifier</a>
                                     <a href=""> - Annuler</a>
                                 {% endif %}
 
@@ -134,7 +134,7 @@
                                         {% set jeSuisInscrit = true %}
                                     {% endif %}
                                 {% endfor %}
-                                <input type="hidden" id="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
+                                <input type="hidden" name="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
                                 {% if jeSuisInscrit %}
                                     <a href=""> - Se désister</a>
                                 {% else %}
@@ -142,8 +142,8 @@
                                 {% endif %}
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <a href=""> - Modifier</a>
-                                    <a href=""> - Annuler</a>
+                                    <a href="{{ path('sortie_edit',{'id':sortie.id}) }}"> - Modifier</a>
+                                    <a href="{{ path('sortie_delete',{'id':sortie.id}) }}" onclick="return confirm('Confirmation de la suppression ?');"> - Annuler</a>
                                 {% endif %}
 
                             </td>

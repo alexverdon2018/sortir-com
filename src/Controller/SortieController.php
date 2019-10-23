@@ -139,9 +139,10 @@ class SortieController extends AbstractController
     /**
      * @Route("/publier/{id}", name="sortie_publier")
      */
-    public function publier($id, EntityManagerInterface $emi) {
+    public function publier($id, EntityManagerInterface $emi, Request $request) {
         $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
         $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $referer = $request->headers->get('referer');
 
         if ($sortie !== null && $etat !== null) {
 
@@ -149,11 +150,10 @@ class SortieController extends AbstractController
             $emi->persist($sortie);
             $emi->flush();
             $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
-            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+            return $this->redirect($referer);
 
         }
-
-        return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+        return $this->redirect($referer);
     }
 
 }

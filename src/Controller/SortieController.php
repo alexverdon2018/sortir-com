@@ -128,9 +128,10 @@ class SortieController extends AbstractController
 
         if($this->isCsrfTokenValid('delete'.$sortie->getId(),
             $request->request->get('_token'))) {
-            $em->remove($sortie);
-            $em->flush();
-            $this->addFlash('success', 'La sortie a été supprimée');
+            $sortie->setEtat(20);
+//            $em->remove($sortie);
+//            $em->flush();
+            $this->addFlash('success', 'La sortie a été archivée');
         }
         return $this->redirectToRoute("liste_sorties");
     }

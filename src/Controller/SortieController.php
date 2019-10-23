@@ -33,7 +33,7 @@ class SortieController extends AbstractController
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
                 $sortie->setDateHeureDebut(new \DateTime());
-                $site = $em->getRepository(Site::class)->find(1);
+                $site = $em->getRepository(Site::class)->find(2);
                 $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
 
@@ -128,11 +128,32 @@ class SortieController extends AbstractController
 
         if($this->isCsrfTokenValid('delete'.$sortie->getId(),
             $request->request->get('_token'))) {
-            $em->remove($sortie);
-            $em->flush();
-            $this->addFlash('success', 'La sortie a été supprimée');
+            $sortie->setEtat(20);
+//            $em->remove($sortie);
+//            $em->flush();
+            $this->addFlash('success', 'La sortie a été archivée');
         }
         return $this->redirectToRoute("liste_sorties");
+    }
+
+    /**
+     * @Route("/publier/{id}", name="sortie_publier")
+     */
+    public function publier($id, EntityManagerInterface $emi) {
+        $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
+        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+
+        if ($sortie !== null && $etat !== null) {
+
+            $sortie->setEtat($etat);
+            $emi->persist($sortie);
+            $emi->flush();
+            $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
+            return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+
+        }
+
+        return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
     }
 
 }

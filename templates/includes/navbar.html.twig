@@ -1,6 +1,9 @@
 <div class="nav navbar shadow">
     <div>
-        <a href="{{ path('accueil') }}"><h1>Sortir.com</h1></a>
+        <a class="pr-3" href="{{ path('accueil') }}"><b>Sortir.com</b></a>
+        {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-info" href="{{ path('liste_sorties') }}">Les sorties</a>
+        {% endif %}
     </div>
     <div>
         {% if is_granted('ROLE_ADMIN') %}

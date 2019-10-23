@@ -10,7 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ListeSortiesController extends AbstractController
 {
     /**
-     * @Route("/liste/sorties", name="liste_sorties")
+     * @Route("/liste_sortie", name="liste_sorties")
+     * @param EntityManagerInterface $emi
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index(EntityManagerInterface $emi)
     {

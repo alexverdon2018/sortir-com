@@ -6,14 +6,6 @@
 
     <div class="container-fluid pt-3">
 
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="alert alert-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        {% endfor %}
-
         <div class="row">
             <div class="col text-right">
                 <p>Date du jour : (date_du_jour)</p>
@@ -100,7 +92,30 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for sortie in sorties %}
+                    {% for sortie in sortiesCreees %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
+                            <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
+                            <td>(A faire)</td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+
+                                <a href="{{ path('liste_publier_sortie', {'id':sortie.id}) }}">- Publier</a>
+
+                                {% if sortie.organisateur.id == app.user.id %}
+                                    <a href=""> - Modifier</a>
+                                    <a href=""> - Annuler</a>
+                                {% endif %}
+
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    {% for sortie in sortiesOuvertes %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>

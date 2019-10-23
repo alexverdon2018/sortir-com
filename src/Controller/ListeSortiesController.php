@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
 use App\Entity\Rejoindre;
 use App\Entity\Sortie;
 use Doctrine\ORM\EntityManagerInterface;
@@ -19,11 +20,15 @@ class ListeSortiesController extends AbstractController
      */
     public function index(EntityManagerInterface $emi)
     {
-        $sorties = $emi->getRepository(Sortie::class)->findAll();
+        $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Créée']);
+        $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $sortiesOuvertes = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatOuverte]);
+        $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
-            'sorties' => $sorties,
+            'sortiesOuvertes' => $sortiesOuvertes,
+            'sortiesCreees' => $sortiesCreees,
             'rejoindres' => $rejoindres
         ]);
     }
@@ -83,5 +88,25 @@ class ListeSortiesController extends AbstractController
 
         $this->get('session')->getFlashBag()->add('warning', 'La sortie a été supprimée');
         return $this->redirectToRoute("liste_sorties");
+    }
+
+    /**
+     * @Route("/publier/{id}", name="liste_publier_sortie")
+     */
+    public function publier($id, EntityManagerInterface $emi) {
+        $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
+        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+
+        if ($sortie !== null && $etat !== null) {
+
+            $sortie->setEtat($etat);
+            $emi->persist($sortie);
+            $emi->flush();
+            $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
+            return $this->redirectToRoute('liste_sorties');
+
+        }
+
+        return $this->redirectToRoute('liste_sorties');
     }
 }

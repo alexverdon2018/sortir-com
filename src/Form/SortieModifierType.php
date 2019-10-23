@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-
 use App\Entity\Lieu;
 use App\Entity\Sortie;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -15,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class  SortieType extends AbstractType
+class SortieModifierType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -55,18 +54,7 @@ class  SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom'
             ])
-            ->add('enregistrer', SubmitType::class, [
-                'label' => 'Enregistrer le brouillon',
-                'attr' => [
-                    'class' => 'btn btn-light'
-                ]
-            ])
-            ->add('publier', SubmitType::class, [
-                'label' => 'Publier la sortie',
-                'attr' => [
-                    'class' => 'btn btn-lg btn-success'
-                ]
-            ])
+            ->add('modifier', SubmitType::class, ['label' => 'Modifier'])
         ;
     }
 

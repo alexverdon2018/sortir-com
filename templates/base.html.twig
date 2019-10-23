@@ -12,6 +12,8 @@
     <body>
         {% include 'includes/navbar.html.twig' %}
         {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
+        {% block javascripts %}
+            <script rel="script/javascript" src="{{ asset('js/filtres.js') }}"></script>
+        {% endblock %}
     </body>
 </html>

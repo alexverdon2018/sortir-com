@@ -1,0 +1,100 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Détail sortie{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid pt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Détail de la sortie</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <p>Etat :
+                    {% if sortie.etat.libelle == 'Créée' %}
+                        <span class="text-danger">Enregistrée (non publiée)</span>
+                    {% endif %}
+                    {% if sortie.etat.libelle == 'Ouverte' %}
+                        <span class="text-success">Publiée</span>
+                    {% endif %}
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+                <div class="row mt-3">
+                    <div class="col-5">Nom :</div>
+                    <div class="col-4">{{ sortie.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Date et heure de la sortie :</div>
+                    <div class="col-4">{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Date limite d'inscription :</div>
+                    <div class="col-4">{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Nombre de places total :</div>
+                    <div class="col-4">{{ sortie.nbInscriptionMax }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Durée :</div>
+                    <div class="col-4">{{ sortie.duree }} minutes</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Description et infos : :</div>
+                    <div class="col-4">{{ sortie.commentaire }}</div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="row mt-3">
+                    <div class="col-5">Organisateur :</div>
+                    <div class="col-4">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Ville :</div>
+                    <div class="col-4">{{ sortie.lieu.ville.nom }} - {{ sortie.lieu.ville.codePostal }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Lieu :</div>
+                    <div class="col-4">{{ sortie.lieu.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Adresse :</div>
+                    <div class="col-4">{{ sortie.lieu.adresse }}</div>
+                </div>
+            </div>
+        </div>
+
+        {% if app.user.id == sortie.organisateur.id  %}
+            <div class="row mt-4">
+                <div class="col text-center">
+                    <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                        {% if sortie.etat.libelle == 'Créée' %}
+                            <a class="btn btn-success" href="{{ path('sortie_publier',{'id':sortie.id}) }}">Publier la sortie</a>
+                        {% endif %}
+                        <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
+                        <input type="hidden" name="_method" value="DELETE">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                        <button class="btn btn-outline-danger" type="submit">Supprimer</button>
+                    </form>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row my-5">
+            <div class="col">
+                FUTURE CARTE
+            </div>
+        </div>
+
+        <div class="row">
+
+        </div>
+    </div>
+
+{% endblock %}

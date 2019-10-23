@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification d'une sortie | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid pt-3">
+        <div class="row">
+            <div class="col">
+                <h3>Modifier une sortie</h3>
+                <hr>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-5">
+                {{ form_start(sortieForm) }}
+                {{ form_widget(sortieForm) }}
+                {{ form_end(sortieForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

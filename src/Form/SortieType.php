@@ -55,6 +55,8 @@ class  SortieType extends AbstractType
                 'class' => Lieu::class,
                 'choice_label' => 'nom'
             ])
+            ->add('enregistrer', SubmitType::class, ['label' => 'Enregistrer le brouillon'])
+            ->add('publier', SubmitType::class, ['label' => 'Publier la sortie'])
         ;
     }
 

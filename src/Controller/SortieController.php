@@ -103,6 +103,13 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            if($sortieForm->get('enregistrer')->isClicked()){
+                $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+            }
+            else{
+                $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+            }
+
             $em->persist($sortie);
             $em->flush();
             $this->addFlash('success', "La sortie a été modifié");

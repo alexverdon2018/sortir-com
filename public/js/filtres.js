@@ -2,7 +2,7 @@
         const siteInput = document.querySelector('#inputGroup_site');
         const siteNameInputVal = document.querySelector('#inputGroup_nom');
         const siteNameInput = document.querySelector('#inputGroup_nom');
-        const sortieDateDebutInputVal = document.querySelector('#inputGroup_dateDebut').value;
+        const sortieDateDebutInput = document.querySelector('#inputGroup_dateDebut');
         const sortieDateFinVal = document.querySelector('#inputGroup_dateFin').value;
         const jeSuisOrgaCheckbox = document.querySelector('#checkbox_jeSuisOrga');
         const jeSuisinscritCheckbox = document.querySelector("#checkbox_jeSuisInsc");
@@ -15,6 +15,7 @@
             const siteNameInputVal = evt.currentTarget.value;
             trs.forEach((tr) => {
                 filteredTrs = filteredTrs.map((tr) => {
+                    tr.style.display = 'table-row';
                     if (siteNameInputVal) {
                         tr.children[0].textContent.includes(siteNameInputVal) ?
                             tr.style.display = 'table-row' : tr.style.display = 'none';
@@ -27,7 +28,7 @@
       jeSuisOrgaCheckbox.addEventListener('change', evt => {
           debugger;
           filteredTrs = filteredTrs.map((tr) => {
-
+              tr.style.display = 'table-row';
               const showSelfOrga = evt.currentTarget.checked;
               const userName = document.querySelector("#orga_full_name").textContent;
               const trOrga = tr.children[6].textContent;
@@ -48,11 +49,34 @@
 
               if (showSelfRegistered && (tr.children[7].children[1].value == 1)){
                   tr.style.display = 'table-row';
+              } else if (!showSelfRegistered){
+                  tr.style.display = 'table-row';
               } else {
                   tr.style.display = 'none';
               }
               return tr;
           });
       });
+
+      sortieDateDebutInput.onchange = evt => {
+          const dateFromInput = new Date(evt.currentTarget.value);
+          filteredTrs = filteredTrs.map((tr) => {
+              tr.style.display = 'table-row';
+              const rawDate = tr.children[1].textContent.split(" ")[0];
+              const splittedDate = rawDate.split('/');
+              const formattedDate = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+              const dateFromTr =  new Date(formattedDate);
+              if (dateFromTr.getTime() === dateFromInput.getTime()) {
+                  tr.style.display = 'table-row';
+             } else if (dateFromTr.getTime() !== dateFromInput.getTime()) {
+                  tr.style.display = 'none';
+              }
+             return tr;
+          });
+          debugger;
+      }
+
+
+
       //document.querySelector('tbody').children = filteredTrs;
 }, false);

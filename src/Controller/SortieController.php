@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Etat;
+use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Entity\Utilisateur;
 use App\Form\SortieType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -30,6 +33,13 @@ class SortieController extends AbstractController
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
                 $sortie->setDateHeureDebut(new \DateTime());
+                $site = $em->getRepository(Site::class)->find(1);
+                $etat = $em->getRepository(Etat::class)->find(1);
+                $organisateur = $em->getRepository(Utilisateur::class)->find(23);
+
+                $sortie->setSite($site);
+                $sortie->setEtat($etat);
+                $sortie->setOrganisateur($organisateur);
 
                 //sauvegarder les données dans la base
                 $em->persist($sortie);
@@ -61,21 +71,6 @@ class SortieController extends AbstractController
 
         return $this->render("sortie/detail.html.twig", [
             "sortie"=>$sortie
-        ]);
-    }
-
-    /**
-     * Liste des sorties
-     * @Route("/", name="sortie_liste_site")
-     */
-    public function liste_lieu()
-    {
-        //recuperer les sites depuis la base de données
-        $siteRepo = $this->getDoctrine()->getRepository(Site::class);
-        $sites = $siteRepo->findBadSites();
-
-        return $this->render('sortie/liste_site.html.twig', [
-            "sites" => $sites
         ]);
     }
 

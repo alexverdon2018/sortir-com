@@ -3,5 +3,20 @@
 {% block title %}Détail de la Sortie | {{ parent() }}{% endblock %}
 
 {% block body %}
+    <h1>Afficher une Sortie</h1>
+    {# afficher les données de la sortie #}
+    <div class="container">
+        <h2>Nom de la sortie : {{ sortie.nom }}</h2>
+        <p class="small">Date et heure de la sortie : {{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</p>
+        <p class="small">Date limite d'inscription : {{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
+        <p class="small">Nombre de place : {{ sortie.nbInscriptionMax}}</p>
+        <p class="small">Durée :  {{ sortie.duree }} minutes</p>
+        <p class=""small">Description et infos : {{ sortie.commentaire | raw }}</p>
+
+        <p class=""small">Ville organisatrice : Nantes</p>
+        <p class=""small">Lieu : Commerce</p>
+        <p class=""small">Rue : rue Commerce</p>
+        <p class=""small">Code postal : 44 000</p>
+    </div>
 
 {% endblock %}

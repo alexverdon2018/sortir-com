@@ -3,7 +3,9 @@
 namespace App\Form;
 
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -36,11 +38,10 @@ class SortieType extends AbstractType
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Description et infos :'
             ])
-            ->add('lieu', TextareaType::class, [
-                'label' => 'Lieu :'
-            ])
-            ->add('site', TextareaType::class, [
-                'label' => 'Site du lieu de la Sortie :'
+            ->add('lieu', EntityType::class, [
+                'label' => 'Lieu :',
+                'class' => Lieu::class,
+                'choice_label' => 'nom'
             ])
         ;
     }

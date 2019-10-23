@@ -22,43 +22,46 @@ class Sortie
     private $nom;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateHeureDebut;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $duree;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateLimiteInscription;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $nbInscriptionMax;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $commentaire;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\lieu")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\etat")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $etat;
 
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\site")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $site;
 

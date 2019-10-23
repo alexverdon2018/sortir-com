@@ -6,6 +6,12 @@
 
     <div class="container-fluid pt-3">
 
+        {% for flashMessage in app.session.flashbag.get() %}
+
+            {{ flashMessage }}
+
+        {% endfor %}
+
         <div class="row">
             <div class="col text-right">
                 <p>Date du jour : (date_du_jour)</p>

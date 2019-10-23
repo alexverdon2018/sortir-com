@@ -22,22 +22,22 @@
                     return tr;
                 });
             });
+        });
 
-            jeSuisOrgaCheckbox.addEventListener('change', evt => {
-                filteredTrs = filteredTrs.map((tr) => {
-                    tr.style.display = 'table-row';
-                    const showSelfOrga = evt.currentTarget.checked;
-                    const userName = document.querySelector("#orga_full_name").textContent;
-                    const trOrga = tr.children[6].textContent;
-                    if (showSelfOrga && (userName === trOrga)) {
-                        tr.style.display = 'table-row';
-                    } else if (showSelfOrga && (userName !== trOrga)) {
-                        tr.style.display = 'none';
-                    }
-                    ;
-                    return tr;
-                });
-            });
-        })
-            document.querySelector('tbody').children = filteredTrs;
-        }, false);
+      jeSuisOrgaCheckbox.addEventListener('change', evt => {
+          filteredTrs = filteredTrs.map((tr) => {
+              tr.style.display = 'table-row';
+              const showSelfOrga = evt.currentTarget.checked;
+              const userName = document.querySelector("#orga_full_name").textContent;
+              const trOrga = tr.children[6].textContent;
+
+              if (showSelfOrga && (userName === trOrga)) {
+                  tr.style.display = 'table-row';
+              } else if (showSelfOrga && (userName !== trOrga)) {
+                  tr.style.display = 'none';
+              };
+              return tr;
+          });
+      });
+      document.querySelector('tbody').children = filteredTrs;
+}, false);

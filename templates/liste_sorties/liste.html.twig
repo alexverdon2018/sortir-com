@@ -136,7 +136,7 @@
                                 {% endfor %}
                                 <input type="hidden" name="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
                                 {% if jeSuisInscrit %}
-                                    <a href=""> - Se désister</a>
+                                    <a href="{{ path('desister_sortie',{'id':sortie.id}) }}"> - Se désister</a>
                                 {% else %}
                                     <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
                                 {% endif %}

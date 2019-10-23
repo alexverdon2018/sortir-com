@@ -34,6 +34,14 @@ class ListeSortiesController extends AbstractController
      */
     public function rejoindre(EntityManagerInterface $emi, Sortie $Sortie)
     {
+        //recuperer en base de données
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
+
+        if ($sortieRepo !== null) {
+            $this->addFlash('warning', "Vous êtes déja inscrits à la sortie");
+            return $this->redirectToRoute("liste_sorties");
+        }
+
         $rejoindre = new Rejoindre();
 
         $rejoindre->setSonUtilisateur($this->getUser());
@@ -41,20 +49,12 @@ class ListeSortiesController extends AbstractController
         $rejoindre->setSaSortie($Sortie);
         $rejoindre->setDateInscription(new \DateTime());
 
-        //recuperer en base de données
-        
 
-
-        if ($emi->getRepository(Rejoindre::class)->findOneBy($rejoindre->setSonUtilisateur($this->getUser()->getId(), $Sortie->getId()) == null)) {
-                $this->addFlash('failed', "Vous êtes déja inscrits à la sorti");
-        }
-        else {
             //sauvegarder les données dans la base
             $emi->persist($rejoindre);
             $emi->flush();
             $this->addFlash('success', "La sortie a été ajoutée");
 
-        }
         return $this->redirectToRoute("liste_sorties");
     }
 

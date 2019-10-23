@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -9,7 +10,9 @@ use Symfony\Component\Routing\Annotation\Route;
 class ListeSortiesController extends AbstractController
 {
     /**
-     * @Route("/sortie/liste", name="liste_sorties")
+     * @Route("/liste_sortie", name="liste_sorties")
+     * @param EntityManagerInterface $emi
+     * @return \Symfony\Component\HttpFoundation\Response
      */
     public function index(EntityManagerInterface $emi)
     {

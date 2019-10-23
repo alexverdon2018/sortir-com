@@ -1,22 +1,67 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Détail de la Sortie | {{ parent() }}{% endblock %}
+{% block title %}{{ parent() }} | Détail sortie{% endblock %}
 
 {% block body %}
-    <h1>Afficher une Sortie</h1>
-    {# afficher les données de la sortie #}
-    <div class="container">
-        <h2>Nom de la sortie : {{ sortie.nom }}</h2>
-        <p class="small">Date et heure de la sortie : {{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</p>
-        <p class="small">Date limite d'inscription : {{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</p>
-        <p class="small">Nombre de place : {{ sortie.nbInscriptionMax}}</p>
-        <p class="small">Durée :  {{ sortie.duree }} minutes</p>
-        <p class=""small">Description et infos : {{ sortie.commentaire | raw }}</p>
 
-        <p class=""small">Ville organisatrice : Nantes</p>
-        <p class=""small">Lieu : Commerce</p>
-        <p class=""small">Rue : rue Commerce</p>
-        <p class=""small">Code postal : 44 000</p>
+    <div class="container-fluid pt-4">
+        <div class="row">
+            <div class="col">
+                <h2>Détail de la sortie</h2>
+                <hr>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+                <div class="row mt-3">
+                    <div class="col-5">Nom :</div>
+                    <div class="col-4">{{ sortie.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Date et heure de la sortie :</div>
+                    <div class="col-4">{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Date limite d'inscription :</div>
+                    <div class="col-4">{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Nombre de places total :</div>
+                    <div class="col-4">{{ sortie.nbInscriptionMax }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Durée :</div>
+                    <div class="col-4">{{ sortie.duree }} minutes</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Description et infos : :</div>
+                    <div class="col-4">{{ sortie.commentaire }}</div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="row mt-3">
+                    <div class="col-5">Organisateur :</div>
+                    <div class="col-4">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Ville :</div>
+                    <div class="col-4">{{ sortie.lieu.ville.nom }} - {{ sortie.lieu.ville.codePostal }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Lieu :</div>
+                    <div class="col-4">{{ sortie.lieu.nom }}</div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-5">Adresse :</div>
+                    <div class="col-4">{{ sortie.lieu.adresse }}</div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                FUTURE CARTE
+            </div>
+        </div>
     </div>
 
 {% endblock %}

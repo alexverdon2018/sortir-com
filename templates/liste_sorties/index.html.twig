@@ -98,13 +98,15 @@
                                 <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                                 <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                                 <td>(A faire)</td>
-                                <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
+                                <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
                                 <td>
                                     <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
-                                    <a href="">Modifier</a>
-                                    <a href="">S'inscrire</a>
-                                    <a href="">Se désister</a>
-                                    <a href="">Annuler</a>
+                                    <a href=""> - S'inscrire</a>
+                                    <a href=""> - Se désister</a>
+                                    {% if sortie.organisateur.id == app.user.id %}
+                                        <a href=""> - Modifier</a>
+                                        <a href=""> - Annuler</a>
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}

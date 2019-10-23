@@ -79,7 +79,15 @@ class SortieController extends AbstractController
      * @Route("/{id}/edit", name="sortie_edit", requirements={"id"="\d+"})
      */
     public function edit($id, Request $request, EntityManagerInterface $em) {
+        $userCourant = $this->getUser();
+
         $sortie = $em->getRepository(Sortie::class)->find($id);
+
+        //Si utilisateur courant N'EST PAS organisateur de la sortie
+        //Il est redirigé vers la liste des sorties
+        if ($userCourant == null || $userCourant->getId() != $sortie->getOrganisateur()->getId()) {
+            return $this->redirectToRoute("liste_sorties");
+        }
 
         if($sortie == null) {
             throw $this->createNotFoundException('Sortie inconnu');
@@ -106,6 +114,13 @@ class SortieController extends AbstractController
      */
     public function delete(Request $request, EntityManagerInterface $em, $id) {
         $sortie = $em->getRepository(Sortie::class)->find($id);
+        $userCourant = $this->getUser();
+
+        //Si utilisateur courant N'EST PAS organisateur de la sortie
+        //Il est redirigé vers la liste des sorties
+        if ($userCourant == null || $userCourant->getId() != $sortie->getOrganisateur()->getId()) {
+            return $this->redirectToRoute("liste_sorties");
+        }
 
         if($sortie == null) {
             throw $this->createNotFoundException('La Sortie est inconnu ou déjà supprimée');
@@ -117,7 +132,6 @@ class SortieController extends AbstractController
             $em->flush();
             $this->addFlash('success', 'La sortie a été supprimée');
         }
-
         return $this->redirectToRoute("liste_sorties");
     }
 

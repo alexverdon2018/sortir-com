@@ -14,7 +14,7 @@ class ListeSortiesController extends AbstractController
      * @param EntityManagerInterface $emi
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function index(EntityManagerInterface $emi)
+    public function listeSorties(EntityManagerInterface $emi)
     {
         $sorties = $emi->getRepository(Sortie::class)->findAll();
         return $this->render('liste_sorties/index.html.twig', [

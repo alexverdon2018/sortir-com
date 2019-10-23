@@ -34,6 +34,14 @@ class ListeSortiesController extends AbstractController
      */
     public function rejoindre(EntityManagerInterface $emi, Sortie $Sortie)
     {
+        //recuperer en base de données
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
+
+        if ($sortieRepo !== null) {
+            $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrits à la sortie");
+            return $this->redirectToRoute("liste_sorties");
+        }
+
         $rejoindre = new Rejoindre();
 
         $rejoindre->setSonUtilisateur($this->getUser());
@@ -41,17 +49,11 @@ class ListeSortiesController extends AbstractController
         $rejoindre->setSaSortie($Sortie);
         $rejoindre->setDateInscription(new \DateTime());
 
-        //recuperer en base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
 
-        if ($sortieRepo !== null) {
-                $this->addFlash('warning', "Vous êtes déja inscrits à la sortie");
-            return $this->redirectToRoute("liste_sorties");
-        }
             //sauvegarder les données dans la base
             $emi->persist($rejoindre);
             $emi->flush();
-            $this->addFlash('success', "La sortie a été ajoutée");
+        $this->get('session')->getFlashBag()->add('success', "La sortie a été ajoutée");
 
         return $this->redirectToRoute("liste_sorties");
     }
@@ -62,15 +64,20 @@ class ListeSortiesController extends AbstractController
      */
     public function desister(Request $request, EntityManagerInterface $emi, Sortie $Sortie)
     {
-        $rejoindre = new Rejoindre();
+        //recuperer en base de données
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
 
-        if($this->isCsrfTokenValid('delete'.$Sortie->getId(),
-            $request->request->get('_token'))) {
-            $emi->remove($Sortie);
+        if ($sortieRepo !== null) {
+            $rejoindre = new Rejoindre();
+
+            $emi->remove($sortieRepo);
             $emi->flush();
-            $this->addFlash('success', 'La sortie a été supprimée');
+
+            $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désister de la sortie");
+            return $this->redirectToRoute("liste_sorties");
         }
 
+        $this->get('session')->getFlashBag()->add('warning', 'La sortie a été supprimée');
         return $this->redirectToRoute("liste_sorties");
     }
 }

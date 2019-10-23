@@ -143,7 +143,7 @@
 
                                 {% if sortie.organisateur.id == app.user.id %}
                                     <a href="{{ path('sortie_edit',{'id':sortie.id}) }}"> - Modifier</a>
-                                    <a href="{{ path('sortie_delete',{'id':sortie.id}) }}" onclick="return confirm('Confirmation de la suppression ?');"> - Annuler</a>
+                                    <a href="{{ path('sortie_delete',{'id':sortie.id}) }}" onclick="return confirm('Confirmation de la suppression ?');"> - Supprimer</a>
                                 {% endif %}
 
                             </td>

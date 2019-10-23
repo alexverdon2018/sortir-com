@@ -80,7 +80,7 @@
                         <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
                         <input type="hidden" name="_method" value="DELETE">
                         <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                        <button class="btn btn-outline-danger" type="submit">Annuler</button>
+                        <button class="btn btn-outline-danger" type="submit">Supprimer</button>
                     </form>
                 </div>
             </div>

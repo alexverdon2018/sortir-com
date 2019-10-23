@@ -6,6 +6,14 @@
 
     <div class="container-fluid pt-3">
 
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="alert alert-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endfor %}
+
         <div class="row">
             <div class="col text-right">
                 <p>Date du jour : (date_du_jour)</p>
@@ -102,13 +110,27 @@
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
                             <td>
+
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
-                                <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
-                                <a href="{{ path('desister_sortie',{'id':sortie.id}) }}"> - Se désister</a>
+
+                                {% set jeSuisInscrit = false %}
+                                {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                                    {% if rejoindre.saSortie.id == sortie.id %}
+                                        {% set jeSuisInscrit = true %}
+                                    {% endif %}
+                                {% endfor %}
+                                <input type="hidden" id="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
+                                {% if jeSuisInscrit %}
+                                    <a href=""> - Se désister</a>
+                                {% else %}
+                                    <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
+                                {% endif %}
+
                                 {% if sortie.organisateur.id == app.user.id %}
                                     <a href=""> - Modifier</a>
                                     <a href=""> - Annuler</a>
                                 {% endif %}
+
                             </td>
                         </tr>
                     {% endfor %}

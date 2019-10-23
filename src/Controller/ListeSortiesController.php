@@ -20,7 +20,7 @@ class ListeSortiesController extends AbstractController
     public function index(EntityManagerInterface $emi)
     {
         $sorties = $emi->getRepository(Sortie::class)->findAll();
-        $rejoindres = $emi->getRepository(Rejoindre::class)->findAll();
+        $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
             'sorties' => $sorties,
@@ -31,6 +31,10 @@ class ListeSortiesController extends AbstractController
     /**
      * Rejoindre une Sortie
      * @Route("/rejoindre_sortie/{id}", name="rejoindre_sortie")
+     * @param EntityManagerInterface $emi
+     * @param Sortie $Sortie
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     * @throws \Exception
      */
     public function rejoindre(EntityManagerInterface $emi, Sortie $Sortie)
     {
@@ -38,7 +42,7 @@ class ListeSortiesController extends AbstractController
         $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
 
         if ($sortieRepo !== null) {
-            $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrits à la sortie");
+            $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrit à la sortie ...");
             return $this->redirectToRoute("liste_sorties");
         }
 

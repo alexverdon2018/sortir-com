@@ -103,7 +103,7 @@
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
                             <td>
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
-                                <a href=""> - S'inscrire</a>
+                                <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
                                 <a href=""> - Se désister</a>
                                 {% if sortie.organisateur.id == app.user.id %}
                                     <a href=""> - Modifier</a>

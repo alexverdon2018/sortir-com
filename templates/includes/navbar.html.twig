@@ -2,7 +2,7 @@
     <div>
         <a class="pr-3" href="{{ path('accueil') }}"><b>Sortir.com</b></a>
         {% if is_granted('ROLE_USER') %}
-            <a class="btn btn-info" href="{{ path('liste_sorties') }}">Les sorties</a>
+            <a class="nav-item" href="{{ path('liste_sorties') }}">Les sorties</a>
         {% endif %}
     </div>
     <div>
@@ -10,7 +10,7 @@
             <a class="btn btn-secondary" href="{{ path('admin') }}">Admin</a>
         {% endif %}
         {% if is_granted('ROLE_USER') %}
-            <a class="btn btn-success" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
+            <a class="btn btn-info" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
             <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion</a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('app_login') }}">Connexion</a>

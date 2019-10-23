@@ -9,7 +9,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
-class UtilisateurFixture extends Fixture
+class EtatFixture extends Fixture
 {
 
 

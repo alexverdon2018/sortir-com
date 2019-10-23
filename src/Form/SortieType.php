@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class SortieType extends AbstractType
+class  SortieType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
@@ -23,20 +23,31 @@ class SortieType extends AbstractType
                 'label' => 'Nom de la sortie :'
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
-                'label' => 'Date et heure de la sortie :'
+                'label' => 'Date et heure de la sortie :',
+                'years' => range(2019,2030),
+                'widget' => 'single_text',
+                'html5' => 'true'
+
             ])
             ->add('dateLimiteInscription', DateTimeType::class, [
-                'label' => 'Date limite dinscription :'
+                'label' => 'Date limite dinscription :',
+                'years' => range(2019,2030),
+                'widget' => 'single_text',
+                'html5' => 'true'
             ])
             ->add('nbInscriptionMax', IntegerType::class, [
-                'label' => 'Nombre de place :'
+                'label' => 'Nombre de place :',
+                'attr' => [
+                    'min' => '1',
+                    'max' => '100'
+                ]
             ])
             ->add('duree', IntegerType::class, [
                 'label' => 'Durée :'
             ])
-
             ->add('commentaire', TextareaType::class, [
-                'label' => 'Description et infos :'
+                'label' => 'Description et infos :',
+                'required' => 'false'
             ])
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',

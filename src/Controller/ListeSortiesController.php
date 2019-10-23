@@ -8,7 +8,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ListeSortiesController extends AbstractController
 {
     /**
-     * @Route("/liste/sorties", name="liste_sorties")
+     * @Route("/liste_sorties", name="liste_sorties")
      */
     public function index()
     {

@@ -1,20 +1,61 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ListeSortiesController!{% endblock %}
+{% block title %}{{ parent() }} | Les sorties{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="container-fluid pt-3">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/sortir-com/src/Controller/ListeSortiesController.php'|file_link(0) }}">src/Controller/ListeSortiesController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/sortir-com/templates/liste_sorties/index.html.twig'|file_link(0) }}">templates/liste_sorties/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <div class="row">
+            <div class="col text-right">
+                <p>Date du jour : (date_du_jour)</p>
+                <p>Participant : {{ app.user.prenom }} {{ app.user.nom }}</p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h3>Filter les sorties</h3>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="input-group mt-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroup_site">Site</label>
+                    </div>
+                    <select class="custom-select" id="inputGroup_site">
+                        <option selected>Tous les sites</option>
+                    </select>
+                </div>
+                <div class="input-group mt-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroup_nom">Nom de la sortie</label>
+                    </div>
+                    <input class="form-control" id="inputGroup_nom" type="text">
+                </div>
+                <div class="input-group mt-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text">Dates :</label>
+                    </div>
+                    <input class="form-control" type="date" id="inputGroup_dateDebut">
+                    <input class="form-control" type="date" id="inputGroup_dateFin">
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 col-lg-4">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="checkbox_jeSuisOrga">
+                    <label class="form-check-label" for="checkbox_jeSuisOrga">
+                        Sorties dont je suis l'organisateur.rice
+                    </label>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
 {% endblock %}

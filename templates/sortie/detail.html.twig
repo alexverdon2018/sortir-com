@@ -19,4 +19,16 @@
         <p class=""small">Code postal : 44 000</p>
     </div>
 
+    <div class="row">
+        <a href="{{ path("sortie_edit", {'id' : sortie.id}) }}"
+           class="btn btn-primary">Modifier</a>
+        <form method="post"
+              action="{{ path("sortie_delete", {'id' : sortie.id }) }}"
+              onsubmit="return confirm('Confirmation de la suppression ?');">
+            <input type="hidden" name="_method" value="DELETE">
+            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+            <button class="btn btn-danger">Supprimer</button>
+        </form>
+    </div>
+
 {% endblock %}

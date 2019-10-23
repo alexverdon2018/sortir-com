@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification d'une sortie | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <h1>Modifier une sortie</h1>
+    {# afficher un formulaire #}
+    {{ form_start(sortieForm) }}
+    {{ form_widget(sortieForm) }}
+    <button type="submit" class="btn btn-primary">Modifier une sortie</button>
+    {{ form_end(sortieForm) }}
+{% endblock %}
+

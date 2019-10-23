@@ -20,7 +20,7 @@ class ListeSortiesController extends AbstractController
     public function index(EntityManagerInterface $emi)
     {
         $sorties = $emi->getRepository(Sortie::class)->findAll();
-        $rejoindres = $emi->getRepository(Rejoindre::class)->findAll();
+        $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
             'sorties' => $sorties,
@@ -42,7 +42,7 @@ class ListeSortiesController extends AbstractController
         $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
 
         if ($sortieRepo !== null) {
-            $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrits à la sortie ...");
+            $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrit à la sortie ...");
             return $this->redirectToRoute("liste_sorties");
         }
 
@@ -57,13 +57,13 @@ class ListeSortiesController extends AbstractController
         $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
 
         if ($sortieRepo !== null) {
-                $this->addFlash('warning', "Vous êtes déja inscrits à la sortie");
+                $this->addFlash('warning', "Vous êtes déja inscrit à la sortie");
             return $this->redirectToRoute("liste_sorties");
         }
             //sauvegarder les données dans la base
             $emi->persist($rejoindre);
             $emi->flush();
-        $this->get('session')->getFlashBag()->add('success', "La sortie a été ajoutée !");
+        $this->get('session')->getFlashBag()->add('success', "Vous êtes désormais inscrit pour cette sortie !");
 
         return $this->redirectToRoute("liste_sorties");
     }

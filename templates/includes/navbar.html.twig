@@ -7,7 +7,7 @@
     </div>
     <div>
         {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn btn-secondary" href="{{ path('administration') }}">Admin</a>
+            <a class="btn btn-secondary" href="{{ path('admin') }}">Admin</a>
         {% endif %}
         {% if is_granted('ROLE_USER') %}
             <a class="btn btn-success" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>

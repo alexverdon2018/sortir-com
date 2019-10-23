@@ -56,7 +56,7 @@ class Utilisateur implements UserInterface
     private $password;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\site")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
      */
     private $site;
 

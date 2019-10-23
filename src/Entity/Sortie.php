@@ -47,20 +47,20 @@ class Sortie
     private $commentaire;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\lieu")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Lieu")
      * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\etat")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Etat")
      * @ORM\JoinColumn(nullable=false)
      */
     private $etat;
 
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\site")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Site")
      * @ORM\JoinColumn(nullable=false)
      */
     private $site;

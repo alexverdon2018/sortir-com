@@ -44,6 +44,7 @@ security:
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profil, roles: ROLE_USER }
         - { path: ^/administration, roles: ROLE_ADMIN }
+        - { path: ^/sortie, roles: ROLE_USER }
     role_hierarchy:
         ROLE_ADMIN: ROLE_USER
     encoders:

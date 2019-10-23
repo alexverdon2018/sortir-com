@@ -136,14 +136,14 @@
                                 {% endfor %}
                                 <input type="hidden" id="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
                                 {% if jeSuisInscrit %}
-                                    <a href=""> - Se désister</a>
+                                    <a href="{{ path('desister_sortie',{'id':sortie.id}) }}"> - Se désister</a>
                                 {% else %}
                                     <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
                                 {% endif %}
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <a href=""> - Modifier</a>
-                                    <a href=""> - Annuler</a>
+                                    <a href="{{ path('sortie_edit',{'id':sortie.id}) }}"> - Modifier</a>
+                                    <a href="{{ path('sortie_delete',{'id':sortie.id}) }}"> - Annuler la Sortie</a>
                                 {% endif %}
 
                             </td>

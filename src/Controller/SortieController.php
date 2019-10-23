@@ -23,7 +23,7 @@ class SortieController extends AbstractController
      * Créer une sortie
      * @Route("/add", name="sortie_create")
      */
-    public function create(EntityManagerInterface $em, Request $request)
+    public function add(EntityManagerInterface $em, Request $request)
     {
         {
             //traiter un formulaire
@@ -33,8 +33,14 @@ class SortieController extends AbstractController
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
                 $sortie->setDateHeureDebut(new \DateTime());
-                $site = $em->getRepository(Site::class)->find(2);
-                $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+                $site = $em->getRepository(Site::class)->find(1);
+                if($sortieForm->get('enregistrer')->isClicked()){
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+                }
+                else{
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+                }
+
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
 
                 $sortie->setSite($site);
@@ -50,7 +56,8 @@ class SortieController extends AbstractController
 
             }
             return $this->render("sortie/add.html.twig", [
-                "sortieForm" => $sortieForm->createView()
+                "sortieForm" => $sortieForm->createView(),
+                "sortie" => $sortie
             ]);
         }
     }
@@ -96,6 +103,13 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            if($sortieForm->get('enregistrer')->isClicked()){
+                $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+            }
+            else{
+                $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+            }
+
             $em->persist($sortie);
             $em->flush();
             $this->addFlash('success', "La sortie a été modifié");

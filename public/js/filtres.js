@@ -37,7 +37,6 @@
               } else if (showSelfOrga && (userName !== trOrga)) {
                   tr.style.display = 'none';
               };
-              debugger;
               return tr;
           });
       });
@@ -46,7 +45,13 @@
           filteredTrs = filteredTrs.map((tr) => {
               tr.style.display = 'table-row';
               const showSelfRegistered = evt.currentTarget.checked;
-              debugger;
+
+              if (showSelfRegistered && (tr.children[7].children[1].value == 1)){
+                  tr.style.display = 'table-row';
+              } else {
+                  tr.style.display = 'none';
+              }
+              return tr;
           });
       });
       //document.querySelector('tbody').children = filteredTrs;

@@ -102,25 +102,12 @@ class SortieController extends AbstractController
                 return $this->redirectToRoute("liste_sorties");
             }
 
-            if ($sortie == null) {
-                throw $this->createNotFoundException('Sortie inconnu');
-            }
-            $sortieForm = $this->createForm(SortieType::class, $sortie);
-            $sortieForm->handleRequest($request);
+            $em->persist($sortie);
+            $em->flush();
+            $this->addFlash('success', "La sortie a été modifié");
+            return $this->redirectToRoute("sortie_detail",
+                ['id' => $sortie->getId()]);
 
-            if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-                if ($sortieForm->get('enregistrer')->isClicked()) {
-                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
-                } else {
-                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
-                }
-
-                $em->persist($sortie);
-                $em->flush();
-                $this->addFlash('success', "La sortie a été modifié");
-                return $this->redirectToRoute("sortie_detail",
-                    ['id' => $sortie->getId()]);
-            }
         }
         return $this->render("sortie/edit.html.twig", [
             "sortieForm" => $sortieForm->createView()

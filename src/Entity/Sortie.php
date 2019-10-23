@@ -17,75 +17,63 @@ class Sortie
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $idSortie;
-
-    /**
      * @ORM\Column(type="string", length=150)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateHeureDebut;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $duree;
 
     /**
-     * @ORM\Column(type="datetime", nullable=true)
+     * @ORM\Column(type="datetime", nullable=false)
      */
     private $dateLimiteInscription;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $nbInscriptionMax;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255, nullable=false)
      */
     private $commentaire;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\lieu")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $lieu;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\etat")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $etat;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\utilisateur")
-     */
-    private $utilisateur;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\site")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $site;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organisateur;
 
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdSortie(): ?int
-    {
-        return $this->idSortie;
-    }
-
-    public function setIdSortie(int $idSortie): self
-    {
-        $this->idSortie = $idSortie;
-
-        return $this;
     }
 
     public function getNom(): ?string
@@ -184,18 +172,6 @@ class Sortie
         return $this;
     }
 
-    public function getUtilisateur(): ?utilisateur
-    {
-        return $this->utilisateur;
-    }
-
-    public function setUtilisateur(?utilisateur $utilisateur): self
-    {
-        $this->utilisateur = $utilisateur;
-
-        return $this;
-    }
-
     public function getSite(): ?site
     {
         return $this->site;
@@ -207,4 +183,17 @@ class Sortie
 
         return $this;
     }
+
+    public function getOrganisateur(): ?Utilisateur
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?Utilisateur $organisateur): self
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
 }

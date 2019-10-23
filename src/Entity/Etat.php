@@ -17,11 +17,6 @@ class Etat
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $idEtat;
-
-    /**
      * @ORM\Column(type="string", length=70)
      */
     private $libelle;
@@ -29,18 +24,6 @@ class Etat
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getIdEtat(): ?int
-    {
-        return $this->idEtat;
-    }
-
-    public function setIdEtat(int $idEtat): self
-    {
-        $this->idEtat = $idEtat;
-
-        return $this;
     }
 
     public function getLibelle(): ?string

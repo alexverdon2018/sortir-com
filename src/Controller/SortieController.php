@@ -35,7 +35,7 @@ class SortieController extends AbstractController
                 $sortie->setDateHeureDebut(new \DateTime());
                 $site = $em->getRepository(Site::class)->find(1);
                 $etat = $em->getRepository(Etat::class)->find(1);
-                $organisateur = $em->getRepository(Utilisateur::class)->find(23);
+                $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
 
                 $sortie->setSite($site);
                 $sortie->setEtat($etat);

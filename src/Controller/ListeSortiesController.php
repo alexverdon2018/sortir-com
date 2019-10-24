@@ -26,6 +26,7 @@ class ListeSortiesController extends AbstractController
         $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
         $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
         $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
+        $etatEncours = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'En cours']);
         $villes = $emi->getRepository(Ville::class)->findAll();
 
         // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
@@ -33,6 +34,7 @@ class ListeSortiesController extends AbstractController
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
         $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
         $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
+        $sortiesEncours = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatEncours]);
 
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
 
@@ -42,6 +44,7 @@ class ListeSortiesController extends AbstractController
             'sortiesCreees' => $sortiesCreees,
             'sortiesAnnulees' => $sortiesAnnulees,
             'sortiesCloturees' => $sortiesCloturees,
+            'sortiesEncours' => $sortiesEncours,
             'rejoindres' => $rejoindres,
             'villes' => $villes
         ]);

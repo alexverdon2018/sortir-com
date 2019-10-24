@@ -60,7 +60,7 @@ class ClotureSortieCommand extends Command
                 $this->doctrine->getManager()->persist($sortie);
             }
 
-            if ($sortie->getEtat()->getLibelle() == $etatEnCours->getLibelle() AND ($sortie->getDateHeureDebut() <= $Now)){
+            if ($sortie->getEtat()->getLibelle() == $etatEnCours->getLibelle() AND $sortie->getDateHeureDebut() <= $Now){
                 // ALORS
                 // On modifié l'état de la Sortie de 'Ouverte' à 'En cours'
                 $sortie->setEtat($etatEnCours);

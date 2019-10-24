@@ -117,11 +117,12 @@ class SortieController extends AbstractController
 
     /**
      * Supprimer une sortie
-     * @Route("/{id}", name="sortie_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="sortie_delete", methods={"DELETE"})
      */
     public function delete(Request $request, EntityManagerInterface $em, $id) {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         $userCourant = $this->getUser();
+
 
         //Si utilisateur courant N'EST PAS organisateur de la sortie
         //Il est redirigé vers la liste des sorties
@@ -133,12 +134,23 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('La Sortie est inconnu ou déjà supprimée');
         }
 
-        if($this->isCsrfTokenValid('delete'.$sortie->getId(),
-            $request->request->get('_token'))) {
-            $sortie->setEtat(20);
-//            $em->remove($sortie);
-//            $em->flush();
-            $this->addFlash('success', 'La sortie a été archivée');
+        // Si la Sortie est à l'état "Crééé et souhaite être supprimée (elle est supprimée en base)
+        if($sortie->getEtat() == '14') {
+            if ($this->isCsrfTokenValid('delete' . $sortie->getId(),
+                $request->request->get('_token'))) {
+                $em->remove($sortie);
+                $em->flush();
+                $this->addFlash('success', 'La sortie a été supprimée');
+            }
+        }
+        else{
+            // Etat Annulée
+            $etat = new Etat();
+            $etat = $em->getRepository(Etat::class)->findOneBy(['libelle'=>'Annulée']);
+
+            $sortie->setEtat($etat);
+            $em->persist($sortie);
+            $em->flush();
         }
         return $this->redirectToRoute("liste_sorties");
     }

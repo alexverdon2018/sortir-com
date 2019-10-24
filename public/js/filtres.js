@@ -7,6 +7,7 @@
         const jeSuisOrgaCheckbox = document.querySelector('#checkbox_jeSuisOrga');
         const jeSuisinscritCheckbox = document.querySelector("#checkbox_jeSuisInsc");
         const jeNeSuisPasinscritCheckbox = document.querySelector("#checkbox_jeSuisPasInsc");
+        const selectVilleInput = document.querySelector("#inputGroup_site");
         const dateSpan = document.querySelector("#date_span");
         const heureSpan = document.querySelector("#heure_span");
         const trs = [...document.querySelector('tbody').children];
@@ -117,6 +118,30 @@
               el.dispatchEvent(e);
           }
       };
+
+      selectVilleInput.addEventListener('change', evt => {
+         const {selectedIndex, options} = evt.currentTarget;
+         const selected = options[selectedIndex];
+         const label = selected.label;
+
+         if (label && label === "Toutes les villes" ){
+             filteredTrs = filteredTrs.map((tr) => {
+                 tr.style.display = 'table-row';
+                 return tr;
+             });
+         } else if (label) {
+             filteredTrs = filteredTrs.map((tr) => {
+                 tr.style.display = 'table-row';
+                 const trLabel = tr.children[2].innerText;
+                 if (trLabel === label) {
+                     tr.style.display = 'table-row';
+                 } else {
+                     tr.style.display = 'none';
+                 }
+                 return tr;
+             });
+         }
+      });
 
 
 

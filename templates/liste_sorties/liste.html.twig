@@ -89,6 +89,7 @@
                         <th>Inscrit</th>
                         <th>Organisateur</th>
                         <th>Actions</th>
+                        <th>Etat</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -109,10 +110,15 @@
 
                                 {% if sortie.organisateur.id == app.user.id %}
                                     <a href="{{ path('sortie_edit', {'id':sortie.id}) }}"> - Modifier</a>
-                                    <a href=""> - Annuler</a>
+                                <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                                    <button type="submit">Supprimer</button>
+                                </form>
                                 {% endif %}
 
                             </td>
+                            <td>{{ sortie.etat.libelle }}</td>
                         </tr>
                     {% endfor %}
                     {% for sortie in sortiesOuvertes %}
@@ -142,11 +148,32 @@
                                 {% endif %}
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <a href="{{ path('sortie_edit',{'id':sortie.id}) }}"> - Modifier</a>
-                                    <a href="{{ path('sortie_delete',{'id':sortie.id}) }}" onclick="return confirm('Confirmation de la suppression ?');"> - Supprimer</a>
+                                    <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                                        <button type="submit">Annuler</button>
+                                    </form>
                                 {% endif %}
 
                             </td>
+                            <td>{{ sortie.etat.libelle }}</td>
+                        </tr>
+                    {% endfor %}
+                    {% for sortie in sortiesAnnulees %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
+                            <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
+                            <td>(A faire)</td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+
+                            </td>
+                            <td>{{ sortie.etat.libelle }}</td>
                         </tr>
                     {% endfor %}
                     </tbody>

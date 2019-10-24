@@ -22,13 +22,16 @@ class ListeSortiesController extends AbstractController
     {
         $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Créée']);
         $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
         $sortiesOuvertes = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatOuverte]);
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
+        $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
             'sortiesOuvertes' => $sortiesOuvertes,
             'sortiesCreees' => $sortiesCreees,
+            'sortiesAnnulees' => $sortiesAnnulees,
             'rejoindres' => $rejoindres
         ]);
     }
@@ -82,7 +85,7 @@ class ListeSortiesController extends AbstractController
             $emi->remove($sortieRepo);
             $emi->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désister de la sortie");
+            $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désisté de la sortie");
             return $this->redirectToRoute("liste_sorties");
         }
 

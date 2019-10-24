@@ -20,6 +20,9 @@
                     {% if sortie.etat.libelle == 'Ouverte' %}
                         <span class="text-success">Publiée</span>
                     {% endif %}
+                    {% if sortie.etat.libelle == 'Annulée' %}
+                        <span class="text-success">Annulée</span>
+                    {% endif %}
                 </p>
             </div>
         </div>
@@ -75,12 +78,20 @@
                 <div class="col text-center">
                     <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
                         {% if sortie.etat.libelle == 'Créée' %}
+                            <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
                             <a class="btn btn-success" href="{{ path('sortie_publier',{'id':sortie.id}) }}">Publier la sortie</a>
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                            <button class="btn btn-outline-danger" type="submit">Supprimer</button>
                         {% endif %}
-                        <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                        <button class="btn btn-outline-danger" type="submit">Supprimer</button>
+
+                        {% if sortie.etat.libelle == 'Ouverte' %}
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                            <button class="btn btn-outline-danger" type="submit">Annuler</button>
+                        {% endif %}
+
+                        <a class="btn btn-outline-primary" href="{{ path("liste_sorties", {'id' : sortie.id}) }}">Retour</a>
                     </form>
                 </div>
             </div>

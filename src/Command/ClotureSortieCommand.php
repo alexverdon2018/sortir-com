@@ -37,7 +37,6 @@ class ClotureSortieCommand extends Command
         $sorties = $this->doctrine->getRepository(Sortie::class)->findAll();
 
         // Etat Ouvert
-        $etatOuvert = new Etat();
         $etatOuvert = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
 
         $Now = New \DateTime();
@@ -53,14 +52,12 @@ class ClotureSortieCommand extends Command
                 // On modifié l'état de la Sortie de 'Ouverte' à 'Clôturée'
 
                 // Etat Clôturée
-                $etatCloture = new Etat();
                 $etatCloture = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Clôturée']);
                 $sortie->setEtat($etatCloture);
-                $this->doctrine->persist($sortie);
-                $this->doctrine->flush();
+                $this->doctrine->getManager()->persist($sortie);
             }
-
         }
+        $this->doctrine->getManager()->flush();
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
     }
 }

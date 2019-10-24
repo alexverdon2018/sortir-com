@@ -3,7 +3,7 @@
         const siteNameInputVal = document.querySelector('#inputGroup_nom');
         const siteNameInput = document.querySelector('#inputGroup_nom');
         const sortieDateDebutInput = document.querySelector('#inputGroup_dateDebut');
-        const sortieDateFinVal = document.querySelector('#inputGroup_dateFin').value;
+        const sortieDateFinInput = document.querySelector('#inputGroup_dateFin');
         const jeSuisOrgaCheckbox = document.querySelector('#checkbox_jeSuisOrga');
         const jeSuisinscritCheckbox = document.querySelector("#checkbox_jeSuisInsc");
         const trs = [...document.querySelector('tbody').children];
@@ -58,25 +58,50 @@
           });
       });
 
+
       sortieDateDebutInput.onchange = evt => {
-          const dateFromInput = new Date(evt.currentTarget.value);
-          filteredTrs = filteredTrs.map((tr) => {
-              tr.style.display = 'table-row';
-              const rawDate = tr.children[1].textContent.split(" ")[0];
-              const splittedDate = rawDate.split('/');
-              const formattedDate = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
-              const dateFromTr =  new Date(formattedDate);
-              if (dateFromTr.getTime() === dateFromInput.getTime()) {
+          const isValidDate = d => {
+              return d instanceof Date && !isNaN(d);
+          };
+          const dateDebutVal =  new Date(sortieDateDebutInput.value);
+          const dateFinVal = new Date(sortieDateFinInput.value);
+          if (isValidDate(dateDebutVal) && isValidDate(dateFinVal)) {
+              debugger;
+              filteredTrs = filteredTrs.map((tr) => {
+                  debugger;
                   tr.style.display = 'table-row';
-             } else if (dateFromTr.getTime() !== dateFromInput.getTime()) {
-                  tr.style.display = 'none';
-              }
-             return tr;
-          });
+                  const rawDate = tr.children[1].textContent.split(" ")[0];
+                  const splittedDate = rawDate.split('/');
+                  const formattedDate = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+                  const dateFromTr =  new Date(formattedDate);
+
+                  if (dateFromTr.getTime() >= dateDebutVal.getTime() && dateFromTr.getTime() <= dateFinVal.getTime()) {
+                      tr.style.display = 'table-row';
+                  } else {
+                      tr.style.display = 'none';
+                  }
+                  return tr;
+              });
+          } else {
+              filteredTrs = filteredTrs.map((tr) => {
+                  tr.style.display = 'table-row';
+                  return tr;
+              });
+          }
+      };
+
+      sortieDateFinInput.onchange = evt => {
           debugger;
+          triggerEvent(sortieDateDebutInput, "change");
+      };
+
+      const triggerEvent = (el, type) => {
+          if ('createEvent' in document) {
+              // modern browsers, IE9+
+              const e = document.createEvent('HTMLEvents');
+              e.initEvent(type, false, true);
+              el.dispatchEvent(e);
+          }
       }
-
-
-
       //document.querySelector('tbody').children = filteredTrs;
 }, false);

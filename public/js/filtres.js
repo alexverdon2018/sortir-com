@@ -6,8 +6,8 @@
         const sortieDateFinInput = document.querySelector('#inputGroup_dateFin');
         const jeSuisOrgaCheckbox = document.querySelector('#checkbox_jeSuisOrga');
         const jeSuisinscritCheckbox = document.querySelector("#checkbox_jeSuisInsc");
+        const jeNeSuisPasinscritCheckbox = document.querySelector("#checkbox_jeSuisPasInsc");
         const trs = [...document.querySelector('tbody').children];
-        debugger;
         // Valeur initiale de filteredTrs
         let filteredTrs = [...trs];
 
@@ -26,7 +26,6 @@
         });
 
       jeSuisOrgaCheckbox.addEventListener('change', evt => {
-          debugger;
           filteredTrs = filteredTrs.map((tr) => {
               tr.style.display = 'table-row';
               const showSelfOrga = evt.currentTarget.checked;
@@ -38,6 +37,22 @@
               } else if (showSelfOrga && (userName !== trOrga)) {
                   tr.style.display = 'none';
               };
+              return tr;
+          });
+      });
+
+      jeNeSuisPasinscritCheckbox.addEventListener('change', evt => {
+          filteredTrs = filteredTrs.map((tr) => {
+              tr.style.display = 'table-row';
+              const showNotInscrit = evt.currentTarget.checked;
+
+              if (showNotInscrit && (tr.children[7].children[1].value != 1)){
+                  tr.style.display = 'table-row';
+              } else if (!showNotInscrit){
+                  tr.style.display = 'table-row';
+              } else {
+                  tr.style.display = 'none';
+              }
               return tr;
           });
       });
@@ -66,9 +81,7 @@
           const dateDebutVal =  new Date(sortieDateDebutInput.value);
           const dateFinVal = new Date(sortieDateFinInput.value);
           if (isValidDate(dateDebutVal) && isValidDate(dateFinVal)) {
-              debugger;
               filteredTrs = filteredTrs.map((tr) => {
-                  debugger;
                   tr.style.display = 'table-row';
                   const rawDate = tr.children[1].textContent.split(" ")[0];
                   const splittedDate = rawDate.split('/');
@@ -91,7 +104,6 @@
       };
 
       sortieDateFinInput.onchange = evt => {
-          debugger;
           triggerEvent(sortieDateDebutInput, "change");
       };
 

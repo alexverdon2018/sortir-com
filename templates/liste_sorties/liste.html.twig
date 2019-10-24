@@ -149,10 +149,10 @@
                                 {% endif %}
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                                    <form id="sortie_delete_form" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                                        <button type="submit">Annuler</button>
+                                        <button type="submit">- Annuler</button>
                                     </form>
                                 {% endif %}
 

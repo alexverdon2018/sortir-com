@@ -2,3 +2,14 @@ html {
     font-family: 'Raleway', sans-serif;
 }
 
+input, button, submit {
+    display: inline-block;
+    border:none;
+    background-color: transparent;
+    color: #007bff;
+
+}
+
+#sortie_delete_form {
+    display: inline-block;
+}

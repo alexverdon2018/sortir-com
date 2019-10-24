@@ -1,4 +1,6 @@
 # See https://symfony.com/doc/current/email/dev_environment.html
 swiftmailer:
+    MAILER_URL=null://localhost
     # send all emails to a specific address
     #delivery_addresses: ['me@example.com']
+

@@ -13,8 +13,8 @@ class MailerManager
             ->setBody(
                 $this->renderView(
                 // templates/emails/registration.html.twig
-                    'emails/registration.html.twig',
-                    ['name' => $name]
+                    'email/registration.html.twig',
+                    ['name' => "nom"]
                 ),
                 'text/html'
             );

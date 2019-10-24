@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Rejoindre;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,6 +26,7 @@ class ListeSortiesController extends AbstractController
         $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
         $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
         $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
+        $villes = $emi->getRepository(Ville::class)->findAll();
 
         // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
         $sortiesOuvertes = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatOuverte]);
@@ -40,7 +42,8 @@ class ListeSortiesController extends AbstractController
             'sortiesCreees' => $sortiesCreees,
             'sortiesAnnulees' => $sortiesAnnulees,
             'sortiesCloturees' => $sortiesCloturees,
-            'rejoindres' => $rejoindres
+            'rejoindres' => $rejoindres,
+            'villes' => $villes
         ]);
     }
 

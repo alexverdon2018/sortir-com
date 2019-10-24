@@ -28,6 +28,9 @@
                     </div>
                     <select class="custom-select" id="inputGroup_site">
                         <option selected>Toutes les villes</option>
+                        {% for ville in villes %}
+                            <option attr-id={{ville.id}} value="{{ville.nom}}" >{{ville.nom}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="input-group mt-2">

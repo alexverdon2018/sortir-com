@@ -30,7 +30,7 @@ class Rejoindre
     private $sonUtilisateur;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Sortie")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Sortie", inversedBy="rejoindre")
      */
     private $saSortie;
 

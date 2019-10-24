@@ -134,8 +134,14 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('La Sortie est inconnu ou déjà supprimée');
         }
 
-        // Si la Sortie est à l'état "Crééé et souhaite être supprimée (elle est supprimée en base)
-        if($sortie->getEtat() == '14') {
+        $etatCreee = $em->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
+
+        dump($etatCreee);
+
+        dump($sortie);
+
+        // Si la Sortie est à l'état "Brouillon et souhaite être supprimée (elle est supprimée en base)
+        if($sortie->getEtat()->getLibelle() == $etatCreee->getLibelle()) {
             if ($this->isCsrfTokenValid('delete' . $sortie->getId(),
                 $request->request->get('_token'))) {
                 $em->remove($sortie);

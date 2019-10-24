@@ -14,7 +14,7 @@
         <div class="row">
             <div class="col">
                 <p>Etat :
-                    {% if sortie.etat.libelle == 'Créée' %}
+                    {% if sortie.etat.libelle == 'Brouillon' %}
                         <span class="text-danger">Enregistrée (non publiée)</span>
                     {% endif %}
                     {% if sortie.etat.libelle == 'Ouverte' %}
@@ -77,7 +77,7 @@
             <div class="row mt-4">
                 <div class="col text-center">
                     <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
-                        {% if sortie.etat.libelle == 'Créée' %}
+                        {% if sortie.etat.libelle == 'Brouillon' %}
                             <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
                             <a class="btn btn-success" href="{{ path('sortie_publier',{'id':sortie.id}) }}">Publier la sortie</a>
                             <input type="hidden" name="_method" value="DELETE">

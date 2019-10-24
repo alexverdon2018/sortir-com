@@ -177,6 +177,24 @@
                             <td>{{ sortie.etat.libelle }}</td>
                         </tr>
                     {% endfor %}
+                    {% for sortie in sortiesCloturees %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
+                            <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
+                            <td>(A faire)</td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+
+                            </td>
+                            <td>{{ sortie.etat.libelle }}</td>
+                        </tr>
+                    {% endfor %}
+
                     </tbody>
                 </table>
             </div>

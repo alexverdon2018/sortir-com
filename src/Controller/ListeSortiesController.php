@@ -20,18 +20,26 @@ class ListeSortiesController extends AbstractController
      */
     public function index(EntityManagerInterface $emi)
     {
-        $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Créée']);
+        // LES ETATS
+        $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
         $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
         $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
+        $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
+
+        // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
         $sortiesOuvertes = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatOuverte]);
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
         $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
+        $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
+
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
+
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
             'sortiesOuvertes' => $sortiesOuvertes,
             'sortiesCreees' => $sortiesCreees,
             'sortiesAnnulees' => $sortiesAnnulees,
+            'sortiesCloturees' => $sortiesCloturees,
             'rejoindres' => $rejoindres
         ]);
     }

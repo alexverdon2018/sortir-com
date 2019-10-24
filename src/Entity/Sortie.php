@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -70,6 +71,21 @@ class Sortie
      * @ORM\JoinColumn(nullable=false)
      */
     private $organisateur;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rejoindre", mappedBy="saSortie")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rejoindre;
+
+    /**
+     * Sortie constructor.
+     * @param $rejoindre
+     */
+    public function __construct()
+    {
+        $this->rejoindre = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -192,6 +208,18 @@ class Sortie
     public function setOrganisateur(?Utilisateur $organisateur): self
     {
         $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getRejoindre(): ?Rejoindre
+    {
+        return $this->rejoindre;
+    }
+
+    public function setRejoindre(?Rejoindre $rejoindre): self
+    {
+        $this->rejoindre = $rejoindre;
 
         return $this;
     }

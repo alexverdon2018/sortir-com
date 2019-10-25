@@ -7,10 +7,16 @@
     <div class="container-fluid pt-3">
 
         <div class="row">
+            <div class="col">
+                <h3>Liste des sorties</h3>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col text-right">
-                <p><strong>Date du jour:</strong> <span id="date_span"></span></p>
-                <p><strong>Heure:</strong> <span class="clock" id="heure_span"></span></p>
-                <p><strong>Participant:</strong> <span id="orga_full_name">{{ app.user.prenom }} {{ app.user.nom }}</span></p>
+                <p><strong>Date du jour : </strong><span id="date_span"></span> <span class="clock" id="heure_span"></span></p>
+                <p><strong>Participant : </strong> <span id="orga_full_name">{{ app.user.prenom }} {{ app.user.nom }}</span></p>
             </div>
         </div>
 
@@ -213,14 +219,11 @@
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                             <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
                             <td>
-
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
-
                             </td>
                             <td>{{ sortie.etat.libelle }}</td>
                         </tr>

@@ -56,7 +56,7 @@
                     <div class="col">{{ sortie.duree }} minutes</div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-5">Description et infos : :</div>
+                    <div class="col-5">Description et infos :</div>
                     <div class="col">{{ sortie.commentaire }}</div>
                 </div>
             </div>
@@ -84,7 +84,9 @@
             <div class="row mt-4">
                 <div class="col text-center">
                     <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                        {% if sortie.etat.libelle == 'Brouillon' and sortie.etat.libelle == "Publiée" %}
                         <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
+                        {% endif %}
                         {% if sortie.etat.libelle == 'Brouillon' %}
                             <a class="btn btn-success" href="{{ path('sortie_publier',{'id':sortie.id}) }}">Publier la sortie</a>
                             <input type="hidden" name="_method" value="DELETE">

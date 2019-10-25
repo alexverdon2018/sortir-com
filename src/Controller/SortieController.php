@@ -33,12 +33,13 @@ class SortieController extends AbstractController
             $sortieForm->handleRequest($request);
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-                $sortie->setDateHeureDebut(new \DateTime());
+                //$sortie->setDateHeureDebut(new \DateTime());
+                //$site = $em->getRepository(Site::class)->find(1);
                 if($sortieForm->get('enregistrer')->isClicked()){
                     $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
                 }
                 else{
-                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());

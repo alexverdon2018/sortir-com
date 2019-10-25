@@ -49,7 +49,7 @@ class ClotureSortieCommand extends Command
         // Etat Terminée
         $etatTermine = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Terminée']);
 
-        $Now = New \DateTime();
+        $now = New \DateTime();
 
         // Bouche for
         foreach ($sorties as $sortie) {
@@ -57,10 +57,9 @@ class ClotureSortieCommand extends Command
             // Compte le nombre de participants qui ont rejoins la sortie
             $sortieNbre = $sortie->getRejoindre()->count();
 
-
             // ETAT CLOTURE
-            // Si la Sortie est à l'état 'Ouverte AND (Si la Sortie à son nombre Maximun d'inscription OR la date limite d'inscription de la Sortie est égale ou supérieur à Now())
-            if ($sortie->getEtat()->getLibelle() == $etatPubliee->getLibelle() AND ($sortie->getNbInscriptionMax() == $sortieNbre OR $sortie->getDateLimiteInscription() <= $Now)) {
+            // Si la Sortie est à l'état 'Publiée AND (Si la Sortie à son nombre Maximun d'inscription OR la date limite d'inscription de la Sortie est égale ou supérieur à Now())
+            if ($sortie->getEtat()->getLibelle() == $etatPubliee->getLibelle() AND ($sortie->getNbInscriptionMax() == $sortieNbre OR $now >= $sortie->getDateLimiteInscription())) {
 
                 // ALORS : On modifié l'état de la Sortie de 'Publiée' à 'Clôturée'
                 $sortie->setEtat($etatCloture);
@@ -68,13 +67,15 @@ class ClotureSortieCommand extends Command
             }
 
             // Date de la fin de la Sortie
+            $dateDebutSortie = clone $sortie->getDateHeureDebut();
             $dateFinSortie = $sortie->getDateHeureDebut()->add(new \DateInterval( "PT". $sortie->getDuree(). "M"));
 
 
-
+            dump($now);
+            dump($dateDebutSortie);
             // ETAT EN COURS
             // Si la Sortie est à l'état 'Clôturée' AND la date de debut est inférieur à la date du jour AND la date de fin de sortie est supérieur à la date du jour)
-            if ($sortie->getEtat()->getLibelle() == $etatCloture->getLibelle() AND $sortie->getDateHeureDebut() <= $Now AND $dateFinSortie >= $Now) {
+            if ($sortie->getEtat()->getLibelle() == $etatCloture->getLibelle() AND $now >= $dateDebutSortie) {
                 // ALORS
                 // On modifié l'état de la Sortie de 'Clôturée' à 'En cours'
                 $sortie->setEtat($etatEnCours);
@@ -84,7 +85,7 @@ class ClotureSortieCommand extends Command
 
             // ETAT TERMINEE
             // Si la Sortie est à l'état 'Clôturée' AND la date de debut est inférieur à la date du jour AND la date de fin de sortie est supérieur à la date du jour)
-            if ($sortie->getEtat()->getLibelle() == $etatCloture->getLibelle() AND $sortie->getDateHeureDebut() <= $dateFinSortie) {
+            if ($sortie->getEtat()->getLibelle() == $etatEnCours->getLibelle() AND $now >= $dateFinSortie) {
                 // ALORS
                 // On modifié l'état de la Sortie de 'Clôturée' à 'Terminée'
                 $sortie->setEtat($etatTermine);

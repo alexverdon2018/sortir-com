@@ -33,8 +33,7 @@
               tr.style.display = 'table-row';
               const showSelfOrga = evt.currentTarget.checked;
               const userName = document.querySelector("#orga_full_name").textContent;
-              const trOrga = tr.children[6].textContent;
-
+              const trOrga = tr.children[5].textContent;
               if (showSelfOrga && (userName === trOrga)) {
                   tr.style.display = 'table-row';
               } else if (showSelfOrga && (userName !== trOrga)) {
@@ -49,7 +48,7 @@
               tr.style.display = 'table-row';
               const showNotInscrit = evt.currentTarget.checked;
 
-              if (showNotInscrit && (tr.children[7].children[1].value != 1)){
+              if (showNotInscrit && (tr.children[4].children[0].value == 0)){
                   tr.style.display = 'table-row';
               } else if (!showNotInscrit){
                   tr.style.display = 'table-row';
@@ -64,8 +63,7 @@
           filteredTrs = filteredTrs.map((tr) => {
               tr.style.display = 'table-row';
               const showSelfRegistered = evt.currentTarget.checked;
-
-              if (showSelfRegistered && (tr.children[7].children[1].value == 1)){
+              if (showSelfRegistered && (tr.children[4].children[0].value == 1)){
                   tr.style.display = 'table-row';
               } else if (!showSelfRegistered){
                   tr.style.display = 'table-row';

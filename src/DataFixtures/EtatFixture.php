@@ -46,7 +46,7 @@ class EtatFixture extends Fixture
         $manager->persist($etat4);
 
         $etat5 = new Etat();
-        $etat5->setLibelle("Passée");
+        $etat5->setLibelle("Terminée");
         $manager->persist($etat5);
 
         $etat6 = new Etat();

@@ -23,28 +23,33 @@ class ListeSortiesController extends AbstractController
     {
         // LES ETATS
         $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
-        $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $etatPubliees = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
         $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
         $etatEncours = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'En cours']);
+        $etatTerminee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Terminée']);
+
+        // TOUTE LES VILLES
         $villes = $emi->getRepository(Ville::class)->findAll();
 
         // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
-        $sortiesOuvertes = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatOuverte]);
+        $sortiesPubliees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatPubliees]);
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
         $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
         $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
         $sortiesEncours = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatEncours]);
+        $sortiesTerminee = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatTerminee]);
 
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
 
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
-            'sortiesOuvertes' => $sortiesOuvertes,
+            'sortiesPubliees' => $sortiesPubliees,
             'sortiesCreees' => $sortiesCreees,
             'sortiesAnnulees' => $sortiesAnnulees,
             'sortiesCloturees' => $sortiesCloturees,
             'sortiesEncours' => $sortiesEncours,
+            'sortiesTerminee' => $sortiesTerminee,
             'rejoindres' => $rejoindres,
             'villes' => $villes
         ]);

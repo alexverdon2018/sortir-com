@@ -17,11 +17,17 @@
                     {% if sortie.etat.libelle == 'Brouillon' %}
                         <span class="text-danger">Enregistrée (non publiée)</span>
                     {% endif %}
-                    {% if sortie.etat.libelle == 'Ouverte' %}
+                    {% if sortie.etat.libelle == 'Publiée' %}
                         <span class="text-success">Publiée</span>
                     {% endif %}
                     {% if sortie.etat.libelle == 'Annulée' %}
                         <span class="text-success">Annulée</span>
+                    {% endif %}
+                    {% if sortie.etat.libelle == 'En cours' %}
+                        <span class="text-success">En cours</span>
+                    {% endif %}
+                    {% if sortie.etat.libelle == 'Terminée' %}
+                        <span class="text-success">Terminée</span>
                     {% endif %}
                 </p>
             </div>
@@ -85,7 +91,7 @@
                             <button class="btn btn-outline-danger" type="submit">Supprimer</button>
                         {% endif %}
 
-                        {% if sortie.etat.libelle == 'Ouverte' %}
+                        {% if sortie.etat.libelle == 'Publié' %}
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
                             <button class="btn btn-outline-danger" type="submit">Annuler</button>

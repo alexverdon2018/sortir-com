@@ -28,6 +28,7 @@ class ListeSortiesController extends AbstractController
         $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
         $etatEncours = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'En cours']);
         $etatTerminee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Terminée']);
+        $etatArchive = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Archivée']);
 
         // TOUTE LES VILLES
         $villes = $emi->getRepository(Ville::class)->findAll();
@@ -38,7 +39,8 @@ class ListeSortiesController extends AbstractController
         $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
         $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
         $sortiesEncours = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatEncours]);
-        $sortiesTerminee = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatTerminee]);
+        $sortiesTerminees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatTerminee]);
+        $sortiesArchivees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatArchive]);
 
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
 
@@ -49,7 +51,8 @@ class ListeSortiesController extends AbstractController
             'sortiesAnnulees' => $sortiesAnnulees,
             'sortiesCloturees' => $sortiesCloturees,
             'sortiesEncours' => $sortiesEncours,
-            'sortiesTerminee' => $sortiesTerminee,
+            'sortiesTerminee' => $sortiesTerminees,
+            'sortiesArchivees' => $sortiesArchivees,
             'rejoindres' => $rejoindres,
             'villes' => $villes
         ]);

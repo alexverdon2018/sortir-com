@@ -66,8 +66,10 @@ class ListeSortiesController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function rejoindre(EntityManagerInterface $emi, Sortie $sortie)
+    public function rejoindre(EntityManagerInterface $emi, Sortie $sortie, Request $request)
     {
+        $referer = $request->headers->get('referer');
+
         //recuperer en base de données
         $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$sortie]);
 
@@ -94,7 +96,7 @@ class ListeSortiesController extends AbstractController
             $emi->flush();
         $this->get('session')->getFlashBag()->add('success', "Vous vous êtes inscrit à cette sortie !");
 
-        return $this->redirectToRoute("liste_sorties");
+        return $this->redirect($referer);
     }
 
     /**
@@ -103,6 +105,8 @@ class ListeSortiesController extends AbstractController
      */
     public function desister(Request $request, EntityManagerInterface $emi, Sortie $sortie)
     {
+        $referer = $request->headers->get('referer');
+
         //recuperer en base de données
         $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$sortie]);
 
@@ -119,11 +123,11 @@ class ListeSortiesController extends AbstractController
             $emi->flush();
 
             $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désisté de la sortie");
-            return $this->redirectToRoute("liste_sorties");
+            return $this->redirect($referer);
         }
 
-        $this->get('session')->getFlashBag()->add('warning', 'La sortie a été supprimée');
-        return $this->redirectToRoute("liste_sorties");
+        $this->get('session')->getFlashBag()->add('danger', 'Erreur lors de la tentative de se désister de cette sortie.');
+        return $this->redirect($referer);
     }
 
     /**

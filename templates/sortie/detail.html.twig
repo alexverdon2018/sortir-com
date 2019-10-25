@@ -16,19 +16,20 @@
                 <a class="btn btn-outline-secondary mb-2" href="{{ path("liste_sorties", {'id' : sortie.id}) }}">Retour</a>
                 <p>Etat :
                     {% if sortie.etat.libelle == 'Brouillon' %}
-                        <span class="text-danger">Brouillon</span>
-                    {% endif %}
-                    {% if sortie.etat.libelle == 'Publiée' %}
-                        <span class="text-success">Publiée</span>
-                    {% endif %}
-                    {% if sortie.etat.libelle == 'Annulée' %}
-                        <span class="text-success">Annulée</span>
-                    {% endif %}
-                    {% if sortie.etat.libelle == 'En cours' %}
-                        <span class="text-success">En cours</span>
-                    {% endif %}
-                    {% if sortie.etat.libelle == 'Terminée' %}
-                        <span class="text-success">Terminée</span>
+                        <span><b>Brouillon</b></span>
+                    {% elseif sortie.etat.libelle == 'Publiée' %}
+                        <span class="text-primary"><b>Publiée</b></span>
+                    {% elseif sortie.etat.libelle == 'Clôturée' %}
+                        <span class="text-warning"><b>Clôturée</b></span>
+                    {% elseif sortie.etat.libelle == 'Annulée' %}
+                        <span class="text-danger"><b>Annulée</b></span>
+                        <br>Motif :
+                    {% elseif sortie.etat.libelle == 'En cours' %}
+                        <span class="text-info"><b>En cours</b></span>
+                    {% elseif sortie.etat.libelle == 'Terminée' %}
+                        <span class="text-success"><b>Terminée</b></span>
+                    {% elseif sortie.etat.libelle == 'Archivée' %}
+                        <span>Archivée</span>
                     {% endif %}
                 </p>
             </div>
@@ -84,7 +85,7 @@
             <div class="row mt-4">
                 <div class="col text-center">
                     <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
-                        {% if sortie.etat.libelle == 'Brouillon' and sortie.etat.libelle == "Publiée" %}
+                        {% if sortie.etat.libelle == 'Brouillon' %}
                         <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
                         {% endif %}
                         {% if sortie.etat.libelle == 'Brouillon' %}
@@ -94,10 +95,13 @@
                             <button class="btn btn-outline-danger" type="submit">Supprimer</button>
                         {% endif %}
 
-                        {% if sortie.etat.libelle == 'Publié' %}
+                        {% if sortie.etat.libelle == 'Publiée' %}
                             <input type="hidden" name="_method" value="DELETE">
                             <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
                             <button class="btn btn-outline-danger" type="submit">Annuler</button>
+                        {% endif %}
+                        {% if is_granted('ROLE_ADMIN') and (sortie.etat.libelle == 'Annulée' or sortie.etat.libelle == 'Terminée') %}
+                            <a class="btn btn-primary" href="">Archiver</a>
                         {% endif %}
                     </form>
                 </div>
@@ -106,13 +110,50 @@
 
         <hr>
         <div class="row">
-            <div class="col-6">
-                <table class="table">
+            <div class="col-lg-4">
+                <h5 class="mb-2">Liste des presonnes inscrites</h5>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Prénom Nom</th>
+                            <th>Date inscription</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
+                        {% for rejoindre in rejoindres %}
+                            <tr>
+                                <td>{{ rejoindre.sonUtilisateur.prenom }} {{ rejoindre.sonUtilisateur.nom }}</td>
+                                <td>{{ rejoindre.dateInscription | date('d/m/Y H:i') }}</td>
+                            </tr>
+                        {% endfor %}
+
+                    </tbody>
                 </table>
             </div>
-            <div class="col-6">
+            <div class="col">
 
+                {% if sortie.etat.libelle == "Publiée" or sortie.etat.libelle == "Clôturée" %}
+
+                    {% set jeSuisInscrit = false %}
+                    {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                        {% if rejoindre.sonUtilisateur.id == app.user.id %}
+                            {% set jeSuisInscrit = true %}
+                        {% endif %}
+                    {% endfor %}
+
+                    {% if jeSuisInscrit %}
+                        <br>
+                        <a class="btn btn-warning" href="{{ path('desister_sortie',{'id':sortie.id}) }}">Se désister</a>
+                        <br>
+
+                    {% else %}
+                        <br>
+                        <a class="btn btn-primary" href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}">S'inscrire</a>
+                        <br>
+                    {% endif %}
+
+                {% endif %}
             </div>
         </div>
         <hr>

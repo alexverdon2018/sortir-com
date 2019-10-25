@@ -20,7 +20,7 @@
                 filteredTrs = filteredTrs.map((tr) => {
                     tr.style.display = 'table-row';
                     if (siteNameInputVal) {
-                        tr.children[0].textContent.includes(siteNameInputVal) ?
+                        tr.children[0].textContent.toLocaleLowerCase().includes(siteNameInputVal.toLocaleLowerCase()) ?
                             tr.style.display = 'table-row' : tr.style.display = 'none';
                     }
                     return tr;

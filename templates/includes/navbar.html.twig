@@ -10,6 +10,8 @@
             <a class="btn btn-secondary" href="{{ path('admin') }}">Admin</a>
         {% endif %}
         {% if is_granted('ROLE_USER') %}
+            <a class="btn btn-info" href="{{ path('liste_villes') }}">Villes</a>
+            <a class="btn btn-info" href="{{ path('liste_sites') }}">Sites</a>
             <a class="btn btn-info" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
             <a class="btn btn-danger" href="{{ path('app_logout') }}">Déconnexion</a>
         {% else %}

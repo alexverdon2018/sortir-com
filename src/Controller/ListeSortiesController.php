@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Etat;
 use App\Entity\Rejoindre;
+use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use Doctrine\ORM\EntityManagerInterface;
@@ -144,5 +145,37 @@ class ListeSortiesController extends AbstractController
         }
 
         return $this->redirectToRoute('liste_sorties');
+    }
+
+    /**
+     * @Route("/liste_villes", name="liste_villes")
+     * @param EntityManagerInterface $emi
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listeVilles(EntityManagerInterface $emi)
+    {
+        // TOUTE LES VILLES
+        $villes = $emi->getRepository(Ville::class)->findAll();
+
+        return $this->render('liste_sorties/listeVilles.html.twig', [
+            'controller_name' => 'ListeSortiesController',
+            'villes' => $villes
+        ]);
+    }
+
+    /**
+     * @Route("/liste_sites", name="liste_sites")
+     * @param EntityManagerInterface $emi
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    public function listeSites(EntityManagerInterface $emi)
+    {
+        // TOUTE LES SITES
+        $sites = $emi->getRepository(Site::class)->findAll();
+
+        return $this->render('liste_sorties/listeSites.html.twig', [
+            'controller_name' => 'ListeSortiesController',
+            'sites' => $sites
+        ]);
     }
 }

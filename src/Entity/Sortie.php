@@ -85,6 +85,11 @@ class Sortie
     private $nbInscrits;
 
     /**
+     * @ORM\Column(type="string", length=200, nullable=true)
+     */
+    private $motif;
+
+    /**
      * Sortie constructor.
      * @param $rejoindre
      */
@@ -238,6 +243,18 @@ class Sortie
     public function setNbInscrits(int $nbInscrits): self
     {
         $this->nbInscrits = $nbInscrits;
+
+        return $this;
+    }
+
+    public function getMotif(): ?string
+    {
+        return $this->motif;
+    }
+
+    public function setMotif(?string $motif): self
+    {
+        $this->motif = $motif;
 
         return $this;
     }

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Etat;
+use App\Entity\Rejoindre;
 use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Utilisateur;
@@ -70,17 +71,21 @@ class SortieController extends AbstractController
      * @Route("/{id}", name="sortie_detail",
      *     requirements={"id"="\d+"}, methods={"POST","GET"})
      */
-    public function detail($id, Request $request) {
+    public function detail($id, Request $request, EntityManagerInterface $emi) {
         //recuperer la fiche de la sortie dans la base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Sortie::class);
-        $sortie=$sortieRepo->find($id);
+        $sortie = $this->getDoctrine()->getRepository(Sortie::class)->find($id);
+        if($sortie == null) {
+            throw $this->createNotFoundException("Sortie inconnue !");
+        }
 
-        if($sortie==null) {
-            throw $this->createNotFoundException("Sortie inconnu");
+        $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
+        if ($rejoindres === null) {
+            throw $this->createNotFoundException("Erreur lors de la recherche des inscriptions pour cette sortie !");
         }
 
         return $this->render("sortie/detail.html.twig", [
-            "sortie"=>$sortie
+            "sortie"=>$sortie,
+            "rejoindres"=> $rejoindres
         ]);
     }
 
@@ -158,6 +163,7 @@ class SortieController extends AbstractController
     }
 
     /**
+     * Publier une sortie
      * @Route("/publier/{id}", name="sortie_publier")
      */
     public function publier($id, EntityManagerInterface $emi, Request $request) {
@@ -175,6 +181,41 @@ class SortieController extends AbstractController
 
         }
         return $this->redirect($referer);
+    }
+
+    /**
+     * Annuler une sortie
+     * @Route("/annuler/{id}", name="sortie_annuler")
+     */
+    public function annuler(Request $request, EntityManagerInterface $em, $id)
+    {
+
+        //recuperer la fiche de la sortie dans la base de données
+        $sortie = $em->getRepository(Sortie::class)->find($id);
+        $etatAnnuler = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
+        $userCourant = $this->getUser();
+
+        //traiter un formulaire
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm->handleRequest($request);
+
+        if ($sortie == null) {
+            throw $this->createNotFoundException("Sortie inconnu");
+        }
+
+        if ($sortie !== null && $etatAnnuler !== null) {
+
+//            $sortie->setEtat($etatAnnuler);
+//            $em->persist($sortie);
+//            $em->flush();
+//            $this->get('session')->getFlashBag()->add('success', 'Sortie annulée !');
+
+
+        }
+        return $this->render("sortie/annuler.html.twig", [
+            "sortie" => $sortie,
+            "sortieForm" => $sortieForm->createView()
+        ]);
     }
 
 }

@@ -50,6 +50,10 @@ class  SortieType extends AbstractType
                 'label' => 'Description et infos :',
                 'required' => 'false'
             ])
+            ->add('motif', TextareaType::class, [
+                'label' => 'Motif :',
+                'required' => 'false'
+            ])
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',
                 'class' => Lieu::class,

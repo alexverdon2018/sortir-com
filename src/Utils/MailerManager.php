@@ -19,9 +19,5 @@ class MailerManager
                 'text/html'
             );
 
-        //$mailer->send($message);
-
-        //return $this->render(...);
-
     }
 }

@@ -43,7 +43,7 @@ class SortieController extends AbstractController
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
-
+                $sortie->setNbInscrits(0);
                 $sortie->setSite($this->getUser()->getSite());
                 $sortie->setEtat($etat);
                 $sortie->setOrganisateur($organisateur);
@@ -53,7 +53,7 @@ class SortieController extends AbstractController
                 $em->flush();
                 $this->addFlash('success', "La sortie a été ajoutée");
 
-                return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+                return $this->redirectToRoute('liste_sorties');
 
             }
             return $this->render("sortie/add.html.twig", [
@@ -136,10 +136,6 @@ class SortieController extends AbstractController
 
         $etatCreee = $em->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
 
-        dump($etatCreee);
-
-        dump($sortie);
-
         // Si la Sortie est à l'état "Brouillon et souhaite être supprimée (elle est supprimée en base)
         if($sortie->getEtat()->getLibelle() == $etatCreee->getLibelle()) {
             if ($this->isCsrfTokenValid('delete' . $sortie->getId(),
@@ -151,9 +147,7 @@ class SortieController extends AbstractController
         }
         else{
             // Etat Annulée
-            $etat = new Etat();
             $etat = $em->getRepository(Etat::class)->findOneBy(['libelle'=>'Annulée']);
-
             $sortie->setEtat($etat);
             $em->persist($sortie);
             $em->flush();

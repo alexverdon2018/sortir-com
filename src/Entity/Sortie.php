@@ -80,6 +80,11 @@ class Sortie
     private $rejoindre;
 
     /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbInscrits;
+
+    /**
      * Sortie constructor.
      * @param $rejoindre
      */
@@ -221,6 +226,18 @@ class Sortie
     public function setRejoindre(?Rejoindre $rejoindre): self
     {
         $this->rejoindre = $rejoindre;
+
+        return $this;
+    }
+
+    public function getNbInscrits(): ?int
+    {
+        return $this->nbInscrits;
+    }
+
+    public function setNbInscrits(int $nbInscrits): self
+    {
+        $this->nbInscrits = $nbInscrits;
 
         return $this;
     }

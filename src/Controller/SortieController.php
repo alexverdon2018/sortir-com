@@ -37,9 +37,11 @@ class SortieController extends AbstractController
                 //$site = $em->getRepository(Site::class)->find(1);
                 if($sortieForm->get('enregistrer')->isClicked()){
                     $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
+                    $this->addFlash('warning', "La sortie a été ajoutée à vos brouillons !");
                 }
                 else{
                     $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
+                    $this->addFlash('success', "La sortie a été ajoutée !");
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
@@ -51,7 +53,7 @@ class SortieController extends AbstractController
                 //sauvegarder les données dans la base
                 $em->persist($sortie);
                 $em->flush();
-                $this->addFlash('success', "La sortie a été ajoutée");
+
 
                 return $this->redirectToRoute('liste_sorties');
 

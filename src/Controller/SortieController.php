@@ -166,7 +166,7 @@ class SortieController extends AbstractController
      */
     public function publier($id, EntityManagerInterface $emi, Request $request) {
         $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
-        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $referer = $request->headers->get('referer');
 
         if ($sortie !== null && $etat !== null) {

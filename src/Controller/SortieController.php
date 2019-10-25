@@ -34,7 +34,6 @@ class SortieController extends AbstractController
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
                 $sortie->setDateHeureDebut(new \DateTime());
-                //$site = $em->getRepository(Site::class)->find(1);
                 if($sortieForm->get('enregistrer')->isClicked()){
                     $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
                 }

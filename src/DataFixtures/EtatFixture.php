@@ -34,7 +34,7 @@ class EtatFixture extends Fixture
         $manager->persist($etat);
 
         $etat2 = new Etat();
-        $etat2->setLibelle("Ouverte");
+        $etat2->setLibelle("Publiée");
         $manager->persist($etat2);
 
         $etat3 = new Etat();

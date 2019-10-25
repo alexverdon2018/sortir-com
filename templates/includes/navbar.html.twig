@@ -1,8 +1,8 @@
-<div class="nav navbar shadow">
+<div class="nav navbar shadow navbar-dark bg-dark text-light sticky-top">
     <div>
-        <a class="pr-3" href="{{ path('accueil') }}"><b>Sortir.com</b></a>
+        <a class="navbar-brand pr-3" href="{{ path('accueil') }}"><b>Sortir.com</b></a>
         {% if is_granted('ROLE_USER') %}
-            <a class="nav-item" href="{{ path('liste_sorties') }}">Les sorties</a>
+            <a class="nav-item text-light" href="{{ path('liste_sorties') }}">Les sorties</a>
         {% endif %}
     </div>
     <div>
@@ -11,7 +11,7 @@
         {% endif %}
         {% if is_granted('ROLE_USER') %}
             <a class="btn btn-info" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
-            <a class="btn btn-outline-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+            <a class="btn btn-danger" href="{{ path('app_logout') }}">Déconnexion</a>
         {% else %}
             <a class="btn btn-primary" href="{{ path('app_login') }}">Connexion</a>
         {% endif %}
@@ -23,8 +23,11 @@
         <div class="col">
             {% for label, messages in app.flashes %}
                 {% for message in messages %}
-                    <div class="alert alert-{{ label }}">
+                    <div class="alert alert-{{ label }} alert-dismissible fade show mt-3">
                         {{ message }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
                     </div>
                 {% endfor %}
             {% endfor %}

@@ -33,27 +33,29 @@ class SortieController extends AbstractController
             $sortieForm->handleRequest($request);
 
             if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-                $sortie->setDateHeureDebut(new \DateTime());
-                $site = $em->getRepository(Site::class)->find(1);
+                //$sortie->setDateHeureDebut(new \DateTime());
+                //$site = $em->getRepository(Site::class)->find(1);
                 if($sortieForm->get('enregistrer')->isClicked()){
-                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Créée']);
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Brouillon']);
+                    $this->addFlash('warning', "La sortie a été ajoutée à vos brouillons !");
                 }
                 else{
-                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+                    $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
+                    $this->addFlash('success', "La sortie a été ajoutée !");
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
-
-                $sortie->setSite($site);
+                $sortie->setNbInscrits(0);
+                $sortie->setSite($this->getUser()->getSite());
                 $sortie->setEtat($etat);
                 $sortie->setOrganisateur($organisateur);
 
                 //sauvegarder les données dans la base
                 $em->persist($sortie);
                 $em->flush();
-                $this->addFlash('success', "La sortie a été ajoutée");
 
-                return $this->redirectToRoute('sortie_detail', ['id' => $sortie->getId()]);
+
+                return $this->redirectToRoute('liste_sorties');
 
             }
             return $this->render("sortie/add.html.twig", [
@@ -117,11 +119,12 @@ class SortieController extends AbstractController
 
     /**
      * Supprimer une sortie
-     * @Route("/{id}", name="sortie_delete", methods={"DELETE"})
+     * @Route("/delete/{id}", name="sortie_delete", methods={"DELETE"})
      */
     public function delete(Request $request, EntityManagerInterface $em, $id) {
         $sortie = $em->getRepository(Sortie::class)->find($id);
         $userCourant = $this->getUser();
+
 
         //Si utilisateur courant N'EST PAS organisateur de la sortie
         //Il est redirigé vers la liste des sorties
@@ -133,12 +136,23 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException('La Sortie est inconnu ou déjà supprimée');
         }
 
-        if($this->isCsrfTokenValid('delete'.$sortie->getId(),
-            $request->request->get('_token'))) {
-            $sortie->setEtat(20);
-//            $em->remove($sortie);
-//            $em->flush();
-            $this->addFlash('success', 'La sortie a été archivée');
+        $etatCreee = $em->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
+
+        // Si la Sortie est à l'état "Brouillon et souhaite être supprimée (elle est supprimée en base)
+        if($sortie->getEtat()->getLibelle() == $etatCreee->getLibelle()) {
+            if ($this->isCsrfTokenValid('delete' . $sortie->getId(),
+                $request->request->get('_token'))) {
+                $em->remove($sortie);
+                $em->flush();
+                $this->addFlash('success', 'La sortie a été supprimée');
+            }
+        }
+        else{
+            // Etat Annulée
+            $etat = $em->getRepository(Etat::class)->findOneBy(['libelle'=>'Annulée']);
+            $sortie->setEtat($etat);
+            $em->persist($sortie);
+            $em->flush();
         }
         return $this->redirectToRoute("liste_sorties");
     }
@@ -148,7 +162,7 @@ class SortieController extends AbstractController
      */
     public function publier($id, EntityManagerInterface $emi, Request $request) {
         $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
-        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $referer = $request->headers->get('referer');
 
         if ($sortie !== null && $etat !== null) {

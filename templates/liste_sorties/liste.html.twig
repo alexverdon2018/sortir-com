@@ -7,15 +7,22 @@
     <div class="container-fluid pt-3">
 
         <div class="row">
+            <div class="col">
+                <h3>Liste des sorties</h3>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="col text-right">
-                <p>Date du jour : <span id="date_span">(date_du_jour)</span></p>
-                <p>Participant : <span id="orga_full_name">{{ app.user.prenom }} {{ app.user.nom }}</span></p>
+                <p><strong>Date du jour : </strong><span id="date_span"></span> <span class="clock" id="heure_span"></span></p>
+                <p><strong>Participant : </strong> <span id="orga_full_name">{{ app.user.prenom }} {{ app.user.nom }}</span></p>
             </div>
         </div>
 
         <div class="row">
             <div class="col">
-                <h3>Filter les sorties</h3>
+                <h5>Filter les sorties</h5>
             </div>
         </div>
 
@@ -27,6 +34,9 @@
                     </div>
                     <select class="custom-select" id="inputGroup_site">
                         <option selected>Toutes les villes</option>
+                        {% for ville in villes %}
+                            <option attr-id={{ville.id}} value="{{ville.nom}}" >{{ville.nom}}</option>
+                        {% endfor %}
                     </select>
                 </div>
                 <div class="input-group mt-2">
@@ -52,7 +62,7 @@
                     </label>
                 </div>
                 <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox_jeSuisInsc">
+                    <input class="form-check-input" type="checkbox" id="checkbox_jeSuisInsc">
                     <label class="form-check-label" for="checkbox_jeSuisInsc">
                         Sorties auxquelles je suis inscrit.e
                     </label>
@@ -61,12 +71,6 @@
                     <input class="form-check-input" type="checkbox" value="" id="checkbox_jeSuisPasInsc">
                     <label class="form-check-label" for="checkbox_jeSuisPasInsc">
                         Sorties auxquelles je ne suis pas inscrit.e
-                    </label>
-                </div>
-                <div class="form-check mt-2">
-                    <input class="form-check-input" type="checkbox" value="" id="checkbox_sortiesPassees">
-                    <label class="form-check-label" for="checkbox_sortiesPassees">
-                        Sorties passées
                     </label>
                 </div>
             </div>
@@ -78,28 +82,27 @@
 
         <div class="row mt-4">
             <div class="col">
-                <table class="table">
-                    <thead>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
                     <tr>
                         <th>Nom</th>
                         <th>Date sortie</th>
                         <th>Ville</th>
-                        <th>Fin inscription</th>
                         <th>Nb places</th>
-                        <th>Inscrit</th>
+                        <th class="text-center">Inscrit</th>
                         <th>Organisateur</th>
                         <th>Actions</th>
+                        <th>Etat</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for sortie in sortiesCreees %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
-                            <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
-                            <td>(A faire)</td>
+                            <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                            <td></td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
                             <td>
 
@@ -109,31 +112,44 @@
 
                                 {% if sortie.organisateur.id == app.user.id %}
                                     <a href="{{ path('sortie_edit', {'id':sortie.id}) }}"> - Modifier</a>
-                                    <a href=""> - Annuler</a>
+                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                                        <button class="faux-lien" type="submit">- Supprimer</button>
+                                    </form>
                                 {% endif %}
 
                             </td>
+                            <td><b>{{ sortie.etat.libelle }}</b></td>
                         </tr>
                     {% endfor %}
-                    {% for sortie in sortiesOuvertes %}
+                    {% for sortie in sortiesPubliees %}
+
+                        {% set jeSuisInscrit = false %}
+                        {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                            {% if rejoindre.saSortie.id == sortie.id %}
+                                {% set jeSuisInscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
-                            <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
-                            <td>(A faire)</td>
+                            <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                            <td class="text-center">
+                                {% if jeSuisInscrit %}
+                                    <input type="hidden" class="inscrit"  value="1">
+                                    ✅
+                                {% endif %}
+                                <input type="hidden" class="inscrit"  value="0">
+                            </td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
                             <td>
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
 
-                                {% set jeSuisInscrit = false %}
-                                {% for rejoindre in rejoindres if not jeSuisInscrit %}
-                                    {% if rejoindre.saSortie.id == sortie.id %}
-                                        {% set jeSuisInscrit = true %}
-                                    {% endif %}
-                                {% endfor %}
+
                                 <input type="hidden" name="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
                                 {% if jeSuisInscrit %}
                                     <a href="{{ path('desister_sortie',{'id':sortie.id}) }}"> - Se désister</a>
@@ -142,13 +158,173 @@
                                 {% endif %}
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <a href="{{ path('sortie_edit',{'id':sortie.id}) }}"> - Modifier</a>
-                                    <a href="{{ path('sortie_delete',{'id':sortie.id}) }}" onclick="return confirm('Confirmation de la suppression ?');"> - Supprimer</a>
+                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de l\'annulation ?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                                        <button class="faux-lien" type="submit">- Annuler</button>
+                                    </form>
                                 {% endif %}
 
                             </td>
+                            <td class="text-primary"><b>{{ sortie.etat.libelle }}</b></td>
                         </tr>
                     {% endfor %}
+                    {% for sortie in sortiesCloturees %}
+
+                        {% set jeSuisInscrit = false %}
+                        {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                            {% if rejoindre.saSortie.id == sortie.id %}
+                                {% set jeSuisInscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                            <td class="text-center">
+                                {% if jeSuisInscrit %}
+                                    <input type="hidden" class="inscrit"  value="1">
+                                    ✅
+                                {% endif %}
+                                <input type="hidden" class="inscrit"  value="0">
+                            </td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+
+                                <input type="hidden" name="isJeSuisInscrit" value="{{ jeSuisInscrit }}">
+                                {% if jeSuisInscrit %}
+                                    <a href="{{ path('desister_sortie',{'id':sortie.id}) }}"> - Se désister</a>
+                                {% endif %}
+
+                            </td>
+                            <td class="text-warning"><b>{{ sortie.etat.libelle }}</b></td>
+                        </tr>
+                    {% endfor %}
+                    {% for sortie in sortiesEncours %}
+
+                        {% set jeSuisInscrit = false %}
+                        {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                            {% if rejoindre.saSortie.id == sortie.id %}
+                                {% set jeSuisInscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                            <td class="text-center">
+                                {% if jeSuisInscrit %}
+                                    <input type="hidden" class="inscrit"  value="1">
+                                    ✅
+                                {% endif %}
+                                <input type="hidden" class="inscrit"  value="0">
+                            </td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+
+                            </td>
+                            <td class="text-info"><b>{{ sortie.etat.libelle }}</b></td>
+                        </tr>
+                    {% endfor %}
+                    {% for sortie in sortiesTerminee %}
+
+                        {% set jeSuisInscrit = false %}
+                        {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                            {% if rejoindre.saSortie.id == sortie.id %}
+                                {% set jeSuisInscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                            <td class="text-center">
+                                {% if jeSuisInscrit %}
+                                    <input type="hidden" class="inscrit"  value="1">
+                                    ✅
+                                {% endif %}
+                                <input type="hidden" class="inscrit"  value="0">
+                            </td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+                            </td>
+                            <td class="text-success"><b>{{ sortie.etat.libelle }}</b></td>
+                        </tr>
+                    {% endfor %}
+                    {% for sortie in sortiesAnnulees %}
+
+                        {% set jeSuisInscrit = false %}
+                        {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                            {% if rejoindre.saSortie.id == sortie.id %}
+                                {% set jeSuisInscrit = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
+                            <td>{{ sortie.lieu.ville.nom }}</td>
+                            <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                            <td class="text-center">
+                                {% if jeSuisInscrit %}
+                                    <input type="hidden" class="inscrit"  value="1">
+                                    ✅
+                                {% endif %}
+                                <input type="hidden" class="inscrit"  value="0">
+                            </td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td>
+
+                                <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+
+                            </td>
+                            <td class="text-danger"><b>{{ sortie.etat.libelle }}</b></td>
+                        </tr>
+                    {% endfor %}
+
+                    {% if is_granted('ROLE_ADMIN') %}
+                        {% for sortie in sortiesArchivees %}
+
+                            {% set jeSuisInscrit = false %}
+                            {% for rejoindre in rejoindres if not jeSuisInscrit %}
+                                {% if rejoindre.saSortie.id == sortie.id %}
+                                    {% set jeSuisInscrit = true %}
+                                {% endif %}
+                            {% endfor %}
+
+                            <tr class="table-secondary">
+                                <td>{{ sortie.nom }}</td>
+                                <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                                <td>{{ sortie.lieu.ville.nom }}</td>
+                                <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
+                                <td class="text-center">
+                                    {% if jeSuisInscrit %}
+                                        <input type="hidden" class="inscrit"  value="1">
+                                        ✅
+                                    {% endif %}
+                                    <input type="hidden" class="inscrit"  value="0">
+                                </td>
+                                <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                                <td>
+                                    <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
+                                </td>
+                                <td>{{ sortie.etat.libelle }}</td>
+                            </tr>
+                        {% endfor %}
+                    {% endif %}
+
+
                     </tbody>
                 </table>
             </div>

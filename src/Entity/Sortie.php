@@ -2,7 +2,9 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SortieRepository")
@@ -70,6 +72,26 @@ class Sortie
      * @ORM\JoinColumn(nullable=false)
      */
     private $organisateur;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Rejoindre", mappedBy="saSortie")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $rejoindre;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $nbInscrits;
+
+    /**
+     * Sortie constructor.
+     * @param $rejoindre
+     */
+    public function __construct()
+    {
+        $this->rejoindre = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -192,6 +214,30 @@ class Sortie
     public function setOrganisateur(?Utilisateur $organisateur): self
     {
         $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    public function getRejoindre(): ?PersistentCollection
+    {
+        return $this->rejoindre;
+    }
+
+    public function setRejoindre(?Rejoindre $rejoindre): self
+    {
+        $this->rejoindre = $rejoindre;
+
+        return $this;
+    }
+
+    public function getNbInscrits(): ?int
+    {
+        return $this->nbInscrits;
+    }
+
+    public function setNbInscrits(int $nbInscrits): self
+    {
+        $this->nbInscrits = $nbInscrits;
 
         return $this;
     }

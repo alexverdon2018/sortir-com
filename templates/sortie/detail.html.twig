@@ -13,12 +13,22 @@
         </div>
         <div class="row">
             <div class="col">
+                <a class="btn btn-outline-secondary mb-2" href="{{ path("liste_sorties", {'id' : sortie.id}) }}">Retour</a>
                 <p>Etat :
-                    {% if sortie.etat.libelle == 'Créée' %}
-                        <span class="text-danger">Enregistrée (non publiée)</span>
+                    {% if sortie.etat.libelle == 'Brouillon' %}
+                        <span class="text-danger">Brouillon</span>
                     {% endif %}
-                    {% if sortie.etat.libelle == 'Ouverte' %}
+                    {% if sortie.etat.libelle == 'Publiée' %}
                         <span class="text-success">Publiée</span>
+                    {% endif %}
+                    {% if sortie.etat.libelle == 'Annulée' %}
+                        <span class="text-success">Annulée</span>
+                    {% endif %}
+                    {% if sortie.etat.libelle == 'En cours' %}
+                        <span class="text-success">En cours</span>
+                    {% endif %}
+                    {% if sortie.etat.libelle == 'Terminée' %}
+                        <span class="text-success">Terminée</span>
                     {% endif %}
                 </p>
             </div>
@@ -27,45 +37,45 @@
             <div class="col-12 col-lg-4">
                 <div class="row mt-3">
                     <div class="col-5">Nom :</div>
-                    <div class="col-4">{{ sortie.nom }}</div>
+                    <div class="col"><b>{{ sortie.nom }}</b></div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Date et heure de la sortie :</div>
-                    <div class="col-4">{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</div>
+                    <div class="col">{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Date limite d'inscription :</div>
-                    <div class="col-4">{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</div>
+                    <div class="col">{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Nombre de places total :</div>
-                    <div class="col-4">{{ sortie.nbInscriptionMax }}</div>
+                    <div class="col">{{ sortie.nbInscriptionMax }}</div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Durée :</div>
-                    <div class="col-4">{{ sortie.duree }} minutes</div>
+                    <div class="col">{{ sortie.duree }} minutes</div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-5">Description et infos : :</div>
-                    <div class="col-4">{{ sortie.commentaire }}</div>
+                    <div class="col-5">Description et infos :</div>
+                    <div class="col">{{ sortie.commentaire }}</div>
                 </div>
             </div>
             <div class="col-12 col-lg-4">
                 <div class="row mt-3">
                     <div class="col-5">Organisateur :</div>
-                    <div class="col-4">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</div>
+                    <div class="col"><a href="{{ path('profil_detail', {'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Ville :</div>
-                    <div class="col-4">{{ sortie.lieu.ville.nom }} - {{ sortie.lieu.ville.codePostal }}</div>
+                    <div class="col">{{ sortie.lieu.ville.nom }} - {{ sortie.lieu.ville.codePostal }}</div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Lieu :</div>
-                    <div class="col-4">{{ sortie.lieu.nom }}</div>
+                    <div class="col">{{ sortie.lieu.nom }}</div>
                 </div>
                 <div class="row mt-3">
                     <div class="col-5">Adresse :</div>
-                    <div class="col-4">{{ sortie.lieu.adresse }}</div>
+                    <div class="col">{{ sortie.lieu.adresse }}</div>
                 </div>
             </div>
         </div>
@@ -74,17 +84,38 @@
             <div class="row mt-4">
                 <div class="col text-center">
                     <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
-                        {% if sortie.etat.libelle == 'Créée' %}
-                            <a class="btn btn-success" href="{{ path('sortie_publier',{'id':sortie.id}) }}">Publier la sortie</a>
-                        {% endif %}
+                        {% if sortie.etat.libelle == 'Brouillon' and sortie.etat.libelle == "Publiée" %}
                         <a class="btn btn-outline-primary" href="{{ path("sortie_edit", {'id' : sortie.id}) }}">Modifier</a>
-                        <input type="hidden" name="_method" value="DELETE">
-                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                        <button class="btn btn-outline-danger" type="submit">Supprimer</button>
+                        {% endif %}
+                        {% if sortie.etat.libelle == 'Brouillon' %}
+                            <a class="btn btn-success" href="{{ path('sortie_publier',{'id':sortie.id}) }}">Publier la sortie</a>
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                            <button class="btn btn-outline-danger" type="submit">Supprimer</button>
+                        {% endif %}
+
+                        {% if sortie.etat.libelle == 'Publié' %}
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                            <button class="btn btn-outline-danger" type="submit">Annuler</button>
+                        {% endif %}
                     </form>
                 </div>
             </div>
         {% endif %}
+
+        <hr>
+        <div class="row">
+            <div class="col-6">
+                <table class="table">
+
+                </table>
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+        <hr>
 
         <div class="row my-5">
             <div class="col">

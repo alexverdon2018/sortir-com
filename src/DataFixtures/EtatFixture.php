@@ -30,11 +30,11 @@ class EtatFixture extends Fixture
 
     public function createEtats(ObjectManager $manager) {
         $etat = new Etat();
-        $etat->setLibelle("Créée");
+        $etat->setLibelle("Brouillon");
         $manager->persist($etat);
 
         $etat2 = new Etat();
-        $etat2->setLibelle("Ouverte");
+        $etat2->setLibelle("Publiée");
         $manager->persist($etat2);
 
         $etat3 = new Etat();
@@ -46,7 +46,7 @@ class EtatFixture extends Fixture
         $manager->persist($etat4);
 
         $etat5 = new Etat();
-        $etat5->setLibelle("Passée");
+        $etat5->setLibelle("Terminée");
         $manager->persist($etat5);
 
         $etat6 = new Etat();

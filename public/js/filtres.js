@@ -3,11 +3,14 @@
         const siteNameInputVal = document.querySelector('#inputGroup_nom');
         const siteNameInput = document.querySelector('#inputGroup_nom');
         const sortieDateDebutInput = document.querySelector('#inputGroup_dateDebut');
-        const sortieDateFinVal = document.querySelector('#inputGroup_dateFin').value;
+        const sortieDateFinInput = document.querySelector('#inputGroup_dateFin');
         const jeSuisOrgaCheckbox = document.querySelector('#checkbox_jeSuisOrga');
         const jeSuisinscritCheckbox = document.querySelector("#checkbox_jeSuisInsc");
+        const jeNeSuisPasinscritCheckbox = document.querySelector("#checkbox_jeSuisPasInsc");
+        const selectVilleInput = document.querySelector("#inputGroup_site");
+        const dateSpan = document.querySelector("#date_span");
+        const heureSpan = document.querySelector("#heure_span");
         const trs = [...document.querySelector('tbody').children];
-        debugger;
         // Valeur initiale de filteredTrs
         let filteredTrs = [...trs];
 
@@ -17,7 +20,7 @@
                 filteredTrs = filteredTrs.map((tr) => {
                     tr.style.display = 'table-row';
                     if (siteNameInputVal) {
-                        tr.children[0].textContent.includes(siteNameInputVal) ?
+                        tr.children[0].textContent.toLocaleLowerCase().includes(siteNameInputVal.toLocaleLowerCase()) ?
                             tr.style.display = 'table-row' : tr.style.display = 'none';
                     }
                     return tr;
@@ -26,13 +29,11 @@
         });
 
       jeSuisOrgaCheckbox.addEventListener('change', evt => {
-          debugger;
           filteredTrs = filteredTrs.map((tr) => {
               tr.style.display = 'table-row';
               const showSelfOrga = evt.currentTarget.checked;
               const userName = document.querySelector("#orga_full_name").textContent;
-              const trOrga = tr.children[6].textContent;
-
+              const trOrga = tr.children[5].textContent;
               if (showSelfOrga && (userName === trOrga)) {
                   tr.style.display = 'table-row';
               } else if (showSelfOrga && (userName !== trOrga)) {
@@ -42,12 +43,27 @@
           });
       });
 
+      jeNeSuisPasinscritCheckbox.addEventListener('change', evt => {
+          filteredTrs = filteredTrs.map((tr) => {
+              tr.style.display = 'table-row';
+              const showNotInscrit = evt.currentTarget.checked;
+
+              if (showNotInscrit && (tr.children[4].children[0].value == 0)){
+                  tr.style.display = 'table-row';
+              } else if (!showNotInscrit){
+                  tr.style.display = 'table-row';
+              } else {
+                  tr.style.display = 'none';
+              }
+              return tr;
+          });
+      });
+
       jeSuisinscritCheckbox.addEventListener('change', evt => {
           filteredTrs = filteredTrs.map((tr) => {
               tr.style.display = 'table-row';
               const showSelfRegistered = evt.currentTarget.checked;
-
-              if (showSelfRegistered && (tr.children[7].children[1].value == 1)){
+              if (showSelfRegistered && (tr.children[4].children[0].value == 1)){
                   tr.style.display = 'table-row';
               } else if (!showSelfRegistered){
                   tr.style.display = 'table-row';
@@ -58,25 +74,104 @@
           });
       });
 
+
       sortieDateDebutInput.onchange = evt => {
-          const dateFromInput = new Date(evt.currentTarget.value);
-          filteredTrs = filteredTrs.map((tr) => {
-              tr.style.display = 'table-row';
-              const rawDate = tr.children[1].textContent.split(" ")[0];
-              const splittedDate = rawDate.split('/');
-              const formattedDate = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
-              const dateFromTr =  new Date(formattedDate);
-              if (dateFromTr.getTime() === dateFromInput.getTime()) {
+          const isValidDate = d => {
+              return d instanceof Date && !isNaN(d);
+          };
+          const dateDebutVal =  new Date(sortieDateDebutInput.value);
+          const dateFinVal = new Date(sortieDateFinInput.value);
+          if (isValidDate(dateDebutVal) && isValidDate(dateFinVal)) {
+              filteredTrs = filteredTrs.map((tr) => {
                   tr.style.display = 'table-row';
-             } else if (dateFromTr.getTime() !== dateFromInput.getTime()) {
-                  tr.style.display = 'none';
-              }
-             return tr;
-          });
-          debugger;
-      }
+                  const rawDate = tr.children[1].textContent.split(" ")[0];
+                  const splittedDate = rawDate.split('/');
+                  const formattedDate = `${splittedDate[2]}-${splittedDate[1]}-${splittedDate[0]}`;
+                  const dateFromTr =  new Date(formattedDate);
+
+                  if (dateFromTr.getTime() >= dateDebutVal.getTime() && dateFromTr.getTime() <= dateFinVal.getTime()) {
+                      tr.style.display = 'table-row';
+                  } else {
+                      tr.style.display = 'none';
+                  }
+                  return tr;
+              });
+          } else {
+              filteredTrs = filteredTrs.map((tr) => {
+                  tr.style.display = 'table-row';
+                  return tr;
+              });
+          }
+      };
+
+      sortieDateFinInput.onchange = evt => {
+          triggerEvent(sortieDateDebutInput, "change");
+      };
+
+      const triggerEvent = (el, type) => {
+          if ('createEvent' in document) {
+              // modern browsers, IE9+
+              const e = document.createEvent('HTMLEvents');
+              e.initEvent(type, false, true);
+              el.dispatchEvent(e);
+          }
+      };
+
+      selectVilleInput.addEventListener('change', evt => {
+         const {selectedIndex, options} = evt.currentTarget;
+         const selected = options[selectedIndex];
+         const label = selected.label;
+
+         if (label && label === "Toutes les villes" ){
+             filteredTrs = filteredTrs.map((tr) => {
+                 tr.style.display = 'table-row';
+                 return tr;
+             });
+         } else if (label) {
+             filteredTrs = filteredTrs.map((tr) => {
+                 tr.style.display = 'table-row';
+                 const trLabel = tr.children[2].innerText;
+                 if (trLabel === label) {
+                     tr.style.display = 'table-row';
+                 } else {
+                     tr.style.display = 'none';
+                 }
+                 return tr;
+             });
+         }
+      });
 
 
 
+      const showTime = () =>{
+          let date = new Date();
+          let h = date.getHours(); // 0 - 23
+          let m = date.getMinutes(); // 0 - 59
+          let s = date.getSeconds(); // 0 - 59
+
+          if(h == 0){
+              h = 12;
+          }
+
+
+          h = (h < 10) ? "0" + h : h;
+          m = (m < 10) ? "0" + m : m;
+          s = (s < 10) ? "0" + s : s;
+
+          let domDate = date.getDate() + "/" + (date.getMonth()+1) + "/" + date.getFullYear();
+          let time = h + ":" + m + ":" + s;
+
+          let options =  { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+
+          time.toLocaleString();
+          dateSpan.innerText = domDate;
+          dateSpan.textContent = domDate;
+          heureSpan.innerText = time;
+          heureSpan.textContent = time;
+          setTimeout(showTime, 1000);
+
+      };
+
+      showTime();
       //document.querySelector('tbody').children = filteredTrs;
 }, false);

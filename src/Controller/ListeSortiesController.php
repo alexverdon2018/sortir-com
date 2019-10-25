@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Etat;
 use App\Entity\Rejoindre;
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,16 +21,40 @@ class ListeSortiesController extends AbstractController
      */
     public function index(EntityManagerInterface $emi)
     {
-        $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Créée']);
-        $etatOuverte = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Ouverte']);
-        $sortiesOuvertes = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatOuverte]);
+        // LES ETATS
+        $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
+        $etatPubliees = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Publiée']);
+        $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
+        $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
+        $etatEncours = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'En cours']);
+        $etatTerminee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Terminée']);
+        $etatArchive = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Archivée']);
+
+        // TOUTE LES VILLES
+        $villes = $emi->getRepository(Ville::class)->findAll();
+
+        // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
+        $sortiesPubliees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatPubliees]);
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
+        $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
+        $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
+        $sortiesEncours = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatEncours]);
+        $sortiesTerminees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatTerminee]);
+        $sortiesArchivees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatArchive]);
+
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
+
         return $this->render('liste_sorties/liste.html.twig', [
             'controller_name' => 'ListeSortiesController',
-            'sortiesOuvertes' => $sortiesOuvertes,
+            'sortiesPubliees' => $sortiesPubliees,
             'sortiesCreees' => $sortiesCreees,
-            'rejoindres' => $rejoindres
+            'sortiesAnnulees' => $sortiesAnnulees,
+            'sortiesCloturees' => $sortiesCloturees,
+            'sortiesEncours' => $sortiesEncours,
+            'sortiesTerminee' => $sortiesTerminees,
+            'sortiesArchivees' => $sortiesArchivees,
+            'rejoindres' => $rejoindres,
+            'villes' => $villes
         ]);
     }
 
@@ -37,14 +62,14 @@ class ListeSortiesController extends AbstractController
      * Rejoindre une Sortie
      * @Route("/rejoindre_sortie/{id}", name="rejoindre_sortie")
      * @param EntityManagerInterface $emi
-     * @param Sortie $Sortie
+     * @param Sortie $sortie
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function rejoindre(EntityManagerInterface $emi, Sortie $Sortie)
+    public function rejoindre(EntityManagerInterface $emi, Sortie $sortie)
     {
         //recuperer en base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$sortie]);
 
         if ($sortieRepo !== null) {
             $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrit à la sortie ...");
@@ -55,14 +80,19 @@ class ListeSortiesController extends AbstractController
 
         $rejoindre->setSonUtilisateur($this->getUser());
 
-        $rejoindre->setSaSortie($Sortie);
+        $sortie->setNbInscrits($sortie->getNbInscrits()+1);
+        if ($sortie->getNbInscrits() == $sortie->getNbInscriptionMax()) {
+            $etatCloturee = $emi->getRepository(Etat::class)->findOneBy(['libelle'=>'Clôturée']);
+            $sortie->setEtat($etatCloturee);
+        }
+        $rejoindre->setSaSortie($sortie);
         $rejoindre->setDateInscription(new \DateTime());
 
 
             //sauvegarder les données dans la base
             $emi->persist($rejoindre);
             $emi->flush();
-        $this->get('session')->getFlashBag()->add('success', "La sortie a été ajoutée");
+        $this->get('session')->getFlashBag()->add('success', "Vous vous êtes inscrit à cette sortie !");
 
         return $this->redirectToRoute("liste_sorties");
     }
@@ -71,18 +101,24 @@ class ListeSortiesController extends AbstractController
      * Se désister d'une Sortie
      * @Route("/desister_sortie/{id}", name="desister_sortie")
      */
-    public function desister(Request $request, EntityManagerInterface $emi, Sortie $Sortie)
+    public function desister(Request $request, EntityManagerInterface $emi, Sortie $sortie)
     {
         //recuperer en base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$sortie]);
 
         if ($sortieRepo !== null) {
-            $rejoindre = new Rejoindre();
+
+            $sortie->setNbInscrits($sortie->getNbInscrits()-1);
+
+            if ($sortie->getNbInscrits() < $sortie->getNbInscriptionMax()) {
+                $etatPubliee = $emi->getRepository(Etat::class)->findOneBy(['libelle'=>'Publiée']);
+                $sortie->setEtat($etatPubliee);
+            }
 
             $emi->remove($sortieRepo);
             $emi->flush();
 
-            $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désister de la sortie");
+            $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désisté de la sortie");
             return $this->redirectToRoute("liste_sorties");
         }
 

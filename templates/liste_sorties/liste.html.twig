@@ -88,7 +88,6 @@
                         <th>Nom</th>
                         <th>Date sortie</th>
                         <th>Ville</th>
-                        <th>Fin inscription</th>
                         <th>Nb places</th>
                         <th>Inscrit</th>
                         <th>Organisateur</th>
@@ -100,9 +99,8 @@
                     {% for sortie in sortiesCreees %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                             <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
@@ -114,11 +112,11 @@
 
                                 {% if sortie.organisateur.id == app.user.id %}
                                     <a href="{{ path('sortie_edit', {'id':sortie.id}) }}"> - Modifier</a>
-                                <form method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
-                                    <input type="hidden" name="_method" value="DELETE">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                                    <button type="submit">Supprimer</button>
-                                </form>
+                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                                        <input type="hidden" name="_method" value="DELETE">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
+                                        <button type="submit">- Supprimer</button>
+                                    </form>
                                 {% endif %}
 
                             </td>
@@ -128,9 +126,8 @@
                     {% for sortie in sortiesOuvertes %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                             <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
@@ -152,7 +149,7 @@
                                 {% endif %}
 
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <form id="sortie_delete_form" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de la suppression ?');">
+                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de l\'annulation ?');">
                                         <input type="hidden" name="_method" value="DELETE">
                                         <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
                                         <button type="submit">- Annuler</button>
@@ -166,9 +163,8 @@
                     {% for sortie in sortiesAnnulees %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                             <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
@@ -183,9 +179,8 @@
                     {% for sortie in sortiesCloturees %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                             <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
@@ -200,9 +195,8 @@
                     {% for sortie in sortiesEncours %}
                         <tr>
                             <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
+                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
-                            <td>{{ sortie.dateLimiteInscription | date('d/m/Y h:i')  }}</td>
                             <td>(A faire) /{{ sortie.nbInscriptionMax }}</td>
                             <td>(A faire)</td>
                             <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>

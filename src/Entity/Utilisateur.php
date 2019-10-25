@@ -60,6 +60,11 @@ class Utilisateur implements UserInterface
      */
     private $site;
 
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Notification", mappedBy="utilisateur", cascade={"persist", "remove"})
+     */
+    private $notification;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -199,6 +204,23 @@ class Utilisateur implements UserInterface
     public function setSite(?site $site): self
     {
         $this->site = $site;
+
+        return $this;
+    }
+
+    public function getNotification(): ?Notification
+    {
+        return $this->notification;
+    }
+
+    public function setNotification(Notification $notification): self
+    {
+        $this->notification = $notification;
+
+        // set the owning side of the relation if necessary
+        if ($this !== $notification->getUtilisateur()) {
+            $notification->setUtilisateur($this);
+        }
 
         return $this;
     }

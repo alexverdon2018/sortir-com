@@ -10,6 +10,10 @@ input, button, submit {
 
 }
 
-#sortie_delete_form {
+.form-inline-delete {
     display: inline-block;
+}
+
+.form-inline-delete:hover button {
+    text-decoration: underline;
 }

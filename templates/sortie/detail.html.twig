@@ -16,7 +16,7 @@
                 <a class="btn btn-outline-secondary mb-2" href="{{ path("liste_sorties", {'id' : sortie.id}) }}">Retour</a>
                 <p>Etat :
                     {% if sortie.etat.libelle == 'Brouillon' %}
-                        <span class="text-danger">Enregistrée (non publiée)</span>
+                        <span class="text-danger">Brouillon</span>
                     {% endif %}
                     {% if sortie.etat.libelle == 'Publiée' %}
                         <span class="text-success">Publiée</span>
@@ -103,6 +103,19 @@
                 </div>
             </div>
         {% endif %}
+
+        <hr>
+        <div class="row">
+            <div class="col-6">
+                <table class="table">
+
+                </table>
+            </div>
+            <div class="col-6">
+
+            </div>
+        </div>
+        <hr>
 
         <div class="row my-5">
             <div class="col">

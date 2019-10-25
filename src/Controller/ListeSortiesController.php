@@ -59,14 +59,14 @@ class ListeSortiesController extends AbstractController
      * Rejoindre une Sortie
      * @Route("/rejoindre_sortie/{id}", name="rejoindre_sortie")
      * @param EntityManagerInterface $emi
-     * @param Sortie $Sortie
+     * @param Sortie $sortie
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function rejoindre(EntityManagerInterface $emi, Sortie $Sortie)
+    public function rejoindre(EntityManagerInterface $emi, Sortie $sortie)
     {
         //recuperer en base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$sortie]);
 
         if ($sortieRepo !== null) {
             $this->get('session')->getFlashBag()->add('warning', "Vous êtes déja inscrit à la sortie ...");
@@ -77,14 +77,19 @@ class ListeSortiesController extends AbstractController
 
         $rejoindre->setSonUtilisateur($this->getUser());
 
-        $rejoindre->setSaSortie($Sortie);
+        $sortie->setNbInscrits($sortie->getNbInscrits()+1);
+        if ($sortie->getNbInscrits() == $sortie->getNbInscriptionMax()) {
+            $etatCloturee = $emi->getRepository(Etat::class)->findOneBy(['libelle'=>'Clôturée']);
+            $sortie->setEtat($etatCloturee);
+        }
+        $rejoindre->setSaSortie($sortie);
         $rejoindre->setDateInscription(new \DateTime());
 
 
             //sauvegarder les données dans la base
             $emi->persist($rejoindre);
             $emi->flush();
-        $this->get('session')->getFlashBag()->add('success', "La sortie a été ajoutée");
+        $this->get('session')->getFlashBag()->add('success', "Vous vous êtes inscrit à cette sortie !");
 
         return $this->redirectToRoute("liste_sorties");
     }
@@ -93,13 +98,19 @@ class ListeSortiesController extends AbstractController
      * Se désister d'une Sortie
      * @Route("/desister_sortie/{id}", name="desister_sortie")
      */
-    public function desister(Request $request, EntityManagerInterface $emi, Sortie $Sortie)
+    public function desister(Request $request, EntityManagerInterface $emi, Sortie $sortie)
     {
         //recuperer en base de données
-        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$Sortie]);
+        $sortieRepo = $this->getDoctrine()->getRepository(Rejoindre::class)->findOneBy(['sonUtilisateur'=>$this->getUser(), 'saSortie'=>$sortie]);
 
         if ($sortieRepo !== null) {
-            $rejoindre = new Rejoindre();
+
+            $sortie->setNbInscrits($sortie->getNbInscrits()-1);
+
+            if ($sortie->getNbInscrits() < $sortie->getNbInscriptionMax()) {
+                $etatPubliee = $emi->getRepository(Etat::class)->findOneBy(['libelle'=>'Publiée']);
+                $sortie->setEtat($etatPubliee);
+            }
 
             $emi->remove($sortieRepo);
             $emi->flush();

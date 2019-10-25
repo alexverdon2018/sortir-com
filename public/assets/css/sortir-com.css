@@ -17,3 +17,8 @@ input, button, submit {
 .form-inline-delete:hover button {
     text-decoration: underline;
 }
+
+.faux-lien {
+    padding: 0 !important;
+}
+

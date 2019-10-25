@@ -37,8 +37,8 @@ class ClotureSortieCommand extends Command
         // Recuperer les sorties
         $sorties = $this->doctrine->getRepository(Sortie::class)->findAll();
 
-        // Etat Ouvert
-        $etatOuvert = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
+        // Etat Publiée
+        $etatPubliee = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
 
         // Etat En Cours
         $etatEnCours = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'En cours']);
@@ -60,9 +60,9 @@ class ClotureSortieCommand extends Command
 
             // ETAT CLOTURE
             // Si la Sortie est à l'état 'Ouverte AND (Si la Sortie à son nombre Maximun d'inscription OR la date limite d'inscription de la Sortie est égale ou supérieur à Now())
-            if ($sortie->getEtat()->getLibelle() == $etatOuvert->getLibelle() AND ($sortie->getNbInscriptionMax() == $sortieNbre OR $sortie->getDateLimiteInscription() <= $Now)) {
+            if ($sortie->getEtat()->getLibelle() == $etatPubliee->getLibelle() AND ($sortie->getNbInscriptionMax() == $sortieNbre OR $sortie->getDateLimiteInscription() <= $Now)) {
 
-                // ALORS : On modifié l'état de la Sortie de 'Ouverte' à 'Clôturée'
+                // ALORS : On modifié l'état de la Sortie de 'Publiée' à 'Clôturée'
                 $sortie->setEtat($etatCloture);
                 $this->doctrine->getManager()->persist($sortie);
             }

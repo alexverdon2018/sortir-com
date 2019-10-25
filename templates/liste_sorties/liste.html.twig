@@ -26,6 +26,8 @@
             </div>
         </div>
 
+
+
         <div class="row">
             <div class="col-12 col-md-6 col-lg-4 mt-2">
                 <div class="input-group mt-2">
@@ -156,14 +158,16 @@
                                 {% else %}
                                     <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
                                 {% endif %}
-
                                 {% if sortie.organisateur.id == app.user.id %}
-                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_delete", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de l\'annulation ?');">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                                        <button class="faux-lien" type="submit">- Annuler</button>
-                                    </form>
+{#                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_annuler", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de l\'annulation ?');">#}
+{#                                        <input type="hidden" name="_method" value="DELETE">#}
+{#                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">#}
+{#                                        <button class="faux-lien" type="submit">- Annuler</button>#}
+{#                                    </form>#}
+
+                                    <a href="{{ path('sortie_annuler',{'id':sortie.id}) }}"> - Annuler</a>
                                 {% endif %}
+
 
                             </td>
                             <td class="text-primary"><b>{{ sortie.etat.libelle }}</b></td>

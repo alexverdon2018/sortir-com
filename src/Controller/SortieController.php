@@ -74,12 +74,12 @@ class SortieController extends AbstractController
     public function detail($id, Request $request, EntityManagerInterface $emi) {
         //recuperer la fiche de la sortie dans la base de données
         $sortie = $this->getDoctrine()->getRepository(Sortie::class)->find($id);
-        if($sortie==null) {
+        if($sortie == null) {
             throw $this->createNotFoundException("Sortie inconnue !");
         }
 
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
-        if ($rejoindres == null) {
+        if ($rejoindres === null) {
             throw $this->createNotFoundException("Erreur lors de la recherche des inscriptions pour cette sortie !");
         }
 

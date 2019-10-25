@@ -49,6 +49,12 @@ class ClotureSortieCommand extends Command
         // Etat Terminée
         $etatTermine = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Terminée']);
 
+        // Etat Terminée
+        $etatAnnule = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
+
+        // Etat Archive
+        $etatArchive = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Archivée']);
+
         $now = New \DateTime();
 
         // Bouche for
@@ -69,10 +75,8 @@ class ClotureSortieCommand extends Command
             // Date de la fin de la Sortie
             $dateDebutSortie = clone $sortie->getDateHeureDebut();
             $dateFinSortie = $sortie->getDateHeureDebut()->add(new \DateInterval( "PT". $sortie->getDuree(). "M"));
+            dump($dateFinSortie);
 
-
-            dump($now);
-            dump($dateDebutSortie);
             // ETAT EN COURS
             // Si la Sortie est à l'état 'Clôturée' AND la date de debut est inférieur à la date du jour AND la date de fin de sortie est supérieur à la date du jour)
             if ($sortie->getEtat()->getLibelle() == $etatCloture->getLibelle() AND $now >= $dateDebutSortie) {
@@ -93,7 +97,18 @@ class ClotureSortieCommand extends Command
 
             }
 
+            $dateArchiveSortie = $dateFinSortie->add(new \DateInterval( "PT30S"));
+            dump($dateArchiveSortie);
 
+            // ETAT ARCHIVEE
+            // Si la date de fin est passé de 30 secondes AND la Sortie est à l'état 'Terminée' OR à l'état 'Annulée')
+            if ($dateFinSortie <= $dateArchiveSortie AND ($sortie->getEtat()->getLibelle() == $etatTermine->getLibelle() OR $sortie->getEtat()->getLibelle() == $etatAnnule->getLibelle()) ) {
+                // ALORS
+                // On modifié l'état de la Sortie de 'Terminé' OU 'Annulée' A l'etat 'Archive'
+                $sortie->setEtat($etatArchive);
+                $this->doctrine->getManager()->persist($sortie);
+
+            }
 
         }
         $this->doctrine->getManager()->flush();

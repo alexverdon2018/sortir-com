@@ -23,12 +23,15 @@ class UpdateUtilisateurType extends AbstractType
                 'label' => 'Prénom :'
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Téléphone :'
+                'label' => 'Téléphone :',
+                'required' => false
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Mail :'
-            ])
-            ->add('password', RepeatedType::class, [
+            ]);
+
+        if($options['action'] != 'add') {
+            $builder->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
                     'label' => 'Mot de passe :'
@@ -36,8 +39,8 @@ class UpdateUtilisateurType extends AbstractType
                 'second_options' => [
                     'label' => 'Confirmation :'
                 ]
-            ])
-        ;
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

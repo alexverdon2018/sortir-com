@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Annuler une  sortie{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid pt-3">
+
+        <div class="row">
+            <div class="col">
+                <h3>Annuler une sortie</h3>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-5">
+                {{ form_start(sortieForm) }}
+                {{ form_widget(sortieForm) }}
+                {% if app.user.id == sortie.organisateur.id  %}
+{#                    <button class="btn btn-danger" type="submit">Confirmer l'annulation</button>#}
+                    <a class="btn btn-outline-danger" href="{{ path('sortie_annuler',{'id':sortie.id}) }}">Confirmer l'annulation</a>
+                {% endif %}
+                {{ form_end(sortieForm) }}
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

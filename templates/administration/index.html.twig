@@ -1,20 +1,130 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello AdministrationController!{% endblock %}
+{% block title %}{{ parent() }} | Administration{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+<div class="container-fluid">
+    <div class="row mt-3">
+        <div class="col">
+            <h3>Administration</h3>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-2">
+            <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-utilisateurs-tab" data-toggle="pill" href="#v-pills-utilisateurs">Utilisateurs</a>
+                <a class="nav-link" id="v-pills-villes-tab" data-toggle="pill" href="#v-pills-villes">Villes</a>
+                <a class="nav-link" id="v-pills-sites-tab" data-toggle="pill" href="#v-pills-sites">Sites</a>
+            </div>
+        </div>
+        <div class="col-8">
+            <div class="tab-content" id="v-pills-tabContent">
+                <div class="tab-pane fade show active" id="v-pills-utilisateurs">
+                    <div class="row">
+                        <div class="col-lg-4 border-right">
+                            <input class="form-control" type="text" id="searchUser" placeholder="Chercher un utilisateur...">
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-success" href="{{ path('admin_addUser') }}">Ajouter un utilisateur</a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                <tr>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
-
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/wamp64/www/sortir-com/src/Controller/AdministrationController.php'|file_link(0) }}">src/Controller/AdministrationController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/wamp64/www/sortir-com/templates/administration/index.html.twig'|file_link(0) }}">templates/administration/index.html.twig</a></code></li>
-    </ul>
+                                    <th>Prénom Nom</th>
+                                    <th>Mail</th>
+                                    <th>Téléphone</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for utilisateur in utilisateurs %}
+                                    {% if utilisateur.actif == 1 %}
+                                       <tr>
+                                    {% else %}
+                                        <tr class="table-danger">
+                                    {% endif %}
+                                        <td>{{ utilisateur.prenom }} {{ utilisateur.nom }}</td>
+                                        <td>{{ utilisateur.mail }}</td>
+                                        <td>{{ utilisateur.telephone }}</td>
+                                        <td>
+                                            {% if utilisateur.actif == 1 %}
+                                            <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
+                                            {% else %}
+                                                <a href="{{ path('utilisateur_activer', {'id':utilisateur.id}) }}">Activer</a>
+                                            {% endif %}
+                                            <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="v-pills-villes">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Code postal</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for ville in villes %}
+                            <tr>
+                                <td>{{ ville.nom }}</td>
+                                <td>{{ ville.codePostal }}</td>
+                                <td>
+                                    <a href="">Modifier</a>
+                                    <a href="">- Supprimer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            <tr>
+                                <td>Formulaire pour ajouter</td>
+                                <td>une ville</td>
+                                <td>
+                                    <a href="">Ajouter</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane fade" id="v-pills-sites">
+                    <table class="table table-striped">
+                        <thead class="thead-dark">
+                        <tr>
+                            <th>Nom</th>
+                            <th>Actions</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for site in sites %}
+                            <tr>
+                                <td>{{ site.nom }}</td>
+                                <td>
+                                    <a href="">Modifier</a>
+                                    <a href="">- Supprimer</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                            <tr>
+                                <td>Formulaire pour ajouter un site</td>
+                                <td>
+                                    <a href="">Ajouter</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

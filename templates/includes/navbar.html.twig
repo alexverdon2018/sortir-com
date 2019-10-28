@@ -1,20 +1,39 @@
-<div class="nav navbar shadow navbar-dark bg-dark text-light sticky-top">
-    <div>
-        <a class="navbar-brand pr-3" href="{{ path('accueil') }}"><b>Sortir.com</b></a>
+<div class="navbar navbar-expand-lg shadow navbar-dark bg-dark text-light sticky-top">
+    <a class="navbar-brand pr-3" href="{{ path('accueil') }}"><b>Sortir.com</b></a>
+
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
         {% if is_granted('ROLE_USER') %}
-            <a class="nav-item text-light" href="{{ path('liste_sorties') }}">Les sorties</a>
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-light" href="{{ path('liste_sorties') }}">Les sorties</a>
+                </li>
+            </ul>
         {% endif %}
-    </div>
-    <div>
-        {% if is_granted('ROLE_ADMIN') %}
-            <a class="btn btn-secondary" href="{{ path('admin') }}">Admin</a>
-        {% endif %}
-        {% if is_granted('ROLE_USER') %}
-            <a class="btn btn-info" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
-            <a class="btn btn-danger" href="{{ path('app_logout') }}">Déconnexion</a>
-        {% else %}
-            <a class="btn btn-primary" href="{{ path('app_login') }}">Connexion</a>
-        {% endif %}
+        <ul class="navbar-nav mr-0 text-right">
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item mr-2">
+                    <a class="btn btn-secondary" href="{{ path('admin') }}">Admin</a>
+                </li>
+            {% endif %}
+            {% if is_granted('ROLE_USER') %}
+                {#            <a class="btn btn-info" href="{{ path('liste_villes') }}">Villes</a>#}
+                {#            <a class="btn btn-info" href="{{ path('liste_sites') }}">Sites</a>#}
+                <li class="nav-item mr-2">
+                    <a class="btn btn-info" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
+                </li>
+                <li class="nav-item mr-2">
+                    <a class="btn btn-danger" href="{{ path('app_logout') }}">Déconnexion</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="btn btn-primary" href="{{ path('app_login') }}">Connexion</a>
+                </li>
+            {% endif %}
+        </ul>
     </div>
 </div>
 

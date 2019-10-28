@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Lieu;
+use App\Entity\Site;
 use App\Entity\Utilisateur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -23,21 +26,29 @@ class UpdateUtilisateurType extends AbstractType
                 'label' => 'Prénom :'
             ])
             ->add('telephone', TextType::class, [
-                'label' => 'Téléphone :'
+                'label' => 'Téléphone :',
+                'required' => false
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Mail :'
             ])
-            ->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
+            ->add('site', EntityType::class, [
+            'label' => 'Site :',
+            'class' => Site::class,
+            'choice_label' => 'nom'
+            ]);
+
+        if($options['action'] != 'addUser') {
+            $builder->add('password', RepeatedType::class, [
+                'type' => TextType::class,
                 'first_options' => [
                     'label' => 'Mot de passe :'
                 ],
                 'second_options' => [
                     'label' => 'Confirmation :'
                 ]
-            ])
-        ;
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

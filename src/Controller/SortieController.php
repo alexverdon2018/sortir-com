@@ -202,7 +202,7 @@ class SortieController extends AbstractController
             throw $this->createNotFoundException("Sortie inconnue !");
         }
 
-        if ($sortie !== null && $etatAnnuler !== null) {
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $sortie->setEtat($etatAnnuler);
             $em->persist($sortie);
             $em->flush();

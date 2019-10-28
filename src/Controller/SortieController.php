@@ -185,7 +185,7 @@ class SortieController extends AbstractController
 
     /**
      * Annuler une sortie
-     * @Route("/annuler/{id}", name="sortie_annuler")
+     * @Route("/annuler/{id}", name="sortie_annuler", methods={"POST", "GET"})
      */
     public function annuler(Request $request, EntityManagerInterface $em, $id)
     {
@@ -203,12 +203,14 @@ class SortieController extends AbstractController
         }
 
         if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+
             $sortie->setEtat($etatAnnuler);
             $em->persist($sortie);
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'Sortie annulée !');
+            return $this->redirectToRoute('liste_sortie');
         }
-        return $this->render("sortie/li.html.twig", [
+        return $this->render("sortie/annuler.html.twig", [
             "sortie" => $sortie,
             "sortieForm" => $sortieForm->createView()
         ]);

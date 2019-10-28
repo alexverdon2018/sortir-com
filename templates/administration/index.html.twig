@@ -42,12 +42,20 @@
                                 </thead>
                                 <tbody>
                                 {% for utilisateur in utilisateurs %}
-                                    <tr>
+                                    {% if utilisateur.actif == 1 %}
+                                       <tr>
+                                    {% else %}
+                                        <tr class="table-danger">
+                                    {% endif %}
                                         <td>{{ utilisateur.prenom }} {{ utilisateur.nom }}</td>
                                         <td>{{ utilisateur.mail }}</td>
                                         <td>{{ utilisateur.telephone }}</td>
                                         <td>
-                                            <a href="">Désactiver</a>
+                                            {% if utilisateur.actif == 1 %}
+                                                <a href="">Désactiver</a>
+                                            {% else %}
+                                                <a href="">Activer</a>
+                                            {% endif %}
                                             <a href="">- Supprimer</a>
                                         </td>
                                     </tr>

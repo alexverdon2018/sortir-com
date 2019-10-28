@@ -64,7 +64,23 @@ class SortieController extends AbstractController
                         );
                     $mailer->send($message);
 
-
+                    //Envoie un mail à tous les utilisateurs qui ont le même site que user
+                    $userSite = $this->getUser()->getSite();
+                    $users = $em->getRepository(Utilisateur::class)->findBy(['site' => $userSite]);
+                    $lesMailsUserSite = [];
+                    foreach ($users as $user) {
+                        array_push($lesMailsUserSite, $admin->getMail());
+                    }
+                    $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
+                        ->setFrom('sortir.com.pamelarose@gmail.com')
+                        ->setTo($lesMailsUserSite)
+                        ->setBody(
+                            $this->renderView(
+                                'emails/confirm.html.twig'
+                            ),
+                            'text/html'
+                        );
+                    $mailer->send($message);
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());

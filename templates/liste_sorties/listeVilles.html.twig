@@ -1,0 +1,48 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Les sorties{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid pt-3">
+
+        <div class="row">
+            <div class="col">
+                <h3>Gérer les Villes </h3>
+                <hr>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col text-right">
+                <p><strong>Date du jour : </strong><span id="date_span"></span> <span class="clock" id="heure_span"></span></p>
+                <p><strong>Participant : </strong> <span id="orga_full_name">{{ app.user.prenom }} {{ app.user.nom }}</span></p>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <h5>Gérer les Villes </h5>
+            </div>
+        </div>
+
+
+
+        <div class="row">
+            <div class="col-12 col-md-6 col-lg-4 mt-2">
+                <div class="input-group mt-2">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="inputGroup_site">Ville</label>
+                    </div>
+
+                        {% for ville in villes %}
+                            <option attr-id={{ville.id}} value="{{ville.nom}}" >{{ville.nom}} <br></option>
+                        {% endfor %}
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

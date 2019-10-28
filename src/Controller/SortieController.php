@@ -76,7 +76,9 @@ class SortieController extends AbstractController
                         ->setTo($lesMailsUserSite)
                         ->setBody(
                             $this->renderView(
-                                'emails/confirm.html.twig'
+                                'emails/confirm.html.twig',
+                                ['sortie' => $sortie,
+                                    'utilisateur' => $this->getUser()]
                             ),
                             'text/html'
                         );

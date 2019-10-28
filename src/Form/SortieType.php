@@ -9,6 +9,8 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -50,10 +52,6 @@ class  SortieType extends AbstractType
                 'label' => 'Description et infos :',
                 'required' => 'false'
             ])
-            ->add('motif', TextareaType::class, [
-                'label' => 'Motif :',
-                'required' => 'false'
-            ])
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',
                 'class' => Lieu::class,
@@ -70,8 +68,13 @@ class  SortieType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-lg btn-success'
                 ]
-            ])
-        ;
+            ]);
+
+        if($options['action'] != 'addUser') {
+            $builder->add('motif', TextareaType::class, [
+                    'label' => 'Motif :'
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver)

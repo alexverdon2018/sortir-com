@@ -193,24 +193,20 @@ class SortieController extends AbstractController
         //recuperer la fiche de la sortie dans la base de données
         $sortie = $em->getRepository(Sortie::class)->find($id);
         $etatAnnuler = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
-        $userCourant = $this->getUser();
 
         //traiter un formulaire
-        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortieForm = $this->createForm(SortieType::class, $sortie, ['action' => 'annuler']);
         $sortieForm->handleRequest($request);
 
         if ($sortie == null) {
-            throw $this->createNotFoundException("Sortie inconnu");
+            throw $this->createNotFoundException("Sortie inconnue !");
         }
 
         if ($sortie !== null && $etatAnnuler !== null) {
-
-//            $sortie->setEtat($etatAnnuler);
-//            $em->persist($sortie);
-//            $em->flush();
-//            $this->get('session')->getFlashBag()->add('success', 'Sortie annulée !');
-
-
+            $sortie->setEtat($etatAnnuler);
+            $em->persist($sortie);
+            $em->flush();
+            $this->get('session')->getFlashBag()->add('success', 'Sortie annulée !');
         }
         return $this->render("sortie/annuler.html.twig", [
             "sortie" => $sortie,

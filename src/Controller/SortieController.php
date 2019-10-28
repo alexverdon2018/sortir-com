@@ -208,7 +208,7 @@ class SortieController extends AbstractController
             $em->flush();
             $this->get('session')->getFlashBag()->add('success', 'Sortie annulée !');
         }
-        return $this->render("sortie/annuler.html.twig", [
+        return $this->render("sortie/li.html.twig", [
             "sortie" => $sortie,
             "sortieForm" => $sortieForm->createView()
         ]);

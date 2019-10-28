@@ -11,14 +11,53 @@
                 <hr>
             </div>
         </div>
+        {{ form_start(sortieForm) }}
         <div class="row justify-content-center">
-            <div class="col-12 col-lg-5">
-                {{ form_start(sortieForm) }}
-                {{ form_widget(sortieForm) }}
-                {{ form_end(sortieForm) }}
+            <div class="col-12 col-lg-4">
+                {{ form_row(sortieForm.nom) }}
             </div>
+            <div class="col-12 col-lg-4">
 
+            </div>
         </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+                {{ form_row(sortieForm.dateHeureDebut) }}
+            </div>
+            <div class="col-12 col-lg-4">
+                {{ form_row(sortieForm.dateLimiteInscription) }}
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+                {{ form_row(sortieForm.duree) }}
+            </div>
+            <div class="col-12 col-lg-4">
+                {{ form_row(sortieForm.nbInscriptionMax) }}
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+                {{ form_row(sortieForm.lieu) }}
+            </div>
+            <div class="col-12 col-lg-4">
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-8">
+                {{ form_row(sortieForm.commentaire) }}
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-6 col-lg-2">
+                {{ form_row(sortieForm.publier) }}
+            </div>
+            <div class="col-6 col-lg-2">
+                {{ form_row(sortieForm.enregistrer) }}
+            </div>
+        </div>
+
+        {{ form_end(sortieForm) }}
     </div>
 {% endblock %}
 

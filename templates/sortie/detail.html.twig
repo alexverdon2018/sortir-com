@@ -164,7 +164,8 @@
             {% else %}
 
                 <div class="col-lg-4">
-                    Il n'y a personnes d'inscrit pour le moment...
+                    <h5 class="mb-2">Liste des presonnes inscrites</h5>
+                    <p>Il n'y a personnes d'inscrit pour le moment...</p>
                 </div>
 
                 <div class="col">
@@ -194,17 +195,12 @@
             {% endif %}
 
         </div>
-        <hr>
+{#        Affichage de la localisation de la ville sur une carte #}
+{#        <hr>#}
+{#        <div class="row">#}
+{#            <iframe class="col" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q={{ sortie.lieu.ville.nom }}&amp;ie=UTF8&amp;&amp;output=embed"></iframe>#}
+{#        </div>#}
 
-        <div class="row my-5">
-
-            <iframe class="col" width="425" height="350" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q={{ sortie.lieu.ville.nom }}&amp;ie=UTF8&amp;&amp;output=embed"></iframe>
-
-        </div>
-
-        <div class="row">
-
-        </div>
     </div>
 
 {% endblock %}

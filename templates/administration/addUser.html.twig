@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} | Ajouter un utilisateur{% endblock %}
+
+{% block body %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <h3>Ajouter un utilisateur</h3>
+                <hr>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+
+            </div>
+        </div>
+    </div>
+
+    {{ form_start(formAddUser) }}
+
+    {{ form_widget(formAddUser) }}
+        <button class="btn btn-success" type="submit">Ajouter un utilisateur</button>
+    {{ form_end(formAddUser) }}
+
+{% endblock %}

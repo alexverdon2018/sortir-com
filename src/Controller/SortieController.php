@@ -9,6 +9,7 @@ use App\Entity\Sortie;
 use App\Entity\Utilisateur;
 use App\Form\SortieModifierType;
 use App\Form\SortieType;
+use App\Utils\MailerManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +26,7 @@ class SortieController extends AbstractController
      * Créer une sortie
      * @Route("/add", name="sortie_create")
      */
-    public function add(EntityManagerInterface $em, Request $request)
+    public function add(EntityManagerInterface $em, Request $request, \Swift_Mailer $mailer)
     {
         {
             //traiter un formulaire
@@ -43,6 +44,22 @@ class SortieController extends AbstractController
                 else{
                     $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
                     $this->addFlash('success', "La sortie a été ajoutée !");
+
+                    $message = (new \Swift_Message('Hello Email'))
+                        ->setFrom('sortir.com.pamelarose@gmail.com')
+                        ->setTo('papercut@user.com')
+                        ->setBody(
+                            $this->renderView(
+                                'emails/administration_publication.txt.twig',
+                                ['name' => 'Patrcik Richard']
+                            ),
+                            'text/html'
+                        );
+
+                    $mailer->send($message);
+
+//                    $mailerManager->sendMail("Sortir.com | Nouvelle publication",
+//                        "Sortie publiée :".$sortie->getNom(), "sortir.com.pamelarose@gmail.com", "patrick.richard2018@campus-eni.fr", "emails/administration_publication.txt.twig");
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());
@@ -56,7 +73,7 @@ class SortieController extends AbstractController
                 $em->flush();
 
 
-                return $this->redirectToRoute('liste_sorties');
+               // return $this->redirectToRoute('liste_sorties');
 
             }
             return $this->render("sortie/add.html.twig", [

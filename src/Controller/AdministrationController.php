@@ -41,7 +41,7 @@ class AdministrationController extends AbstractController
         // traiter le formulaire utilisateur
 
         $utilisateur = new Utilisateur();
-        $formAddUser = $this->createForm(UpdateUtilisateurType::class, $utilisateur, ['action' => 'add']);
+        $formAddUser = $this->createForm(UpdateUtilisateurType::class, $utilisateur, ['action' => 'addUser']);
         $formAddUser->handleRequest($request);
 
         // Setter les champs obligatoires pour la table Utilisateur

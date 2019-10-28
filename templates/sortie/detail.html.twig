@@ -45,11 +45,11 @@
                     <div class="col">{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-5">Date limite d'inscription :</div>
+                    <div class="col-5">Date limite inscription :</div>
                     <div class="col">{{ sortie.dateLimiteInscription | date('d/m/Y H:i') }}</div>
                 </div>
                 <div class="row mt-3">
-                    <div class="col-5">Nombre de places total :</div>
+                    <div class="col-5">Nb de places total :</div>
                     <div class="col">{{ sortie.nbInscriptionMax }}</div>
                 </div>
                 <div class="row mt-3">
@@ -96,9 +96,7 @@
                         {% endif %}
 
                         {% if sortie.etat.libelle == 'Publiée' or sortie.etat.libelle == 'Clôturée' %}
-                            <input type="hidden" name="_method" value="DELETE">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">
-                            <button class="btn btn-outline-danger" type="submit">Annuler</button>
+                            <a class="btn btn-outline-danger" href="{{ path('sortie_annuler',{'id':sortie.id}) }}">Annuler</a>
                         {% endif %}
                         {% if is_granted('ROLE_ADMIN') and (sortie.etat.libelle == 'Annulée' or sortie.etat.libelle == 'Terminée') %}
                             <a class="btn btn-primary" href="">Archiver</a>

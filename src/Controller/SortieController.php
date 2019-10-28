@@ -56,7 +56,7 @@ class SortieController extends AbstractController
                         ->setTo($lesMailsAdmins)
                         ->setBody(
                             $this->renderView(
-                                'emails/administration_publication.html.twig',
+                                'emails/publication_utilisateur.html.twig',
                                 ['sortie' => $sortie,
                                 'utilisateur' => $this->getUser()]
                             ),
@@ -71,12 +71,12 @@ class SortieController extends AbstractController
                     foreach ($users as $user) {
                         array_push($lesMailsUserSite, $admin->getMail());
                     }
-                    $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
-                        ->setFrom('sortir.com.pamelarose@gmail.com')
+                    $message = (new \Swift_Message('sortir.com | (Admin) Nouvelle publication'))
+                        ->setFrom('noreply@sortir.com')
                         ->setTo($lesMailsUserSite)
                         ->setBody(
                             $this->renderView(
-                                'emails/confirm.html.twig',
+                                'emails/publication_utilisateur.html.twig',
                                 ['sortie' => $sortie,
                                     'utilisateur' => $this->getUser()]
                             ),
@@ -227,7 +227,7 @@ class SortieController extends AbstractController
      * Publier une sortie
      * @Route("/publier/{id}", name="sortie_publier")
      */
-    public function publier($id, EntityManagerInterface $emi, Request $request) {
+    public function publier($id, EntityManagerInterface $em, Request $request, \Swift_Mailer $mailer) {
         $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
         $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $referer = $request->headers->get('referer');
@@ -237,6 +237,46 @@ class SortieController extends AbstractController
             $sortie->setEtat($etat);
             $emi->persist($sortie);
             $emi->flush();
+
+            //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+            $lesAdmins = $em->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
+            $lesMailsAdmins = [];
+            foreach ($lesAdmins as $admin) {
+                array_push($lesMailsAdmins, $admin->getMail());
+            }
+            $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
+                ->setFrom('noreply@sortir.com')
+                ->setTo($lesMailsAdmins)
+                ->setBody(
+                    $this->renderView(
+                        'emails/publication_utilisateur.html.twig',
+                        ['sortie' => $sortie,
+                            'utilisateur' => $this->getUser()]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+
+            //Envoie un mail à tous les utilisateurs qui ont le même site que user
+            $userSite = $this->getUser()->getSite();
+            $users = $em->getRepository(Utilisateur::class)->findBy(['site' => $userSite]);
+            $lesMailsUserSite = [];
+            foreach ($users as $user) {
+                array_push($lesMailsUserSite, $admin->getMail());
+            }
+            $message = (new \Swift_Message('sortir.com | (Admin) Nouvelle publication'))
+                ->setFrom('noreply@sortir.com')
+                ->setTo($lesMailsUserSite)
+                ->setBody(
+                    $this->renderView(
+                        'emails/publication_utilisateur.html.twig',
+                        ['sortie' => $sortie,
+                            'utilisateur' => $this->getUser()]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+
             $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
             return $this->redirect($referer);
 

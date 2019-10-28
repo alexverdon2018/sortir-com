@@ -104,12 +104,12 @@ class ListeSortiesController extends AbstractController
 
         $mailOrganisateur = $organisateur->getMail();
 
-        $message = (new \Swift_Message('sortir.com | Notification : Inscription'))
-            ->setFrom('sortir.com.pamelarose@gmail.com')
+        $message = (new \Swift_Message('sortir.com | Inscription'))
+            ->setFrom('noreply@sortir.com')
             ->setTo($mailOrganisateur)
             ->setBody(
                 $this->renderView(
-                    'emails/administration_modification.html.twig',
+                    'emails/inscription_sortie.html.twig',
                     ['sortie' => $sortie,
                         'utilisateur' => $this->getUser()]
                 ),
@@ -149,12 +149,12 @@ class ListeSortiesController extends AbstractController
 
             $mailOrganisateur = $organisateur->getMail();
 
-            $message = (new \Swift_Message('sortir.com | Notification : désistement'))
-                ->setFrom('sortir.com.pamelarose@gmail.com')
+            $message = (new \Swift_Message('sortir.com | Désistement'))
+                ->setFrom('noreply@sortir.compu')
                 ->setTo($mailOrganisateur)
                 ->setBody(
                     $this->renderView(
-                        'emails/administration_modification.html.twig',
+                        'emails/desistement_sortie.html.twig',
                         ['sortie' => $sortie,
                             'utilisateur' => $this->getUser()]
                     ),
@@ -168,26 +168,6 @@ class ListeSortiesController extends AbstractController
 
         $this->get('session')->getFlashBag()->add('danger', 'Erreur lors de la tentative de se désister de cette sortie.');
         return $this->redirect($referer);
-    }
-
-    /**
-     * @Route("/publier/{id}", name="liste_publier_sortie")
-     */
-    public function publier($id, EntityManagerInterface $emi) {
-        $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
-        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
-
-        if ($sortie !== null && $etat !== null) {
-
-            $sortie->setEtat($etat);
-            $emi->persist($sortie);
-            $emi->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
-            return $this->redirectToRoute('liste_sorties');
-
-        }
-
-        return $this->redirectToRoute('liste_sorties');
     }
 
     /**

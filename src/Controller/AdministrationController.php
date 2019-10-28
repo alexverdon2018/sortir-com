@@ -8,8 +8,11 @@ use App\Entity\Utilisateur;
 use App\Entity\Ville;
 use App\Form\UpdateUtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+
+
 
 
 class AdministrationController extends AbstractController
@@ -30,10 +33,27 @@ class AdministrationController extends AbstractController
     }
 
     /**
+     * Créer un utilisateur
      * @Route("/admin/addUser", name="admin_addUser")
      */
-    public function addUser() {
-        $formAddUser = $this->createForm(UpdateUtilisateurType::class);
+    public function addUser(EntityManagerInterface $em, Request $request) {
+
+        // traiter le formulaire utilisateur
+
+        $utilisateur = new Utilisateur();
+        $formAddUser = $this->createForm(UpdateUtilisateurType::class, $utilisateur);
+        $formAddUser->handleRequest($request);
+
+        // Setter les champs obligatoires pour la table Utilisateur
+        $utilisateur->setAdmin(0);
+        $utilisateur->setActif(1);
+
+        if($formAddUser->isSubmitted() && $formAddUser->isValid()){
+        //sauvegarder les données dans la base
+            $em->persist($utilisateur);
+            $em->flush();
+        }
+
         return $this->render('administration/addUser.html.twig', [
             'formAddUser' => $formAddUser->createView()
         ]);

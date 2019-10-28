@@ -5,23 +5,31 @@
 {% block body %}
 
     <div class="container-fluid">
-        <div class="row">
+        <div class="row mt-3">
             <div class="col">
                 <h3>Ajouter un utilisateur</h3>
                 <hr>
             </div>
         </div>
+        {{ form_start(formAddUser) }}
         <div class="row">
             <div class="col">
-
+                {{ form_row(formAddUser.nom) }}
+                {{ form_row(formAddUser.mail) }}
+            </div>
+            <div class="col">
+                {{ form_row(formAddUser.prenom) }}
+                {{ form_row(formAddUser.telephone) }}
             </div>
         </div>
+        <div class="row">
+            <div class="col">
+                <button class="btn btn-success" type="submit">Ajouter un utilisateur</button>
+            </div>
+        </div>
+        {{ form_end(formAddUser) }}
     </div>
 
-    {{ form_start(formAddUser) }}
 
-    {{ form_widget(formAddUser) }}
-        <button class="btn btn-success" type="submit">Ajouter un utilisateur</button>
-    {{ form_end(formAddUser) }}
 
 {% endblock %}

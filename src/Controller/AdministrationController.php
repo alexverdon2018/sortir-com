@@ -33,7 +33,8 @@ class AdministrationController extends AbstractController
      * @Route("/admin/addUser", name="admin_addUser")
      */
     public function addUser() {
-        $formAddUser = $this->createForm(UpdateUtilisateurType::class);
+        $utilisateur = new Utilisateur();
+        $formAddUser = $this->createForm(UpdateUtilisateurType::class, $utilisateur, ['action' => 'add']);
         return $this->render('administration/addUser.html.twig', [
             'formAddUser' => $formAddUser->createView()
         ]);

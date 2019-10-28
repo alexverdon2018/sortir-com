@@ -30,7 +30,7 @@ class UpdateUtilisateurType extends AbstractType
                 'label' => 'Mail :'
             ]);
 
-        if($options['action'] != 'add') {
+        if($options['action'] != 'addUser') {
             $builder->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [

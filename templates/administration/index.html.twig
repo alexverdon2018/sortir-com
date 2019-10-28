@@ -40,8 +40,12 @@
                                     <td>{{ utilisateur.mail }}</td>
                                     <td>{{ utilisateur.telephone }}</td>
                                     <td>
-                                        <a href="">Désactiver</a>
-                                        <a href="">- Supprimer</a>
+                                        <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
+
+{#                                        <input type="hidden" name="_method" value="DELETE">#}
+{#                                        <input type="hidden" name="_token" value="{{ csrf_token('utilisateur_delete'~utilisateur.id) }}">#}
+{#                                        <button class="btn btn-outline-danger" type="submit">Supprimer</button>#}
+                                        <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
                                     </td>
                                 </tr>
                             {% endfor %}

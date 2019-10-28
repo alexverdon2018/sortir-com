@@ -19,7 +19,7 @@
                 {{ form_widget(sortieForm) }}
                 {% if app.user.id == sortie.organisateur.id  %}
 {#                    <button class="btn btn-danger" type="submit">Confirmer l'annulation</button>#}
-                    <a class="btn btn-outline-danger" href="{{ path('sortie_annuler',{'id':sortie.id}) }}">Confirmer l'annulation</a>
+                    <button class="btn btn-outline-danger" type="submit">Confirmer l'annulation</button>
                 {% endif %}
                 {{ form_end(sortieForm) }}
             </div>

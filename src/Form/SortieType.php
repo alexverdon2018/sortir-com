@@ -23,7 +23,7 @@ class  SortieType extends AbstractType
     {
 
 
-        if ($options['action'] == 'annuler') {
+        if ($options['form_annuler'] == 'annuler') {
             $builder->add('motif', TextareaType::class, [
                     'label' => 'Motif :'
             ]);
@@ -83,6 +83,7 @@ class  SortieType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Sortie::class,
+            'form_annuler' => null
         ]);
     }
 }

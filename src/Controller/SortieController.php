@@ -52,11 +52,11 @@ class SortieController extends AbstractController
                         array_push($lesMailsAdmins, $admin->getMail());
                     }
                     $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
-                        ->setFrom('sortir.com.pamelarose@gmail.com')
+                        ->setFrom('noreply@sortir.com')
                         ->setTo($lesMailsAdmins)
                         ->setBody(
                             $this->renderView(
-                                'emails/administration_modification.html.twig',
+                                'emails/administration_publication.html.twig',
                                 ['sortie' => $sortie,
                                 'utilisateur' => $this->getUser()]
                             ),
@@ -95,7 +95,6 @@ class SortieController extends AbstractController
                 $em->persist($sortie);
                 $em->flush();
 
-
                 return $this->redirectToRoute('liste_sorties');
 
             }
@@ -133,7 +132,7 @@ class SortieController extends AbstractController
      * Modifier une sortie
      * @Route("/{id}/edit", name="sortie_edit", requirements={"id"="\d+"})
      */
-    public function edit($id, Request $request, EntityManagerInterface $em) {
+    public function edit($id, Request $request, EntityManagerInterface $em, \Swift_Mailer $mailer) {
 
         //traiter un formulaire
         $sortie = $em->getRepository(Sortie::class)->find($id);
@@ -152,6 +151,28 @@ class SortieController extends AbstractController
             $em->persist($sortie);
             $em->flush();
             $this->addFlash('success', "La sortie a été modifié");
+
+
+            //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+            $lesAdmins = $em->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
+            $lesMailsAdmins = [];
+            foreach ($lesAdmins as $admin) {
+                array_push($lesMailsAdmins, $admin->getMail());
+            }
+            $message = (new \Swift_Message('sortir.com | Modification sortie'))
+                ->setFrom('noreply@sortir.com')
+                ->setTo($lesMailsAdmins)
+                ->setBody(
+                    $this->renderView(
+                        'emails/administration_modification.html.twig',
+                        ['sortie' => $sortie,
+                            'utilisateur' => $this->getUser()]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+
+
             return $this->redirectToRoute("sortie_detail",
                 ['id' => $sortie->getId()]);
 

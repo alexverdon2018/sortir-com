@@ -78,7 +78,7 @@ class SortieController extends AbstractController
                 $em->flush();
 
 
-               // return $this->redirectToRoute('liste_sorties');
+                return $this->redirectToRoute('liste_sorties');
 
             }
             return $this->render("sortie/add.html.twig", [

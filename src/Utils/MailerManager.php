@@ -6,17 +6,13 @@ namespace App\Utils;
 
 class MailerManager
 {
-    public function sendMail($subject, $content, $from, $to, $twig) {
-        $message = (new \Swift_Message($subject))
-            ->setFrom($from) // send@example.com
-            ->setTo( $to) // recipient@example.com
-            ->setBody(
-                $this->renderView(
-                    $twig,
-                    ['name' => "nom"]
-                ),
-                'text/html'
-            );
+    public function sendMail($from, $to, $twig, $params) {
+        $mailer = new \Swift_Mailer;
+        $message = (new \Swift_Message('Hello Email'))
+            ->setFrom($from)
+            ->setTo( $to)
+            ->setBody($this->renderView($twig, $params),'text/html');
 
+        $mailer->send($message);
     }
-}
+};

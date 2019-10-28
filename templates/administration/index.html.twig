@@ -55,7 +55,7 @@
                                             {% if utilisateur.actif == 1 %}
                                             <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
                                             {% else %}
-                                                <a href="">Activer</a>
+                                                <a href="{{ path('utilisateur_activer', {'id':utilisateur.id}) }}">Activer</a>
                                             {% endif %}
                                             <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
                                         </td>

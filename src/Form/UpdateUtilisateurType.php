@@ -2,7 +2,10 @@
 
 namespace App\Form;
 
+use App\Entity\Lieu;
+use App\Entity\Site;
 use App\Entity\Utilisateur;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -28,6 +31,11 @@ class UpdateUtilisateurType extends AbstractType
             ])
             ->add('mail', EmailType::class, [
                 'label' => 'Mail :'
+            ])
+            ->add('site', EntityType::class, [
+            'label' => 'Site :',
+            'class' => Site::class,
+            'choice_label' => 'nom'
             ]);
 
         if($options['action'] != 'addUser') {

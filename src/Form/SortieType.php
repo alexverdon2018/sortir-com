@@ -73,7 +73,7 @@ class  SortieType extends AbstractType
                 ->add('publier', SubmitType::class, [
                     'label' => 'Publier la sortie',
                     'attr' => [
-                        'class' => 'btn btn-lg btn-success'
+                        'class' => 'btn btn-success'
                     ]
                 ]);
         }

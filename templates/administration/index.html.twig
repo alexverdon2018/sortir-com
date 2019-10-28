@@ -21,33 +21,50 @@
         <div class="col-8">
             <div class="tab-content" id="v-pills-tabContent">
                 <div class="tab-pane fade show active" id="v-pills-utilisateurs">
-                    <a class="btn btn-success" href="{{ path('admin_addUser') }}">Ajouter un utilisateur</a>
-                    <br>
-                    <br>
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>Prénom Nom</th>
-                                <th>Mail</th>
-                                <th>Téléphone</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for utilisateur in utilisateurs %}
+                    <div class="row">
+                        <div class="col-lg-4 border-right">
+                            <input class="form-control" type="text" id="searchUser" placeholder="Chercher un utilisateur...">
+                        </div>
+                        <div class="col">
+                            <a class="btn btn-success" href="{{ path('admin_addUser') }}">Ajouter un utilisateur</a>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
                                 <tr>
-                                    <td>{{ utilisateur.prenom }} {{ utilisateur.nom }}</td>
-                                    <td>{{ utilisateur.mail }}</td>
-                                    <td>{{ utilisateur.telephone }}</td>
-                                    <td>
-                                        <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
-                                        
-                                        <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}" onsubmit="return confirm('Confirmation de la suppression ?');">- Supprimer</a>
-                                    </td>
+
+                                    <th>Prénom Nom</th>
+                                    <th>Mail</th>
+                                    <th>Téléphone</th>
+                                    <th>Actions</th>
                                 </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                </thead>
+                                <tbody>
+                                {% for utilisateur in utilisateurs %}
+                                    {% if utilisateur.actif == 1 %}
+                                       <tr>
+                                    {% else %}
+                                        <tr class="table-danger">
+                                    {% endif %}
+                                        <td>{{ utilisateur.prenom }} {{ utilisateur.nom }}</td>
+                                        <td>{{ utilisateur.mail }}</td>
+                                        <td>{{ utilisateur.telephone }}</td>
+                                        <td>
+                                            {% if utilisateur.actif == 1 %}
+                                            <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
+                                            {% else %}
+                                                <a href="">Activer</a>
+                                            {% endif %}
+                                            <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="tab-pane fade" id="v-pills-villes">
                     <table class="table table-striped">

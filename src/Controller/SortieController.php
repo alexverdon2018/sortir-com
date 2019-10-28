@@ -45,21 +45,26 @@ class SortieController extends AbstractController
                     $etat = $em->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
                     $this->addFlash('success', "La sortie a été ajoutée !");
 
-                    $message = (new \Swift_Message('Hello Email'))
+                    //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+                    $lesAdmins = $em->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
+                    $lesMailsAdmins = [];
+                    foreach ($lesAdmins as $admin) {
+                        array_push($lesMailsAdmins, $admin->getMail());
+                    }
+                    $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
                         ->setFrom('sortir.com.pamelarose@gmail.com')
-                        ->setTo('papercut@user.com')
+                        ->setTo($lesMailsAdmins)
                         ->setBody(
                             $this->renderView(
-                                'emails/administration_publication.txt.twig',
-                                ['name' => 'Patrcik Richard']
+                                'emails/administration_modification.html.twig',
+                                ['sortie' => $sortie,
+                                'utilisateur' => $this->getUser()]
                             ),
                             'text/html'
                         );
-
                     $mailer->send($message);
 
-//                    $mailerManager->sendMail("Sortir.com | Nouvelle publication",
-//                        "Sortie publiée :".$sortie->getNom(), "sortir.com.pamelarose@gmail.com", "patrick.richard2018@campus-eni.fr", "emails/administration_publication.txt.twig");
+
                 }
 
                 $organisateur = $em->getRepository(Utilisateur::class)->find($this->getUser()->getId());

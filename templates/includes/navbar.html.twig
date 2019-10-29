@@ -20,7 +20,7 @@
         <ul class="navbar-nav mr-0 text-right">
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item mr-2">
-                    <a class="btn btn-secondary" href="{{ path('admin') }}">Admin</a>
+                    <a class="btn btn-secondary" href="{{ path('admin', {'option':'Utilisateurs'}) }}">Admin</a>
                 </li>
             {% endif %}
             {% if is_granted('ROLE_USER') %}

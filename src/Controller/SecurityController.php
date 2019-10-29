@@ -43,6 +43,8 @@ class SecurityController extends AbstractController
      */
     public function mdp_oublie() {
 
+        //TODO
+
         return $this->render('security/mdp_oublie.html.twig');
     }
 

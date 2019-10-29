@@ -38,9 +38,9 @@ class UpdateUtilisateurType extends AbstractType
             'choice_label' => 'nom'
             ]);
 
-        if($options['action'] != 'addUser') {
+        if($options['form_action'] != 'addUser') {
             $builder->add('password', RepeatedType::class, [
-                'type' => TextType::class,
+                'type' => PasswordType::class,
                 'first_options' => [
                     'label' => 'Mot de passe :'
                 ],
@@ -55,6 +55,7 @@ class UpdateUtilisateurType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
+            'form_action' => null
         ]);
     }
 }

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification d'une Ville | {{ parent() }}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid pt-3">
+        <div class="row">
+            <div class="col">
+                <h3>Modification d'une Ville</h3>
+                <hr>
+            </div>
+        </div>
+        {{ form_start(villeForm) }}
+        <div class="row justify-content-center">
+            <div class="col-12 col-md-6 col-lg-4">
+                {{ form_row(villeForm.nom) }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+                {{ form_row(villeForm.codePostal) }}
+            </div>
+        </div>
+                    <div class="col-6 col-md-4 col-lg-2 text-center">
+                        <button class="btn btn-success" type="submit">Modifier</button>
+                    </div>
+    </div>
+    {{ form_end(villeForm) }}
+    </div>
+{% endblock %}
+

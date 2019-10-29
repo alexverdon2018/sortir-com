@@ -57,7 +57,7 @@ class SecurityController extends AbstractController
 
             $utilisateur->setPassword($utilisateur->getPrenom() . $utilisateur->getNom());
 
-            $message = (new \Swift_Message('sortir.com | Inscription'))
+            $message = (new \Swift_Message('sortir.com | Mot de Passe oublié'))
                 ->setFrom('noreply@sortir.com')
                 ->setTo($mail)
                 ->setBody(

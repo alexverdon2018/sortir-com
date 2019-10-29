@@ -28,25 +28,21 @@ class VilleLieuFixture extends Fixture
         $faker = Faker\Factory::create('fr_FR');
         for($i = 1; $i <= 5; $i++){
             $city = new Ville();
-            $city->setIdVille($i);
             $city->setNom($faker->city);
             $city->setCodePostal($faker->postcode);
 
             $lieu = new Lieu();
             $lieu->setNom($faker->streetName)
-                ->setIdLieu(random_int ( 1, 1000 ))
                 ->setAdresse($faker->streetAddress)
                 ->setVille($city);
 
             $lieu2 = new Lieu();
             $lieu2->setNom($faker->streetName)
-                ->setIdLieu(random_int ( 1, 1000 ))
                 ->setAdresse($faker->streetAddress)
                 ->setVille($city);
 
             $lieu3 = new Lieu();
             $lieu3->setNom($faker->streetName)
-                ->setIdLieu(random_int ( 1, 1000 ))
                 ->setAdresse($faker->streetAddress)
                 ->setVille($city);
 

@@ -19,11 +19,6 @@ class Ville
     private $id;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $idVille;
-
-    /**
      * @ORM\Column(type="string", length=150)
      */
     private $nom;

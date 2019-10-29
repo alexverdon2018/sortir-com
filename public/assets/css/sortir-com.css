@@ -21,4 +21,7 @@ input, button, submit {
 .faux-lien {
     padding: 0 !important;
 }
+.faux-lien:hover {
+    text-decoration: underline;
+}
 

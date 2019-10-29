@@ -7,29 +7,55 @@ use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Utilisateur;
 use App\Entity\Ville;
+use App\Form\SiteType;
 use App\Form\UpdateUtilisateurType;
+use App\Form\VilleType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 
 class AdministrationController extends AbstractController
 {
     /**
-     * @Route("/admin", name="admin")
+     * @Route("/admin/{option}", name="admin")
      */
-    public function admin(EntityManagerInterface $emi)
+    public function admin($option, EntityManagerInterface $emi, Request $request)
     {
         $utilisateurs = $emi->getRepository(Utilisateur::class)->findAll();
         $villes = $emi->getRepository(Ville::class)->findAll();
         $sites = $emi->getRepository(Site::class)->findAll();
+
+        $newVille = new Ville();
+        $formVille = $this->createForm(VilleType::class, $newVille);
+        $formVille->handleRequest($request);
+
+        $newSite = new Site();
+        $formSite = $this->createForm(SiteType::class, $newSite);
+        $formSite->handleRequest($request);
+
+        if ($formVille->isSubmitted() && $formVille->isValid()) {
+            $emi->persist($newVille);
+            $emi->flush();
+            return $this->redirectToRoute('admin', ['option' => 'Villes']);
+        }
+
+        if ($formSite->isSubmitted() && $formSite->isValid()) {
+            $emi->persist($newSite);
+            $emi->flush();
+            return $this->redirectToRoute('admin', ['option' => 'Sites']);
+        }
+
         return $this->render('administration/index.html.twig', [
             'utilisateurs' => $utilisateurs,
             'villes' => $villes,
-            'sites' => $sites
+            'sites' => $sites,
+            'formVille' => $formVille->createView(),
+            'formSite' => $formSite->createView(),
+            'onglet_visible' => $option
         ]);
     }
 
@@ -37,18 +63,23 @@ class AdministrationController extends AbstractController
      * Créer un utilisateur
      * @Route("/admin/addUser", name="admin_addUser")
      */
-    public function addUser(EntityManagerInterface $em, Request $request) {
+    public function addUser(EntityManagerInterface $em, Request $request, UserPasswordEncoderInterface $passwordEncoder) {
 
         // traiter le formulaire utilisateur
 
         $utilisateur = new Utilisateur();
-        $formAddUser = $this->createForm(UpdateUtilisateurType::class, $utilisateur, ['action' => 'addUser']);
+        $formAddUser = $this->createForm(UpdateUtilisateurType::class, $utilisateur, ['form_action' => 'addUser']);
         $formAddUser->handleRequest($request);
 
         // Setter les champs obligatoires pour la table Utilisateur
         $utilisateur->setAdmin(0);
         $utilisateur->setActif(1);
-        $utilisateur->setPassword($utilisateur->getNom(). "" . $utilisateur->getPrenom());
+        $utilisateur->setPassword(
+            $passwordEncoder->encodePassword(
+                $utilisateur,
+                $utilisateur->getPrenom().$utilisateur->getNom()
+            )
+        );
 
         if($formAddUser->isSubmitted() && $formAddUser->isValid()){
         //sauvegarder les données dans la base

@@ -13,14 +13,30 @@
     <div class="row">
         <div class="col-2">
             <div class="nav flex-column nav-pills" id="v-pills-tab" role="tablist" aria-orientation="vertical">
-                <a class="nav-link active" id="v-pills-utilisateurs-tab" data-toggle="pill" href="#v-pills-utilisateurs">Utilisateurs</a>
-                <a class="nav-link" id="v-pills-villes-tab" data-toggle="pill" href="#v-pills-villes">Villes</a>
-                <a class="nav-link" id="v-pills-sites-tab" data-toggle="pill" href="#v-pills-sites">Sites</a>
+                {% if onglet_visible == 'Utilisateurs' %}
+                    <a class="nav-link active" id="v-pills-utilisateurs-tab" data-toggle="pill" href="#v-pills-utilisateurs">Utilisateurs</a>
+                {% else %}
+                    <a class="nav-link" id="v-pills-utilisateurs-tab" data-toggle="pill" href="#v-pills-utilisateurs">Utilisateurs</a>
+                {% endif %}
+                {% if onglet_visible == 'Villes' %}
+                    <a class="nav-link active" id="v-pills-villes-tab" data-toggle="pill" href="#v-pills-villes">Villes</a>
+                {% else %}
+                    <a class="nav-link" id="v-pills-villes-tab" data-toggle="pill" href="#v-pills-villes">Villes</a>
+                {% endif %}
+                {% if onglet_visible == 'Sites' %}
+                    <a class="nav-link active" id="v-pills-sites-tab" data-toggle="pill" href="#v-pills-sites">Sites</a>
+                {% else %}
+                    <a class="nav-link" id="v-pills-sites-tab" data-toggle="pill" href="#v-pills-sites">Sites</a>
+                {% endif %}
             </div>
         </div>
         <div class="col-8">
             <div class="tab-content" id="v-pills-tabContent">
-                <div class="tab-pane fade show active" id="v-pills-utilisateurs">
+                {% if onglet_visible == 'Utilisateurs' %}
+                    <div class="tab-pane fade show active" id="v-pills-utilisateurs">
+                {% else %}
+                    <div class="tab-pane fade show" id="v-pills-utilisateurs">
+                {% endif %}
                     <div class="row">
                         <div class="col-lg-4 border-right">
                             <input class="form-control" type="text" id="searchUser" placeholder="Chercher un utilisateur...">
@@ -66,37 +82,56 @@
                         </div>
                     </div>
                 </div>
-                <div class="tab-pane fade" id="v-pills-villes">
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th>Nom</th>
-                            <th>Code postal</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for ville in villes %}
-                            <tr>
-                                <td>{{ ville.nom }}</td>
-                                <td>{{ ville.codePostal }}</td>
-                                <td>
-                                    <a href="">Modifier</a>
-                                    <a href="">- Supprimer</a>
-                                </td>
-                            </tr>
-                        {% endfor %}
-                            <tr>
-                                <td>Formulaire pour ajouter</td>
-                                <td>une ville</td>
-                                <td>
-                                    <a href="">Ajouter</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                {% if onglet_visible == 'Villes' %}
+                    <div class="tab-pane fade show active" id="v-pills-villes">
+                {% else %}
+                    <div class="tab-pane fade show" id="v-pills-villes">
+                {% endif %}
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <input class="form-control" type="text" id="searchUser" placeholder="Chercher une ville...">
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col">
+                            <table class="table table-striped">
+                                <thead class="thead-dark">
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Code postal</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for ville in villes %}
+                                    <tr>
+                                        <td>{{ ville.nom }}</td>
+                                        <td>{{ ville.codePostal }}</td>
+                                        <td>
+                                            <a href="">Modifier</a>
+                                            <a href="">- Supprimer</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                {{ form_start(formVille) }}
+                                <tr>
+                                    <td>{{ form_widget(formVille.nom) }}</td>
+                                    <td>{{ form_widget(formVille.codePostal) }}</td>
+                                    <td>
+                                        <button class="faux-lien" type="submit">Ajouter</button>
+                                    </td>
+                                </tr>
+                                {{ form_end(formVille) }}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
-                <div class="tab-pane fade" id="v-pills-sites">
+                {% if onglet_visible == 'Sites' %}
+                    <div class="tab-pane fade show active" id="v-pills-sites">
+                {% else %}
+                    <div class="tab-pane fade show" id="v-pills-sites">
+                {% endif %}
                     <table class="table table-striped">
                         <thead class="thead-dark">
                         <tr>

@@ -42,7 +42,7 @@ class UpdateUtilisateurType extends AbstractType
             $builder->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'label' => 'Mot de passe :'
+                    'label' => 'Nouveau mot de passe :'
                 ],
                 'second_options' => [
                     'label' => 'Confirmation :'

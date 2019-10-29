@@ -8,12 +8,14 @@
         <div class="row">
             <div class="col">
                 <h2>Détail de la sortie</h2>
-                <hr>
+            </div>
+            <div class="col-2 text-right">
+                <a class="btn btn-outline-secondary mb-2" href="{{ path("liste_sorties", {'id' : sortie.id}) }}">Retour</a>
             </div>
         </div>
+        <hr>
         <div class="row">
             <div class="col">
-                <a class="btn btn-outline-secondary mb-2" href="{{ path("liste_sorties", {'id' : sortie.id}) }}">Retour</a>
                 <p>Etat :
                     {% if sortie.etat.libelle == 'Brouillon' %}
                         <span><b>Brouillon</b></span>
@@ -107,6 +109,7 @@
         {% endif %}
 
         <hr>
+
         <div class="row">
 
             {% if rejoindres|length > 0 %}
@@ -147,12 +150,12 @@
 
                         {% if jeSuisInscrit %}
                             <br>
-                            <a class="btn btn-warning" href="{{ path('desister_sortie',{'id':sortie.id}) }}">Se désister</a>
+                            <a class="btn btn-warning mb-4" href="{{ path('desister_sortie',{'id':sortie.id}) }}">Se désister</a>
                             <br>
 
                         {% else %}
                             <br>
-                            <a class="btn btn-primary" href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}">S'inscrire</a>
+                            <a class="btn btn-primary mb-4" href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}">S'inscrire</a>
                             <br>
                         {% endif %}
 
@@ -178,11 +181,11 @@
                         {% endfor %}
 
                         {% if jeSuisInscrit %}
-                            <a class="btn btn-warning" href="{{ path('desister_sortie',{'id':sortie.id}) }}">Se désister</a>
+                            <a class="btn btn-warning mb-4" href="{{ path('desister_sortie',{'id':sortie.id}) }}">Se désister</a>
                             <br>
 
                         {% else %}
-                            <a class="btn btn-primary" href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}">S'inscrire</a>
+                            <a class="btn btn-primary mb-4" href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}">S'inscrire</a>
                             <br>
                         {% endif %}
 
@@ -193,6 +196,7 @@
             {% endif %}
 
         </div>
+
 {#        Affichage de la localisation de la ville sur une carte #}
 {#        <hr>#}
 {#        <div class="row">#}

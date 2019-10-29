@@ -21,7 +21,7 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 class AdministrationController extends AbstractController
 {
     /**
-     * @Route("/admin/{option}", name="admin")
+     * @Route("/admin/option/{option}", name="admin")
      */
     public function admin($option, EntityManagerInterface $emi, Request $request)
     {

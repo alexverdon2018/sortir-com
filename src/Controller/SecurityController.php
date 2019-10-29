@@ -37,5 +37,13 @@ class SecurityController extends AbstractController
     {
         throw new \Exception('This method can be blank - it will be intercepted by the logout key on your firewall');
     }
-    
+
+    /**
+     * @Route("/mdp_oublie", name="mdp_oublie")
+     */
+    public function mdp_oublie() {
+
+        return $this->render('security/mdp_oublie.html.twig');
+    }
+
 }

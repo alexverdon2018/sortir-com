@@ -12,6 +12,10 @@
                     <a class="nav-link text-light" href="{{ path('liste_sorties') }}">Les sorties</a>
                 </li>
             </ul>
+        {% else %}
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item"></li>
+            </ul>
         {% endif %}
         <ul class="navbar-nav mr-0 text-right">
             {% if is_granted('ROLE_ADMIN') %}
@@ -25,7 +29,7 @@
                 <li class="nav-item mr-2">
                     <a class="btn btn-info" href="{{ path('profil_detail', {'id':app.user.id}) }}">Mon Profil</a>
                 </li>
-                <li class="nav-item mr-2">
+                <li class="nav-item">
                     <a class="btn btn-danger" href="{{ path('app_logout') }}">Déconnexion</a>
                 </li>
             {% else %}

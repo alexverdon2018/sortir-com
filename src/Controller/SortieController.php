@@ -178,7 +178,8 @@ class SortieController extends AbstractController
 
         }
         return $this->render("sortie/edit.html.twig", [
-            "sortieForm" => $sortieForm->createView()
+            'sortieForm' => $sortieForm->createView(),
+            'sortie' => $sortie
         ]);
 
     }
@@ -227,7 +228,7 @@ class SortieController extends AbstractController
      * Publier une sortie
      * @Route("/publier/{id}", name="sortie_publier")
      */
-    public function publier($id, EntityManagerInterface $em, Request $request, \Swift_Mailer $mailer) {
+    public function publier($id, EntityManagerInterface $emi, Request $request, \Swift_Mailer $mailer) {
         $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
         $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $referer = $request->headers->get('referer');
@@ -239,7 +240,7 @@ class SortieController extends AbstractController
             $emi->flush();
 
             //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
-            $lesAdmins = $em->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
+            $lesAdmins = $emi->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
             $lesMailsAdmins = [];
             foreach ($lesAdmins as $admin) {
                 array_push($lesMailsAdmins, $admin->getMail());
@@ -259,7 +260,7 @@ class SortieController extends AbstractController
 
             //Envoie un mail à tous les utilisateurs qui ont le même site que user
             $userSite = $this->getUser()->getSite();
-            $users = $em->getRepository(Utilisateur::class)->findBy(['site' => $userSite]);
+            $users = $emi->getRepository(Utilisateur::class)->findBy(['site' => $userSite]);
             $lesMailsUserSite = [];
             foreach ($users as $user) {
                 array_push($lesMailsUserSite, $admin->getMail());

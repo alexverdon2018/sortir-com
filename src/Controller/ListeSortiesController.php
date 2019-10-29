@@ -8,6 +8,8 @@ use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Utilisateur;
 use App\Entity\Ville;
+use App\Form\SiteType;
+use App\Form\VilleType;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Integer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +27,7 @@ class ListeSortiesController extends AbstractController
     {
         // LES ETATS
         $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
-        $etatPubliees = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Publiée']);
+        $etatPubliee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
         $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
         $etatEncours = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'En cours']);
@@ -36,13 +38,15 @@ class ListeSortiesController extends AbstractController
         $villes = $emi->getRepository(Ville::class)->findAll();
 
         // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
-        $sortiesPubliees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatPubliees]);
+        $sortiesPubliees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatPubliee]);
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
         $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
         $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
         $sortiesEncours = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatEncours]);
         $sortiesTerminees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatTerminee]);
         $sortiesArchivees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatArchive]);
+
+        $sortiesPhone = $emi->getRepository(Sortie::class)->findBy(['etat' => [$etatCreee, $etatPubliee, $etatCloture, $etatEncours, $etatTerminee], 'site' => $this->getUser()->getSite()]);
 
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
 
@@ -56,7 +60,8 @@ class ListeSortiesController extends AbstractController
             'sortiesTerminee' => $sortiesTerminees,
             'sortiesArchivees' => $sortiesArchivees,
             'rejoindres' => $rejoindres,
-            'villes' => $villes
+            'villes' => $villes,
+            'sortiesPhone' => $sortiesPhone
         ]);
     }
 
@@ -200,5 +205,96 @@ class ListeSortiesController extends AbstractController
             'controller_name' => 'ListeSortiesController',
             'sites' => $sites
         ]);
+    }
+
+    /**
+     * Supprimer une ville
+     * @Route("/deleteVille/{id}", name="ville_delete")
+     */
+    public function deleteVille(Request $request, EntityManagerInterface $em, $id) {
+
+        $ville = $em->getRepository(Ville::class)->find($id);
+
+        if($ville == null) {
+            throw $this->createNotFoundException('La ville est inconnu ou déjà supprimée');
+        }
+        $em->remove($ville);
+        $em->flush();
+        $this->addFlash('success', 'La ville est supprimé');
+
+        return $this->redirectToRoute("admin");
+    }
+
+    /**
+     * Supprimer un Site
+     * @Route("/deleteSite/{id}", name="site_delete")
+     */
+    public function deleteSite(Request $request, EntityManagerInterface $em, $id) {
+
+        $site = $em->getRepository(Site::class)->find($id);
+
+        if($site == null) {
+            throw $this->createNotFoundException('Le Site est inconnu ou déjà supprimée');
+        }
+        $em->remove($site);
+        $em->flush();
+        $this->addFlash('success', 'Le Site est supprimé');
+
+        return $this->redirectToRoute("admin");
+    }
+
+    /**
+     * Modifier une ville
+     * @Route("/{id}/editVille", name="ville_edit", requirements={"id"="\d+"})
+     */
+    public function editVille($id, Request $request, EntityManagerInterface $em, \Swift_Mailer $mailer) {
+
+        //traiter un formulaire
+        $ville = $em->getRepository(Ville::class)->find($id);
+        $villeForm = $this->createForm(VilleType::class, $ville);
+        $villeForm->handleRequest($request);
+
+        if($villeForm->isSubmitted() && $villeForm->isValid()) {
+
+            $em->persist($ville);
+            $em->flush();
+            $this->addFlash('success', "La vile a été modifié");
+
+            return $this->redirectToRoute("admin", [
+                'option' => 'Villes'
+            ]);
+        }
+        return $this->render("sortie/editVille.html.twig", [
+            'villeForm' => $villeForm->createView()
+        ]);
+
+    }
+
+    /**
+     * Modifier un Site
+     * @Route("/{id}/editSite", name="site_edit", requirements={"id"="\d+"})
+     */
+    public function editSite($id, Request $request, EntityManagerInterface $em, \Swift_Mailer $mailer) {
+
+        //traiter un formulaire
+        $site = $em->getRepository(Site::class)->find($id);
+        $siteForm = $this->createForm(SiteType::class, $site);
+        $siteForm->handleRequest($request);
+
+        if($siteForm->isSubmitted() && $siteForm->isValid()) {
+
+            $em->persist($site);
+            $em->flush();
+            $this->addFlash('success', "Le site a été modifié");
+
+            return $this->redirectToRoute("admin", [
+                'option' => 'Sites'
+            ]);
+
+        }
+        return $this->render("sortie/editSite.html.twig", [
+            'siteForm' => $siteForm->createView()
+        ]);
+
     }
 }

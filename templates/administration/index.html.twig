@@ -109,7 +109,7 @@
                                         <td>{{ ville.codePostal }}</td>
                                         <td>
                                             <a href="{{ path('ville_edit', {'id':ville.id}) }}">Modifier</a>
-                                            <a href="{{ path('ville_delete', {'id':ville.id}) }}">- Supprimer</a>
+{#                                            <a href="{{ path('ville_delete', {'id':ville.id}) }}">- Supprimer</a>#}
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -145,7 +145,7 @@
                                 <td>{{ site.nom }}</td>
                                 <td>
                                     <a href="{{ path('site_edit', {'id':site.id}) }}">Modifier</a>
-                                    <a href="{{ path('site_delete', {'id':site.id}) }}">- Supprimer</a>
+{#                                    <a href="{{ path('site_delete', {'id':site.id}) }}">- Supprimer</a>#}
                                 </td>
                             </tr>
                         {% endfor %}

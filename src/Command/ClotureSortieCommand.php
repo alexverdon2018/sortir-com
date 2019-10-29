@@ -56,6 +56,13 @@ class ClotureSortieCommand extends Command
         $etatArchive = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Archivée']);
 
         $now = New \DateTime();
+        $heures = $now->format('H');
+        $minutes = $now->format('i');
+
+//        $now->setTime($now->getTimestamp());
+        //$now->setDate()
+        date_time_set($now, $heures, $minutes);
+        dump($now);
 
         // Bouche for
         foreach ($sorties as $sortie) {
@@ -75,7 +82,6 @@ class ClotureSortieCommand extends Command
             // Date de la fin de la Sortie
             $dateDebutSortie = clone $sortie->getDateHeureDebut();
             $dateFinSortie = $sortie->getDateHeureDebut()->add(new \DateInterval( "PT". $sortie->getDuree(). "M"));
-            dump($dateFinSortie);
 
             // ETAT EN COURS
             // Si la Sortie est à l'état 'Clôturée' AND la date de debut est inférieur à la date du jour AND la date de fin de sortie est supérieur à la date du jour)
@@ -98,7 +104,6 @@ class ClotureSortieCommand extends Command
             }
 
             $dateArchiveSortie = $dateFinSortie->add(new \DateInterval( "PT30S"));
-            dump($dateArchiveSortie);
 
             // ETAT ARCHIVEE
             // Si la date de fin est passé de 30 secondes AND la Sortie est à l'état 'Terminée' OR à l'état 'Annulée')
@@ -109,6 +114,29 @@ class ClotureSortieCommand extends Command
                 $this->doctrine->getManager()->persist($sortie);
 
             }
+
+            $nowMoin1Jour = $sortie->getDateHeureDebut()->sub(new DateInterval('P1D'));
+
+            dump($nowMoin1Jour);
+
+//            if($now == $nowMoin1Jour ){
+//
+//                $mailOrganisateur = $organisateur->getMail();
+//
+//                $message = (new \Swift_Message('sortir.com | Désistement'))
+//                    ->setFrom('noreply@sortir.compu')
+//                    ->setTo($mailOrganisateur)
+//                    ->setBody(
+//                        $this->renderView(
+//                            'emails/desistement_sortie.html.twig',
+//                            ['sortie' => $sortie,
+//                                'utilisateur' => $this->getUser()]
+//                        ),
+//                        'text/html'
+//                    );
+//                $mailer->send($message);
+//
+//            }
 
         }
         $this->doctrine->getManager()->flush();

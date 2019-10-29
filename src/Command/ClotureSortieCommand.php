@@ -3,8 +3,10 @@
 namespace App\Command;
 
 use App\Entity\Etat;
+use App\Entity\Rejoindre;
 use App\Entity\Sortie;
 use DateInterval;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -16,6 +18,8 @@ class ClotureSortieCommand extends Command
     protected static $defaultName = 'app:cloture-sortie';
 
     protected $doctrine;
+    protected $mail;
+    protected $emi;
 
     public function __construct(string $name = null, RegistryInterface $doctrine)
     {
@@ -58,11 +62,7 @@ class ClotureSortieCommand extends Command
         $now = New \DateTime();
         $heures = $now->format('H');
         $minutes = $now->format('i');
-
-//        $now->setTime($now->getTimestamp());
-        //$now->setDate()
         date_time_set($now, $heures, $minutes);
-        dump($now);
 
         // Bouche for
         foreach ($sorties as $sortie) {
@@ -115,28 +115,30 @@ class ClotureSortieCommand extends Command
 
             }
 
-            $nowMoin1Jour = $sortie->getDateHeureDebut()->sub(new DateInterval('P1D'));
+            $nowMoin1Jour =  $dateDebutSortie->sub(new DateInterval('P1D'));
 
-            dump($nowMoin1Jour);
 
-//            if($now == $nowMoin1Jour ){
-//
-//                $mailOrganisateur = $organisateur->getMail();
-//
-//                $message = (new \Swift_Message('sortir.com | Désistement'))
-//                    ->setFrom('noreply@sortir.compu')
-//                    ->setTo($mailOrganisateur)
-//                    ->setBody(
-//                        $this->renderView(
-//                            'emails/desistement_sortie.html.twig',
-//                            ['sortie' => $sortie,
-//                                'utilisateur' => $this->getUser()]
-//                        ),
-//                        'text/html'
-//                    );
-//                $mailer->send($message);
-//
-//            }
+            if($now == $nowMoin1Jour ){
+
+                $lesParticipants = $emi->getRepository(Rejoindre::class)->findBy(['sortie'=>$sortie]);
+                $lesMailsParticipants = [];
+                foreach ($lesParticipants as $participant) {
+                    array_push($lesMailsParticipants, $participant->getMail());
+                }
+
+                $message = (new \Swift_Message('sortir.com | Bientôt une sortie'))
+                    ->setFrom('noreply@sortir.compu')
+                    ->setTo($lesMailsParticipants)
+                    ->setBody(
+                        $this->renderView(
+                            '<h1>Bientot une sortie !</h1>',
+                            ['sortie' => $sortie]
+                        ),
+                        'text/html'
+                    );
+                $mailer->send($message);
+
+            }
 
         }
         $this->doctrine->getManager()->flush();

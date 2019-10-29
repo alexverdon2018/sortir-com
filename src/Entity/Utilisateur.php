@@ -65,6 +65,11 @@ class Utilisateur implements UserInterface
      */
     private $notification;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $pictureFilename;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -225,4 +230,15 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
+    public function getPictureFilename(): ?string
+    {
+        return $this->pictureFilename;
+    }
+
+    public function setPictureFilename(?string $pictureFilename): self
+    {
+        $this->pictureFilename = $pictureFilename;
+
+        return $this;
+    }
 }

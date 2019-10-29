@@ -6,6 +6,7 @@ use App\Entity\Utilisateur;
 use App\Form\UpdateUtilisateurType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use \Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,6 +44,29 @@ class ProfilController extends AbstractController
         $formUser = $this->createForm(UpdateUtilisateurType::class, $user);
         $formUser->handleRequest($request);
         if ($formUser->isSubmitted() && $formUser->isValid()) {
+            $pictureFile = $formUser['picture']->getData();
+
+            if ($pictureFile) {
+                $originalFilename = pathinfo($pictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                // this is needed to safely include the file name as part of the URL
+                $safeFilename = transliterator_transliterate('Any-Latin; Latin-ASCII; [^A-Za-z0-9_] remove; Lower()', $originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$pictureFile->guessExtension();
+
+                // Move the file to the directory where brochures are stored
+                try {
+                    $pictureFile->move(
+                        $this->getParameter('pictures_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                    // ... handle exception if something happens during file upload
+                }
+
+                // updates the 'brochureFilename' property to store the PDF file name
+                // instead of its contents
+                $user->setPictureFilename($newFilename);
+            }
+
             $hashed = $passwordEncoder->encodePassword($user, $user->getPassword());
             $user->setPassword($hashed);
             $emi->persist($user);

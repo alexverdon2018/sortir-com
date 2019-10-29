@@ -2,9 +2,13 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 class SecurityController extends AbstractController
@@ -39,13 +43,46 @@ class SecurityController extends AbstractController
     }
 
     /**
+     * * Mot de passe oublié utilisateur
      * @Route("/mdp_oublie", name="mdp_oublie")
      */
-    public function mdp_oublie() {
+    public function mdp_oublie(Request $request, EntityManagerInterface $emi, \Swift_Mailer $mailer, UserPasswordEncoderInterface $passwordEncoder)
+    {
 
-        //TODO
+        $mail = $request->request->get('mail_mdp_oublie');
 
-        return $this->render('security/mdp_oublie.html.twig');
+        if ($mail !== null) {
+
+            $utilisateur = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['mail' => $mail]);
+
+            $utilisateur->setPassword($utilisateur->getPrenom() . $utilisateur->getNom());
+
+            $message = (new \Swift_Message('sortir.com | Inscription'))
+                ->setFrom('noreply@sortir.com')
+                ->setTo($mail)
+                ->setBody(
+                    $this->renderView(
+                        'emails/mot_de_oublie.html.twig',
+                        ['utilisateur' => $utilisateur]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+
+            $utilisateur->setPassword(
+                $passwordEncoder->encodePassword(
+                    $utilisateur,
+                    $utilisateur->getPrenom() . $utilisateur->getNom()
+                )
+            );
+
+            $emi->persist($utilisateur);
+            $emi->flush();
+        }
+
+
+
+       return $this->render('security/mdp_oublie.html.twig');
     }
 
 }

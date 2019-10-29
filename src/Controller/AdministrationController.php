@@ -154,21 +154,4 @@ class AdministrationController extends AbstractController
         return $this->redirectToRoute("admin");
     }
 
-    /**
-     * Mot de passe oublié utilisateur
-     * @Route("/motDePasse/{id}", name="utilisateur_motDePasse")
-     */
-    public function motDePasse(Request $request, EntityManagerInterface $em, $motDePasse) {
-
-        $utilisateur = $em->getRepository(Utilisateur::class)->find($motDePasse);
-
-        dump($utilisateur);
-
-        if($utilisateur == null) {
-            throw $this->createNotFoundException('Utilisateur est inconnu ou déjà désactivé');
-        }
-
-        return $this->redirectToRoute("admin");
-    }
-
 }

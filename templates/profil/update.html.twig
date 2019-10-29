@@ -60,3 +60,8 @@
     </div>
 
 {% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script rel="script/javascript" src="{{ asset('js/profile.js') }}"></script>
+{% endblock %}

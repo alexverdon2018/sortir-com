@@ -40,7 +40,7 @@ class UpdateUtilisateurType extends AbstractType
             'choice_label' => 'nom'
             ]);
 
-        if($options['action'] != 'addUser') {
+        if($options['form_action'] != 'addUser') {
             $builder->add('picture', FileType::class, [
                     'label' => 'Picture',
 
@@ -81,6 +81,7 @@ class UpdateUtilisateurType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
+            'form_action' => null
         ]);
     }
 }

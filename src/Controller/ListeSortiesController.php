@@ -27,7 +27,7 @@ class ListeSortiesController extends AbstractController
     {
         // LES ETATS
         $etatCreee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Brouillon']);
-        $etatPubliees = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Publiée']);
+        $etatPubliee = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Publiée']);
         $etatAnnule = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Annulée']);
         $etatCloture = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'Clôturée']);
         $etatEncours = $emi->getRepository( Etat::class)->findOneBy(['libelle' => 'En cours']);
@@ -38,13 +38,15 @@ class ListeSortiesController extends AbstractController
         $villes = $emi->getRepository(Ville::class)->findAll();
 
         // LES REQUETES DE RECUPERATIONS DES SORTIES EN FONCTION DE L'ETAT
-        $sortiesPubliees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatPubliees]);
+        $sortiesPubliees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatPubliee]);
         $sortiesCreees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCreee, 'organisateur' => $this->getUser()]);
         $sortiesAnnulees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatAnnule]);
         $sortiesCloturees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatCloture]);
         $sortiesEncours = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatEncours]);
         $sortiesTerminees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatTerminee]);
         $sortiesArchivees = $emi->getRepository(Sortie::class)->findBy(['etat' => $etatArchive]);
+
+        $sortiesPhone = $emi->getRepository(Sortie::class)->findBy(['etat' => [$etatCreee, $etatPubliee, $etatCloture, $etatEncours, $etatTerminee], 'site' => $this->getUser()->getSite()]);
 
         $rejoindres = $emi->getRepository(Rejoindre::class)->findBy(['sonUtilisateur' => $this->getUser()]);
 
@@ -58,7 +60,8 @@ class ListeSortiesController extends AbstractController
             'sortiesTerminee' => $sortiesTerminees,
             'sortiesArchivees' => $sortiesArchivees,
             'rejoindres' => $rejoindres,
-            'villes' => $villes
+            'villes' => $villes,
+            'sortiesPhone' => $sortiesPhone
         ]);
     }
 

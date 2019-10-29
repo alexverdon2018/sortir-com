@@ -25,3 +25,15 @@ input, button, submit {
     text-decoration: underline;
 }
 
+.show-phone-tr {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    .hide-phone {
+        display: none;
+    }
+    .show-phone-tr {
+        display: table-row;
+    }
+}

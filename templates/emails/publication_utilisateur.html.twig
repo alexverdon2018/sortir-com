@@ -1,8 +1,8 @@
 <html lang="fr">
 <head></head>
 <body>
-    <h3>Modification d'une sortie</h3>
-    <p>{{ utilisateur.nom }} {{ utilisateur.prenom }} vient de modifier une sortie :</p>
+    <h3>Nouvelle publication !</h3>
+    <p>{{ utilisateur.nom }} {{ utilisateur.prenom }} vient de créer une sortie :</p>
     <p>
         Nom de la sortie : <b>{{ sortie.nom }}</b><br>
         Organisateur : {{ utilisateur.nom }} {{ utilisateur.prenom }}<br>
@@ -16,8 +16,7 @@
         Description : {{ sortie.commentaire }}<br>
     </p>
     <p>
-        <a href="http://localhost:8000/sortir-com/public/sortie/{{ sortie.id }}">Lien direct vers la sortie</a>
+    <a href="http://localhost:8000/sortir-com/public/sortie/{{ sortie.id }}">Lien direct vers la sortie</a>
     </p>
-
 </body>
 </html>

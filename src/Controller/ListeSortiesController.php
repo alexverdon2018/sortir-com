@@ -6,6 +6,7 @@ use App\Entity\Etat;
 use App\Entity\Rejoindre;
 use App\Entity\Site;
 use App\Entity\Sortie;
+use App\Entity\Utilisateur;
 use App\Entity\Ville;
 use Doctrine\ORM\EntityManagerInterface;
 use phpDocumentor\Reflection\Types\Integer;
@@ -67,7 +68,7 @@ class ListeSortiesController extends AbstractController
      * @return \Symfony\Component\HttpFoundation\RedirectResponse
      * @throws \Exception
      */
-    public function rejoindre(EntityManagerInterface $emi, Sortie $sortie, Request $request)
+    public function rejoindre(EntityManagerInterface $emi, Sortie $sortie, Request $request, \Swift_Mailer $mailer)
     {
         $referer = $request->headers->get('referer');
 
@@ -97,6 +98,25 @@ class ListeSortiesController extends AbstractController
             $emi->flush();
         $this->get('session')->getFlashBag()->add('success', "Vous vous êtes inscrit à cette sortie !");
 
+        //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+
+        $organisateur  = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['id' => $sortie->getOrganisateur()->getId()]);
+
+        $mailOrganisateur = $organisateur->getMail();
+
+        $message = (new \Swift_Message('sortir.com | Inscription'))
+            ->setFrom('noreply@sortir.com')
+            ->setTo($mailOrganisateur)
+            ->setBody(
+                $this->renderView(
+                    'emails/inscription_sortie.html.twig',
+                    ['sortie' => $sortie,
+                        'utilisateur' => $this->getUser()]
+                ),
+                'text/html'
+            );
+        $mailer->send($message);
+
         return $this->redirect($referer);
     }
 
@@ -104,7 +124,7 @@ class ListeSortiesController extends AbstractController
      * Se désister d'une Sortie
      * @Route("/desister_sortie/{id}", name="desister_sortie")
      */
-    public function desister(Request $request, EntityManagerInterface $emi, Sortie $sortie)
+    public function desister(Request $request, EntityManagerInterface $emi, Sortie $sortie, \Swift_Mailer $mailer)
     {
         $referer = $request->headers->get('referer');
 
@@ -123,32 +143,31 @@ class ListeSortiesController extends AbstractController
             $emi->remove($sortieRepo);
             $emi->flush();
 
+            //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+
+            $organisateur  = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['id' => $sortie->getOrganisateur()->getId()]);
+
+            $mailOrganisateur = $organisateur->getMail();
+
+            $message = (new \Swift_Message('sortir.com | Désistement'))
+                ->setFrom('noreply@sortir.compu')
+                ->setTo($mailOrganisateur)
+                ->setBody(
+                    $this->renderView(
+                        'emails/desistement_sortie.html.twig',
+                        ['sortie' => $sortie,
+                            'utilisateur' => $this->getUser()]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+
             $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désisté de la sortie");
             return $this->redirect($referer);
         }
 
         $this->get('session')->getFlashBag()->add('danger', 'Erreur lors de la tentative de se désister de cette sortie.');
         return $this->redirect($referer);
-    }
-
-    /**
-     * @Route("/publier/{id}", name="liste_publier_sortie")
-     */
-    public function publier($id, EntityManagerInterface $emi) {
-        $sortie = $this->getDoctrine()->getRepository( Sortie::class)->find($id);
-        $etat = $this->getDoctrine()->getRepository(Etat::class)->findOneBy(['libelle' => 'Ouverte']);
-
-        if ($sortie !== null && $etat !== null) {
-
-            $sortie->setEtat($etat);
-            $emi->persist($sortie);
-            $emi->flush();
-            $this->get('session')->getFlashBag()->add('success', 'Sortie publiée !');
-            return $this->redirectToRoute('liste_sorties');
-
-        }
-
-        return $this->redirectToRoute('liste_sorties');
     }
 
     /**

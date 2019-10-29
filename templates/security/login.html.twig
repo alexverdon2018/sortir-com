@@ -25,7 +25,9 @@
                         </div>
                         <div class="form-group">
                             <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required>
+                            <a class="small" href="{{ path('mdp_oublie') }}">Mot de passe oublié ?</a>
                         </div>
+
 
                         <input type="hidden" name="_csrf_token"
                                value="{{ csrf_token('authenticate') }}"

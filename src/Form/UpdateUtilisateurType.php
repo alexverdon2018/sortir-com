@@ -40,9 +40,33 @@ class UpdateUtilisateurType extends AbstractType
             'choice_label' => 'nom'
             ]);
 
-        if($options['form_action'] != 'addUser') {
-            $builder->add('password', RepeatedType::class, [
-                'type' => PasswordType::class,
+        if($options['action'] != 'addUser') {
+            $builder->add('picture', FileType::class, [
+                    'label' => 'Picture',
+
+                    // unmapped means that this field is not associated to any entity property
+                    'mapped' => false,
+
+                    // make it optional so you don't have to re-upload the PDF file
+                    // everytime you edit the Product details
+                    'required' => false,
+
+                    // unmapped fields can't define their validation using annotations
+                    // in the associated entity, so you can use the PHP constraint classes
+                    'constraints' => [
+                        new File([
+                            'maxSize' => '1024k',
+                            'mimeTypes' => [
+                                'image/jpeg',
+                                'image/png',
+                                'image/gif'
+                            ],
+                            'mimeTypesMessage' => 'Please upload a valid image',
+                        ])
+                    ],
+                ])
+                ->add('password', RepeatedType::class, [
+                'type' => TextType::class,
                 'first_options' => [
                     'label' => 'Mot de passe :'
                 ],
@@ -57,7 +81,6 @@ class UpdateUtilisateurType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
-            'form_action' => null
         ]);
     }
 }

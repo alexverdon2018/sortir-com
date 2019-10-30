@@ -66,11 +66,7 @@ class SecurityController extends AbstractController
 
             $utilisateur->setPassword($utilisateur->getPrenom() . $utilisateur->getNom());
 
-//            $utilisateur->setToken('dfvlvmkdhvxmfklvbfdùlbknfdùldpoùlkdfùlkbsdklmkjbdmkmiogb');
-
             $token = sha1(random_bytes(32));
-
-            dump($token);
 
             $utilisateur->setToken($token);
 
@@ -94,9 +90,9 @@ class SecurityController extends AbstractController
 
     /**
      * Mot de passe oublié utilisateur 2
-     * @Route("/{id}/mdp_oublie2", name="mdp_oublie2", requirements={"id"="\d+"})
+     * @Route("/{id}/mdp_oublie_changer", name="mdp_oublie_changer", requirements={"id"="\d+"})
      */
-    public function mdp_oublie2($id, Request $request, EntityManagerInterface $em)
+    public function mdp_oublie_changer($id, Request $request, EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
 
         //traiter un formulaire
@@ -104,25 +100,23 @@ class SecurityController extends AbstractController
         $MotDePasseForm = $this->createForm(MotPasseOublieType::class, $utilisateur);
         $MotDePasseForm->handleRequest($request);
 
-//        dump($utilisateur);
-
         $token = $request->query->get('token');
-//       $token = $request->request->get('_token');
-//        $token = random_bytes(45);
-//
-//        dump($token);
 
-//        dump($utilisateur);
-
-//            }
         if ($utilisateur->getToken() == $token) {
-            $em->persist($utilisateur);
-            $em->flush();
-            dump($token);
-            $this->addFlash('success', "Votre mot de passe a été modifié");
-        }
-        else
-        {
+            if ($MotDePasseForm->isSubmitted() && $MotDePasseForm->isValid()) {
+                $utilisateur->setPassword(
+                    $passwordEncoder->encodePassword(
+                        $utilisateur,
+                        $utilisateur->getPassword()
+                    )
+                );
+                $utilisateur->setToken(null);
+                $em->persist($utilisateur);
+                $em->flush();
+                $this->addFlash('success', "Votre mot de passe a été modifié");
+                return $this->redirectToRoute('app_login',['last_username'=>$utilisateur->getMail()]);
+            }
+        } else {
             return $this->redirectToRoute('app_login');
         }
 

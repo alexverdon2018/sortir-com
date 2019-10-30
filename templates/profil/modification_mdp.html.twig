@@ -3,5 +3,24 @@
 {% block title %}{{ parent() }} | Mot de passe oublié{% endblock %}
 
 {% block body %}
-    {{ form(MotDePasseForm) }}
+    <div class="container-fluid">
+        <div class="row mt-3">
+            <div class="col">
+                <h3>Nouveau mot de passe</h3>
+                <hr>
+            </div>
+        </div>
+        {{ form_start(MotDePasseForm) }}
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-6">
+                {{ form_widget(MotDePasseForm) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col text-center">
+                <input class="btn btn-success" type="submit" value="Confirmer">
+            </div>
+        </div>
+        {{ form_end(MotDePasseForm) }}
+    </div>
 {% endblock %}

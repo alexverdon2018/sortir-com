@@ -48,19 +48,14 @@ class ClotureSortieCommand extends Command
 
         // Etat Publiée
         $etatPubliee = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Publiée']);
-
         // Etat En Cours
         $etatEnCours = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'En cours']);
-
         // Etat Clôturée
         $etatCloture = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Clôturée']);
-
         // Etat Terminée
         $etatTermine = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Terminée']);
-
         // Etat Terminée
         $etatAnnule = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Annulée']);
-
         // Etat Archive
         $etatArchive = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Archivée']);
 

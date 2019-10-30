@@ -242,8 +242,14 @@ class SortieController extends AbstractController
             //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
             $lesAdmins = $emi->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
             $lesMailsAdmins = [];
+
             foreach ($lesAdmins as $admin) {
-                array_push($lesMailsAdmins, $admin->getMail());
+                // La notification de choisir ou non de recevoir les publications
+                $notificationOrganisateur = $admin->getAdministrateurPublication();
+                dump($admin);
+                if($notificationOrganisateur == 1) {
+                    array_push($lesMailsAdmins, $admin->getMail());
+                }
             }
             $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
                 ->setFrom('noreply@sortir.com')

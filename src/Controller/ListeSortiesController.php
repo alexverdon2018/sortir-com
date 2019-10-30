@@ -103,25 +103,31 @@ class ListeSortiesController extends AbstractController
             $emi->flush();
         $this->get('session')->getFlashBag()->add('success', "Vous vous êtes inscrit à cette sortie !");
 
-        //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+        //Envoie un mail à tous les organisateurs de sa sortie lorsqu'il y a une inscription
 
         $organisateur  = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['id' => $sortie->getOrganisateur()->getId()]);
 
+        // Mail de l'organisateur
         $mailOrganisateur = $organisateur->getMail();
 
-        $message = (new \Swift_Message('sortir.com | Inscription'))
-            ->setFrom('noreply@sortir.com')
-            ->setTo($mailOrganisateur)
-            ->setBody(
-                $this->renderView(
-                    'emails/inscription_sortie.html.twig',
-                    ['sortie' => $sortie,
-                        'utilisateur' => $this->getUser()]
-                ),
-                'text/html'
-            );
-        $mailer->send($message);
+        // La notification de choisir ou non de recevoir les personnes qui ne sont inscrits à la sortie de l'organisateur
+        $notificationOrganisateur = $organisateur->getOrganisateurInscriptionDesistement();
 
+        // Si l'organisateur a choisi de recevoir les notifications connernent ses sorties
+        if($notificationOrganisateur === true) {
+            $message = (new \Swift_Message('sortir.com | Inscription'))
+                ->setFrom('noreply@sortir.com')
+                ->setTo($mailOrganisateur)
+                ->setBody(
+                    $this->renderView(
+                        'emails/inscription_sortie.html.twig',
+                        ['sortie' => $sortie,
+                            'utilisateur' => $this->getUser()]
+                    ),
+                    'text/html'
+                );
+            $mailer->send($message);
+        }
         return $this->redirect($referer);
     }
 
@@ -148,12 +154,17 @@ class ListeSortiesController extends AbstractController
             $emi->remove($sortieRepo);
             $emi->flush();
 
-            //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
+            //Envoie un mail à tous les organisateurs de sa sortie lorsqu'il y a un désistement
 
             $organisateur  = $this->getDoctrine()->getRepository(Utilisateur::class)->findOneBy(['id' => $sortie->getOrganisateur()->getId()]);
 
             $mailOrganisateur = $organisateur->getMail();
 
+            // La notification de choisir ou non de recevoir les personnes qui ne sont désister à la sortie de l'organisateur
+            $notificationOrganisateur = $organisateur->getOrganisateurInscriptionDesistement();
+
+            // Si l'organisateur a choisi de recevoir les notifications connernent ses sorties
+            if($notificationOrganisateur === true) {
             $message = (new \Swift_Message('sortir.com | Désistement'))
                 ->setFrom('noreply@sortir.compu')
                 ->setTo($mailOrganisateur)
@@ -166,7 +177,7 @@ class ListeSortiesController extends AbstractController
                     'text/html'
                 );
             $mailer->send($message);
-
+            }
             $this->get('session')->getFlashBag()->add('success', "Vous vous êtes désisté de la sortie");
             return $this->redirect($referer);
         }

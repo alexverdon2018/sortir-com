@@ -124,11 +124,14 @@ class ClotureSortieCommand extends Command
 
 
             if($now == $nowMoin1Jour ) {
-                dump($nowMoin1Jour);
+
                 $lesRejoindres = $this->emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
                 $lesMailsParticipants = [];
                 foreach ($lesRejoindres as $rejoindre) {
-                    array_push($lesMailsParticipants, $rejoindre->getSonUtilisateur()->getMail());
+                    // La notification qui permet de choisir si on souhaite recevoir ou non un mail la veille de la sortie
+                    if($rejoindre->getSonUtilisateur()->getNotifVeilleSortie() === true) {
+                        array_push($lesMailsParticipants, $rejoindre->getSonUtilisateur()->getMail());
+                    }
                 }
 
                 $message = (new \Swift_Message('sortir.com | Dans moins de 24 heures, une sortie vas commencer'))

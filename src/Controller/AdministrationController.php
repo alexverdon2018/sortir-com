@@ -12,6 +12,7 @@ use App\Form\SiteType;
 use App\Form\UpdateUtilisateurType;
 use App\Form\VilleType;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -76,26 +77,31 @@ class AdministrationController extends AbstractController
         foreach ($chunked as $csvuser) {
             $user = new Utilisateur();
             if(sizeof($csvuser) == 16) {
-                $user->setNom($csvuser[1]); // str
-                $user->setPrenom($csvuser[2]); //str
-                if ($csvuser[3] == "NULL") {
-                    $user->setTelephone("");
+                try {
+                    $user->setNom($csvuser[1]); // str
+                    $user->setPrenom($csvuser[2]); //str
+                    if ($csvuser[3] == "NULL") {
+                        $user->setTelephone("");
+                    }
+                    $user->setTelephone($csvuser[3]);  //str nullable
+                    $user->setMail($csvuser[4]); //str
+                    $user->setAdmin((int)$csvuser[5]); //bool
+                    $user->setActif((int)$csvuser[6]); //bool
+                    $user->setPassword($csvuser[7]); //str
+                    $site = $em->getRepository(Site::class)->find((int) $csvuser[8]);
+                    $user->setSite($site); //int
+                    $user->setPictureFilename($csvuser[9]); //str
+                    $user->setPseudo($csvuser[10]); //str
+                    $user->setPublicationParSite((int)$csvuser[11]); //bool
+                    $user->setOrganisateurInscriptionDesistement((int)$csvuser[12]); //bool
+                    $user->setAdministrateurPublication((int)$csvuser[13]); //bool
+                    $user->setAdministrationModification((int)$csvuser[14]); //bool
+                    $user->setNotifVeilleSortie((int)$csvuser[15]); //bool
+                    $em->persist($user);
+                } catch (Exception $e) {
+                    // try catch vide lol
                 }
-                $user->setTelephone($csvuser[3]);  //str nullable
-                $user->setMail($csvuser[4]); //str
-                $user->setAdmin((int)$csvuser[5]); //bool
-                $user->setActif((int)$csvuser[6]); //bool
-                $user->setPassword($csvuser[7]); //str
-                $site = $em->getRepository(Site::class)->find((int) $csvuser[8]);
-                $user->setSite($site); //int
-                $user->setPictureFilename($csvuser[9]); //str
-                $user->setPseudo($csvuser[10]); //str
-                $user->setPublicationParSite((int)$csvuser[11]); //bool
-                $user->setOrganisateurInscriptionDesistement((int)$csvuser[12]); //bool
-                $user->setAdministrateurPublication((int)$csvuser[13]); //bool
-                $user->setAdministrationModification((int)$csvuser[14]); //bool
-                $user->setNotifVeilleSortie((int)$csvuser[15]); //bool
-                $em->persist($user);            }
+            }
 
         }
         $em->flush();

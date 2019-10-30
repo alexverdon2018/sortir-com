@@ -3,9 +3,12 @@
 namespace App\Command;
 
 use App\Entity\Etat;
+use App\Entity\Rejoindre;
 use App\Entity\Sortie;
 use DateInterval;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -16,12 +19,17 @@ class ClotureSortieCommand extends Command
     protected static $defaultName = 'app:cloture-sortie';
 
     protected $doctrine;
+    protected $mailer;
+    protected $emi;
+    protected $twig;
 
-    public function __construct(string $name = null, RegistryInterface $doctrine)
+    public function __construct(string $name = null, RegistryInterface $doctrine, \Twig_Environment $twig, EntityManagerInterface $emi, \Swift_Mailer $mailer)
     {
     parent::__construct($name);
         $this->doctrine = $doctrine;
-
+        $this->emi = $emi;
+        $this->mailer = $mailer;
+        $this->twig = $twig;
     }
 
     protected function configure()
@@ -56,6 +64,9 @@ class ClotureSortieCommand extends Command
         $etatArchive = $this->doctrine->getRepository(Etat::class)->findOneBy(['libelle' => 'Archivée']);
 
         $now = New \DateTime();
+        $heures = $now->format('H');
+        $minutes = $now->format('i');
+        date_time_set($now, $heures, $minutes);
 
         // Bouche for
         foreach ($sorties as $sortie) {
@@ -75,7 +86,6 @@ class ClotureSortieCommand extends Command
             // Date de la fin de la Sortie
             $dateDebutSortie = clone $sortie->getDateHeureDebut();
             $dateFinSortie = $sortie->getDateHeureDebut()->add(new \DateInterval( "PT". $sortie->getDuree(). "M"));
-            dump($dateFinSortie);
 
             // ETAT EN COURS
             // Si la Sortie est à l'état 'Clôturée' AND la date de debut est inférieur à la date du jour AND la date de fin de sortie est supérieur à la date du jour)
@@ -97,8 +107,7 @@ class ClotureSortieCommand extends Command
 
             }
 
-            $dateArchiveSortie = $dateFinSortie->add(new \DateInterval( "PT30S"));
-            dump($dateArchiveSortie);
+            $dateArchiveSortie = $dateFinSortie->add(new \DateInterval( "PT1M"));
 
             // ETAT ARCHIVEE
             // Si la date de fin est passé de 30 secondes AND la Sortie est à l'état 'Terminée' OR à l'état 'Annulée')
@@ -107,6 +116,31 @@ class ClotureSortieCommand extends Command
                 // On modifié l'état de la Sortie de 'Terminé' OU 'Annulée' A l'etat 'Archive'
                 $sortie->setEtat($etatArchive);
                 $this->doctrine->getManager()->persist($sortie);
+
+            }
+
+            $nowMoin1Jour =  $dateDebutSortie->sub(new DateInterval('P1D'));
+
+
+            if($now == $nowMoin1Jour ){
+
+                $lesParticipants = $this->emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
+                $lesMailsParticipants = [];
+                foreach ($lesParticipants as $participant) {
+                    array_push($lesMailsParticipants, $participant->getMail());
+                }
+
+                $message = (new \Swift_Message('sortir.com | Bientôt une sortie'))
+                    ->setFrom('noreply@sortir.compu')
+                    ->setTo($lesMailsParticipants)
+                    ->setBody(
+                        $this->twig->renderView(
+                            'emails/veille_sortie.html.twig',
+                            ['sortie' => $sortie]
+                        ),
+                        'text/html'
+                    );
+                $this->mailer->send($message);
 
             }
 

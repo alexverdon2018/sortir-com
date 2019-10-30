@@ -7,6 +7,7 @@ use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Utilisateur;
 use App\Entity\Ville;
+use App\Form\ImportUsersType;
 use App\Form\SiteType;
 use App\Form\UpdateUtilisateurType;
 use App\Form\VilleType;
@@ -37,7 +38,7 @@ class AdministrationController extends AbstractController
         $formSite = $this->createForm(SiteType::class, $newSite);
         $formSite->handleRequest($request);
 
-        $formImportFile = $this->createForm(null);
+        $formImportFile = $this->createForm(ImportUsersType::class, null);
         $formImportFile->handleRequest($request);
 
         if ($formVille->isSubmitted() && $formVille->isValid()) {
@@ -53,7 +54,7 @@ class AdministrationController extends AbstractController
         }
 
         if ($formImportFile->isSubmitted() && $formImportFile->isValid()) {
-            
+            $this->startImport($formImportFile);
         }
 
         return $this->render('administration/index.html.twig', [
@@ -62,6 +63,7 @@ class AdministrationController extends AbstractController
             'sites' => $sites,
             'formVille' => $formVille->createView(),
             'formSite' => $formSite->createView(),
+            'formImportFile' => $formImportFile->createView(),
             'onglet_visible' => $option
         ]);
     }

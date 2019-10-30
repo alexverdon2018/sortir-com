@@ -86,6 +86,16 @@ class Utilisateur implements UserInterface
      */
     private $pseudo;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $administrationModification;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $notifVeilleSortie;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -288,4 +298,30 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
+
+    public function getAdministrationModification(): ?bool
+    {
+        return $this->administrationModification;
+    }
+
+    public function setAdministrationModification(bool $administrationModification): self
+    {
+        $this->administrationModification = $administrationModification;
+
+        return $this;
+    }
+
+    public function getNotifVeilleSortie(): ?bool
+    {
+        return $this->notifVeilleSortie;
+    }
+
+    public function setNotifVeilleSortie(bool $notifVeilleSortie): self
+    {
+        $this->notifVeilleSortie = $notifVeilleSortie;
+
+        return $this;
+    }
+
+
 }

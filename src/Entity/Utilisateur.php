@@ -37,7 +37,7 @@ class Utilisateur implements UserInterface
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique=true)
      */
     private $mail;
 
@@ -82,7 +82,7 @@ class Utilisateur implements UserInterface
     private $administrateurPublication;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $pseudo;
 
@@ -213,7 +213,7 @@ class Utilisateur implements UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return $this->mail;
     }
 
     /**

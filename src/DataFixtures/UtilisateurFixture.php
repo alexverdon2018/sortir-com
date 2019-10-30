@@ -33,10 +33,16 @@ class UtilisateurFixture extends Fixture
     {
         $user = new Utilisateur();
         $user->setMail(sprintf('test@test.com'));
-        $user->setNom("test");
-        $user->setPrenom("testy");
+        $user->setNom("Super");
+        $user->setPrenom("Boomer");
         $user->setActif(true);
         $user->setAdmin(true);
+        $user->setPseudo("B00MER 4dm1N 420");
+        $user->setOrganisateurInscriptionDesistement(1);
+        $user->setAdministrateurPublication(1);
+        $user->setAdministrationModification(1);
+        $user->setPublicationParSite(1);
+        $user->setNotifVeilleSortie(1);
         $user->setPassword($this->passwordEncoder->encodePassword(
             $user,
             'test'
@@ -56,13 +62,18 @@ class UtilisateurFixture extends Fixture
             $user->setMail($faker->email);
             $user->setActif(true);
             $user->setAdmin(false);
+            $user->setPseudo($faker->userName);
+            $user->setOrganisateurInscriptionDesistement(1);
+            $user->setAdministrateurPublication(0);
+            $user->setAdministrationModification(0);
+            $user->setPublicationParSite(1);
+            $user->setNotifVeilleSortie(1);
             $user->setPassword($this->passwordEncoder->encodePassword(
                 $user,
                 'test'
             ));
             $manager->persist($user);
         }
-
         $manager->flush();
     }
 

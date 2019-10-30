@@ -62,19 +62,39 @@ class Utilisateur implements UserInterface
     private $site;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\Notification", mappedBy="utilisateur", cascade={"persist", "remove"})
-     */
-    private $notification;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pictureFilename;
 
     /**
+     * @ORM\Column(type="boolean")
+     */
+    private $publicationParSite;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $OrganisateurInscriptionDesistement;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $administrateurPublication;
+
+    /**
      * @ORM\Column(type="string", length=255)
      */
     private $pseudo;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $administrationModification;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $notifVeilleSortie;
 
     public function getId(): ?int
     {
@@ -219,23 +239,6 @@ class Utilisateur implements UserInterface
         return $this;
     }
 
-    public function getNotification(): ?Notification
-    {
-        return $this->notification;
-    }
-
-    public function setNotification(Notification $notification): self
-    {
-        $this->notification = $notification;
-
-        // set the owning side of the relation if necessary
-        if ($this !== $notification->getUtilisateur()) {
-            $notification->setUtilisateur($this);
-        }
-
-        return $this;
-    }
-
     public function getPictureFilename(): ?string
     {
         return $this->pictureFilename;
@@ -244,6 +247,42 @@ class Utilisateur implements UserInterface
     public function setPictureFilename(?string $pictureFilename): self
     {
         $this->pictureFilename = $pictureFilename;
+
+        return $this;
+    }
+
+    public function getPublicationParSite(): ?bool
+    {
+        return $this->publicationParSite;
+    }
+
+    public function setPublicationParSite(bool $publicationParSite): self
+    {
+        $this->publicationParSite = $publicationParSite;
+
+        return $this;
+    }
+
+    public function getOrganisateurInscriptionDesistement(): ?bool
+    {
+        return $this->OrganisateurInscriptionDesistement;
+    }
+
+    public function setOrganisateurInscriptionDesistement(bool $OrganisateurInscriptionDesistement): self
+    {
+        $this->OrganisateurInscriptionDesistement = $OrganisateurInscriptionDesistement;
+
+        return $this;
+    }
+
+    public function getAdministrateurPublication(): ?bool
+    {
+        return $this->administrateurPublication;
+    }
+
+    public function setAdministrateurPublication(bool $administrateurPublication): self
+    {
+        $this->administrateurPublication = $administrateurPublication;
 
         return $this;
     }
@@ -259,4 +298,30 @@ class Utilisateur implements UserInterface
 
         return $this;
     }
+
+    public function getAdministrationModification(): ?bool
+    {
+        return $this->administrationModification;
+    }
+
+    public function setAdministrationModification(bool $administrationModification): self
+    {
+        $this->administrationModification = $administrationModification;
+
+        return $this;
+    }
+
+    public function getNotifVeilleSortie(): ?bool
+    {
+        return $this->notifVeilleSortie;
+    }
+
+    public function setNotifVeilleSortie(bool $notifVeilleSortie): self
+    {
+        $this->notifVeilleSortie = $notifVeilleSortie;
+
+        return $this;
+    }
+
+
 }

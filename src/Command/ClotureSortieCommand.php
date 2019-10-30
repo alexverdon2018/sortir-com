@@ -13,6 +13,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class ClotureSortieCommand extends Command
 {
@@ -23,13 +24,13 @@ class ClotureSortieCommand extends Command
     protected $emi;
     protected $twig;
 
-    public function __construct(string $name = null, RegistryInterface $doctrine, \Twig_Environment $twig, EntityManagerInterface $emi, \Swift_Mailer $mailer)
+    public function __construct(string $name = null, RegistryInterface $doctrine, ContainerInterface $container, EntityManagerInterface $emi, \Swift_Mailer $mailer)
     {
     parent::__construct($name);
         $this->doctrine = $doctrine;
         $this->emi = $emi;
         $this->mailer = $mailer;
-        $this->twig = $twig;
+        $this->twig = $container->get('twig');
     }
 
     protected function configure()
@@ -122,19 +123,19 @@ class ClotureSortieCommand extends Command
             $nowMoin1Jour =  $dateDebutSortie->sub(new DateInterval('P1D'));
 
 
-            if($now == $nowMoin1Jour ){
-
-                $lesParticipants = $this->emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
+            if($now == $nowMoin1Jour ) {
+                dump($nowMoin1Jour);
+                $lesRejoindres = $this->emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
                 $lesMailsParticipants = [];
-                foreach ($lesParticipants as $participant) {
-                    array_push($lesMailsParticipants, $participant->getMail());
+                foreach ($lesRejoindres as $rejoindre) {
+                    array_push($lesMailsParticipants, $rejoindre->getSonUtilisateur()->getMail());
                 }
 
-                $message = (new \Swift_Message('sortir.com | Bientôt une sortie'))
+                $message = (new \Swift_Message('sortir.com | Dans moins de 24 heures, une sortie vas commencer'))
                     ->setFrom('noreply@sortir.compu')
                     ->setTo($lesMailsParticipants)
                     ->setBody(
-                        $this->twig->renderView(
+                        $this->twig->render(
                             'emails/veille_sortie.html.twig',
                             ['sortie' => $sortie]
                         ),

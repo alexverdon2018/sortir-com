@@ -7,6 +7,7 @@ use App\Entity\Site;
 use App\Entity\Sortie;
 use App\Entity\Utilisateur;
 use App\Entity\Ville;
+use App\Form\ImportUsersType;
 use App\Form\SiteType;
 use App\Form\UpdateUtilisateurType;
 use App\Form\VilleType;
@@ -55,6 +56,7 @@ class AdministrationController extends AbstractController
             'sites' => $sites,
             'formVille' => $formVille->createView(),
             'formSite' => $formSite->createView(),
+            'formImportFile' => $formImportFile->createView(),
             'onglet_visible' => $option
         ]);
     }

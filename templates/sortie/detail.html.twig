@@ -120,7 +120,7 @@
                     <table class="table table-striped">
                         <thead class="thead-dark">
                             <tr>
-                                <th>Prénom Nom</th>
+                                <th>Pseudo</th>
                                 <th>Date inscription</th>
                             </tr>
                         </thead>
@@ -128,7 +128,7 @@
 
                             {% for rejoindre in rejoindres %}
                                 <tr>
-                                    <td>{{ rejoindre.sonUtilisateur.prenom }} {{ rejoindre.sonUtilisateur.nom }}</td>
+                                    <td><a href="{{ path('profil_detail',{'id':rejoindre.sonUtilisateur.id}) }}">{{ rejoindre.sonUtilisateur.pseudo }}</a></td>
                                     <td>{{ rejoindre.dateInscription | date('d/m/Y H:i') }}</td>
                                 </tr>
                             {% endfor %}

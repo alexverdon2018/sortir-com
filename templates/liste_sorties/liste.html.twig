@@ -16,7 +16,7 @@
         <div class="row">
             <div class="col text-right">
                 <p><strong>Date du jour : </strong><span id="date_span"></span> <span class="clock" id="heure_span"></span></p>
-                <p><strong>Participant : </strong> <span id="orga_full_name">{{ app.user.prenom }} {{ app.user.nom }}</span></p>
+                <p><strong>Participant : </strong> <span id="orga_full_name">{{ app.user.pseudo }} / {{ app.user.prenom }} {{ app.user.nom }}</span></p>
             </div>
         </div>
 
@@ -112,7 +112,7 @@
                             <td>{{ sortie.lieu.ville.nom }}</td>
                             <td>{{ sortie.nbInscrits }} / {{ sortie.nbInscriptionMax }}</td>
                             <td></td>
-                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                             <td>
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
@@ -153,7 +153,7 @@
                                 {% endif %}
                                 <input type="hidden" class="inscrit"  value="0">
                             </td>
-                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                             <td>
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
@@ -165,13 +165,7 @@
                                 {% else %}
                                     <a href="{{ path('rejoindre_sortie',{'id':sortie.id}) }}"> - S'inscrire</a>
                                 {% endif %}
-                                {% if sortie.organisateur.id == app.user.id %}
-{#                                    <form class="form-inline-delete" method="POST" action="{{ path("sortie_annuler", {'id' : sortie.id }) }}" onsubmit="return confirm('Confirmation de l\'annulation ?');">#}
-{#                                        <input type="hidden" name="_method" value="DELETE">#}
-{#                                        <input type="hidden" name="_token" value="{{ csrf_token('delete'~sortie.id) }}">#}
-{#                                        <button class="faux-lien" type="submit">- Annuler</button>#}
-{#                                    </form>#}
-
+                                {% if sortie.organisateur.id == app.user.id or is_granted('ROLE_ADMIN')%}
                                     <a href="{{ path('sortie_annuler',{'id':sortie.id}) }}"> - Annuler</a>
                                 {% endif %}
 
@@ -201,7 +195,7 @@
                                 {% endif %}
                                 <input type="hidden" class="inscrit"  value="0">
                             </td>
-                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                             <td>
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
@@ -236,7 +230,7 @@
                                 {% endif %}
                                 <input type="hidden" class="inscrit"  value="0">
                             </td>
-                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                             <td>
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
@@ -266,7 +260,7 @@
                                 {% endif %}
                                 <input type="hidden" class="inscrit"  value="0">
                             </td>
-                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                             <td>
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
                             </td>
@@ -294,7 +288,7 @@
                                 {% endif %}
                                 <input type="hidden" class="inscrit"  value="0">
                             </td>
-                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                            <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                             <td>
 
                                 <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
@@ -326,7 +320,7 @@
                                     {% endif %}
                                     <input type="hidden" class="inscrit"  value="0">
                                 </td>
-                                <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</a></td>
+                                <td><a href="{{ path('profil_detail',{'id':sortie.organisateur.id}) }}">{{ sortie.organisateur.pseudo }}</a></td>
                                 <td>
                                     <a href="{{ path('sortie_detail',{'id':sortie.id}) }}">Afficher</a>
                                 </td>

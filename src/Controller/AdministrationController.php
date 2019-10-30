@@ -37,9 +37,6 @@ class AdministrationController extends AbstractController
         $formSite = $this->createForm(SiteType::class, $newSite);
         $formSite->handleRequest($request);
 
-        $formImportFile = $this->createForm(null);
-        $formImportFile->handleRequest($request);
-
         if ($formVille->isSubmitted() && $formVille->isValid()) {
             $emi->persist($newVille);
             $emi->flush();
@@ -50,10 +47,6 @@ class AdministrationController extends AbstractController
             $emi->persist($newSite);
             $emi->flush();
             return $this->redirectToRoute('admin', ['option' => 'Sites']);
-        }
-
-        if ($formImportFile->isSubmitted() && $formImportFile->isValid()) {
-            
         }
 
         return $this->render('administration/index.html.twig', [

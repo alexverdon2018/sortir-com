@@ -49,7 +49,9 @@ class SortieController extends AbstractController
                     $lesAdmins = $em->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
                     $lesMailsAdmins = [];
                     foreach ($lesAdmins as $admin) {
-                        array_push($lesMailsAdmins, $admin->getMail());
+                        if($admin->getAdministrateurPublication() === true) {
+                            array_push($lesMailsAdmins, $admin->getMail());
+                        }
                     }
                     $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
                         ->setFrom('noreply@sortir.com')
@@ -69,7 +71,9 @@ class SortieController extends AbstractController
                     $users = $em->getRepository(Utilisateur::class)->findBy(['site' => $userSite]);
                     $lesMailsUserSite = [];
                     foreach ($users as $user) {
-                        array_push($lesMailsUserSite, $admin->getMail());
+                        if($admin->getAdministrateurPublication() === true) {
+                            array_push($lesMailsUserSite, $admin->getMail());
+                        }
                     }
                     $message = (new \Swift_Message('sortir.com | (Admin) Nouvelle publication'))
                         ->setFrom('noreply@sortir.com')

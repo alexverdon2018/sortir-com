@@ -9,7 +9,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\UtilisateurRepository")
- * @UniqueEntity(fields={"mail"}, message="There is already an account with this mail")
+ * @UniqueEntity(fields={"mail"}, message="Il existe déjà un compte avec cet email !")
+ * @UniqueEntity(fields={"pseudo"}, message="Ce pseudo existe déjà !")
  */
 class Utilisateur implements UserInterface
 {
@@ -69,6 +70,11 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $pictureFilename;
+
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $pseudo;
 
     public function getId(): ?int
     {
@@ -238,6 +244,18 @@ class Utilisateur implements UserInterface
     public function setPictureFilename(?string $pictureFilename): self
     {
         $this->pictureFilename = $pictureFilename;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
 
         return $this;
     }

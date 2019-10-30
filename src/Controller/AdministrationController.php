@@ -37,6 +37,9 @@ class AdministrationController extends AbstractController
         $formSite = $this->createForm(SiteType::class, $newSite);
         $formSite->handleRequest($request);
 
+        $formImportFile = $this->createForm(null);
+        $formImportFile->handleRequest($request);
+
         if ($formVille->isSubmitted() && $formVille->isValid()) {
             $emi->persist($newVille);
             $emi->flush();
@@ -47,6 +50,10 @@ class AdministrationController extends AbstractController
             $emi->persist($newSite);
             $emi->flush();
             return $this->redirectToRoute('admin', ['option' => 'Sites']);
+        }
+
+        if ($formImportFile->isSubmitted() && $formImportFile->isValid()) {
+            
         }
 
         return $this->render('administration/index.html.twig', [
@@ -107,7 +114,7 @@ class AdministrationController extends AbstractController
                 $em->flush();
                 $this->addFlash('success', 'Utilisateur supprimé');
 
-        return $this->redirectToRoute("admin");
+        return $this->redirectToRoute("admin",['option'=>'Utilisateurs']);
     }
 
     /**
@@ -129,7 +136,7 @@ class AdministrationController extends AbstractController
             $em->persist($utilisateur);
             $em->flush();
 
-        return $this->redirectToRoute("admin");
+        return $this->redirectToRoute("admin",['option'=>'Utilisateurs']);
     }
 
     /**
@@ -151,7 +158,7 @@ class AdministrationController extends AbstractController
         $em->persist($utilisateur);
         $em->flush();
 
-        return $this->redirectToRoute("admin");
+        return $this->redirectToRoute("admin",['option'=>'Utilisateurs']);
     }
 
 }

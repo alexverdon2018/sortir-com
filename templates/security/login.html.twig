@@ -28,20 +28,13 @@
                             <a class="small" href="{{ path('mdp_oublie') }}">Mot de passe oublié ?</a>
                         </div>
 
-
-                        <input type="hidden" name="_csrf_token"
-                               value="{{ csrf_token('authenticate') }}"
-                        >
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
                         <div class="checkbox mb-3">
                             <label>
                                 <input type="checkbox" name="_remember_me"> Se souvenir de moi
                             </label>
                         </div>
-
-{#                        <div class="mb-3">#}
-{#                            <a href="{{ path('utilisateur_motDePasse', {'id':utilisateur.mail}) }}">Mot de passe oublié</a>#}
-{#                        </div>#}
 
                         <button class="btn btn-primary" type="submit">Se connecter</button>
                     </form>

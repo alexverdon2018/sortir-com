@@ -52,6 +52,42 @@
             </div>
         </div>
         {% if app.user.id == user_profil.id  %}
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 col-md-6 col-lg-4 text-center">
+                    {% if user_profil.publicationParSite == 1 %}
+                        Notification pour le site : ✅
+                    {% else %}
+                        Notification pour le site : ❌
+                    {% endif %}
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 text-center">
+                    {% if user_profil.OrganisateurInscriptionDesistement == 1 %}
+                        Notification inscriptions/désistements : ✅
+                    {% else %}
+                        Notification inscriptions/désistements : ❌
+                    {% endif %}
+                </div>
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="row justify-content-center mt-4">
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        {% if user_profil.administrateurPublication == 1 %}
+                            Notification administration des publications : ✅
+                        {% else %}
+                            Notification administration des publications : ❌
+                        {% endif %}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        {% if user_profil.administrationModification == 1 %}
+                            Notification administration des modifications : ✅
+                        {% else %}
+                            Notification administration des modifications : ❌
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
+        {% if app.user.id == user_profil.id  %}
         <div class="row mt-5">
             <div class="col text-center">
                 <a class="btn btn-info" href="{{ path('profil_update') }}">Modifier</a>

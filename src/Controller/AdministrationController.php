@@ -50,6 +50,12 @@ class AdministrationController extends AbstractController
             return $this->redirectToRoute('admin', ['option' => 'Sites']);
         }
 
+        if ($formImportFile->isSubmitted() && $formImportFile->isValid()) {
+            $file = file_get_contents($formImportFile['file_csv']->getData());
+            $csvArr = str_getcsv($file,",", "","/n");
+            dump($csvArr);
+        }
+
         return $this->render('administration/index.html.twig', [
             'utilisateurs' => $utilisateurs,
             'villes' => $villes,
@@ -59,6 +65,10 @@ class AdministrationController extends AbstractController
             'formImportFile' => $formImportFile->createView(),
             'onglet_visible' => $option
         ]);
+    }
+
+    public function startImort($form) {
+
     }
 
     /**

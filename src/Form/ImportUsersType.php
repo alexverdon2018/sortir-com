@@ -4,6 +4,7 @@ namespace App\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\File;
@@ -24,14 +25,13 @@ class ImportUsersType extends AbstractType
                 'constraints' => [
                     new File([
                         'maxSize' => '5000k',
-                        'mimeTypes' => [
-                            'text/csv',
-                        ],
-                        'mimeTypesMessage' => 'Please upload a valid file (.csv)',
+
+
                     ])
                 ]
-            ])
-        ;
+            ])->add('Importer', SubmitType::class, [
+
+    ]);;
     }
 
     public function configureOptions(OptionsResolver $resolver)

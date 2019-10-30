@@ -96,6 +96,11 @@ class Utilisateur implements UserInterface
      */
     private $notifVeilleSortie;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -319,6 +324,18 @@ class Utilisateur implements UserInterface
     public function setNotifVeilleSortie(bool $notifVeilleSortie): self
     {
         $this->notifVeilleSortie = $notifVeilleSortie;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }

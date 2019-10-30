@@ -3,8 +3,12 @@
 <body>
 <h3>Mot de Passe oublié : </h3>
 <p>Bonjour {{ utilisateur.nom }} {{ utilisateur.prenom }} ,<br> </p>
-<p>Voici, le nouveau mot de passe demandé qui vas vous permettre de connecter : <h3>{{ utilisateur.password }}</h3></p>
-
-<p>Nous vous conseillons de modifiez notre mot de passe à votre nouvelle connexion.</p>
+<p>Voici, un lien ci-dessous pour vous permettre de changer votre mot de passe.
+<p>
+    Lien pour modifier son mot de passe : http://localhost:8000/sortir-com/public/{{ utilisateur.id }}/mdp_oublie2/?token={{ utilisateur.token}}
+</p>
+<p>
+    <a href="http://localhost:8000/sortir-com/public/{{ utilisateur.id }}/mdp_oublie2/?token={{ utilisateur.token}}">Lien pour modifier son mot de passe</a>
+</p>
 </body>
 </html>

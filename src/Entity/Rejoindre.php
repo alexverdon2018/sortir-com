@@ -26,11 +26,13 @@ class Rejoindre
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Utilisateur")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $sonUtilisateur;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Sortie", inversedBy="rejoindre")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $saSortie;
 

@@ -38,6 +38,9 @@ class AdministrationController extends AbstractController
         $formSite = $this->createForm(SiteType::class, $newSite);
         $formSite->handleRequest($request);
 
+        $formImportFile = $this->createForm(ImportUsersType::class, null);
+        $formImportFile->handleRequest($request);
+
         if ($formVille->isSubmitted() && $formVille->isValid()) {
             $emi->persist($newVille);
             $emi->flush();

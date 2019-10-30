@@ -7,6 +7,7 @@ use App\Entity\Site;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -74,6 +75,22 @@ class UpdateUtilisateurType extends AbstractType
                 ])
                 ->add('pseudo', TextType::class, [
                     'label' => 'Pseudo :'
+                ])
+                ->add('publicationParSite', CheckboxType::class, [
+                    'label' => 'Nouvelles publications sur mon site',
+                    'required' => false
+                ])
+                ->add('OrganisateurInscriptionDesistement', CheckboxType::class, [
+                    'label' => 'Inscriptions et désistements à mes sorites',
+                    'required' => false
+
+                ])->add('administrateurPublication', CheckboxType::class, [
+                    'label' => 'Toutes les nouvelles publications',
+                    'required' => false
+                ])
+                ->add('administrationModification', CheckboxType::class, [
+                    'label' => 'Toutes les modifications des brouillons',
+                    'required' => false
                 ]);
         }
     }
@@ -82,7 +99,7 @@ class UpdateUtilisateurType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Utilisateur::class,
-            'form_action' => null
+            'form_action' => null,
         ]);
     }
 }

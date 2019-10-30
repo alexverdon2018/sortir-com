@@ -68,7 +68,7 @@ class SecurityController extends AbstractController
 
 //            $utilisateur->setToken('dfvlvmkdhvxmfklvbfdùlbknfdùldpoùlkdfùlkbsdklmkjbdmkmiogb');
 
-            $token = random_int(1,999999999999999);
+            $token = sha1(random_bytes(32));
 
             dump($token);
 
@@ -104,7 +104,7 @@ class SecurityController extends AbstractController
         $MotDePasseForm = $this->createForm(MotPasseOublieType::class, $utilisateur);
         $MotDePasseForm->handleRequest($request);
 
-        dump($utilisateur);
+//        dump($utilisateur);
 
         $token = $request->query->get('token');
 //       $token = $request->request->get('_token');
@@ -114,18 +114,16 @@ class SecurityController extends AbstractController
 
 //        dump($utilisateur);
 
-//        if($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-//            $userCourant = $this->getUser();
-//
-//            //Si utilisateur courant N'EST PAS organisateur de la sortie
-//            //Il est redirigé vers la liste des sorties
-//            if ($userCourant == null || $userCourant->getId() != $sortie->getOrganisateur()->getId()) {
-//                return $this->redirectToRoute("liste_sorties");
 //            }
         if ($utilisateur->getToken() == $token) {
             $em->persist($utilisateur);
             $em->flush();
+            dump($token);
             $this->addFlash('success', "Votre mot de passe a été modifié");
+        }
+        else
+        {
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render("profil/modification_mdp.html.twig", [

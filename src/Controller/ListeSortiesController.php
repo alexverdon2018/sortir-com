@@ -114,7 +114,7 @@ class ListeSortiesController extends AbstractController
         $notificationOrganisateur = $organisateur->getOrganisateurInscriptionDesistement();
 
         // Si l'organisateur a choisi de recevoir les notifications connernent ses sorties
-        if($notificationOrganisateur == 1) {
+        if($notificationOrganisateur === true) {
             $message = (new \Swift_Message('sortir.com | Inscription'))
                 ->setFrom('noreply@sortir.com')
                 ->setTo($mailOrganisateur)
@@ -164,7 +164,7 @@ class ListeSortiesController extends AbstractController
             $notificationOrganisateur = $organisateur->getOrganisateurInscriptionDesistement();
 
             // Si l'organisateur a choisi de recevoir les notifications connernent ses sorties
-            if($notificationOrganisateur == 1) {
+            if($notificationOrganisateur === true) {
             $message = (new \Swift_Message('sortir.com | Désistement'))
                 ->setFrom('noreply@sortir.compu')
                 ->setTo($mailOrganisateur)

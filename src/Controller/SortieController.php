@@ -156,8 +156,12 @@ class SortieController extends AbstractController
             //Envoie un mail à tous les administrateurs lorsqu'il y a une nouvelle publication
             $lesAdmins = $em->getRepository(Utilisateur::class)->findBy(['admin' => 1]);
             $lesMailsAdmins = [];
+
             foreach ($lesAdmins as $admin) {
-                array_push($lesMailsAdmins, $admin->getMail());
+                // La notificationde choisir ou non de recevoir les modifications des publications
+                if($admin->getAdministrationModification() === true) {
+                    array_push($lesMailsAdmins, $admin->getMail());
+                }
             }
             $message = (new \Swift_Message('sortir.com | Modification sortie'))
                 ->setFrom('noreply@sortir.com')
@@ -245,13 +249,11 @@ class SortieController extends AbstractController
 
             foreach ($lesAdmins as $admin) {
                 // La notification de choisir ou non de recevoir les publications
-                $notificationOrganisateur = $admin->getAdministrateurPublication();
-                dump($admin);
-                if($notificationOrganisateur == 1) {
+                if($admin->getAdministrateurPublication() === true) {
                     array_push($lesMailsAdmins, $admin->getMail());
                 }
             }
-            $message = (new \Swift_Message('sortir.com | Nouvelle publication'))
+            $message = (new \Swift_Message('sortir.com | (Admin) Nouvelle publication'))
                 ->setFrom('noreply@sortir.com')
                 ->setTo($lesMailsAdmins)
                 ->setBody(
@@ -269,9 +271,12 @@ class SortieController extends AbstractController
             $users = $emi->getRepository(Utilisateur::class)->findBy(['site' => $userSite]);
             $lesMailsUserSite = [];
             foreach ($users as $user) {
-                array_push($lesMailsUserSite, $admin->getMail());
+                // La notification de choisir ou non de recevoir les publications
+                if($user->getPublicationParSite() === true) {
+                    array_push($lesMailsUserSite, $user->getMail());
+                }
             }
-            $message = (new \Swift_Message('sortir.com | (Admin) Nouvelle publication'))
+            $message = (new \Swift_Message('sortir.com | Nouvelle publication dans votre Site'))
                 ->setFrom('noreply@sortir.com')
                 ->setTo($lesMailsUserSite)
                 ->setBody(
@@ -288,7 +293,7 @@ class SortieController extends AbstractController
             return $this->redirect($referer);
 
         }
-        return $this->redirect($referer);
+//        return $this->redirect($referer);
     }
 
     /**

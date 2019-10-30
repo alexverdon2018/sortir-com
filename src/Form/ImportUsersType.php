@@ -6,6 +6,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+
 
 class ImportUsersType extends AbstractType
 {
@@ -14,12 +16,7 @@ class ImportUsersType extends AbstractType
         $builder
             ->add('file_csv', FileType::class, [
                 'label' => 'Fichier .csv',
-
-                // unmapped means that this field is not associated to any entity property
                 'mapped' => false,
-
-                // make it optional so you don't have to re-upload the PDF file
-                // everytime you edit the Product details
                 'required' => false,
 
                 // unmapped fields can't define their validation using annotations

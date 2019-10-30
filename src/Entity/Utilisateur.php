@@ -37,7 +37,7 @@ class Utilisateur implements UserInterface
     private $telephone;
 
     /**
-     * @ORM\Column(type="string", length=100)
+     * @ORM\Column(type="string", length=100, unique=true)
      */
     private $mail;
 
@@ -82,7 +82,7 @@ class Utilisateur implements UserInterface
     private $administrateurPublication;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $pseudo;
 
@@ -95,6 +95,11 @@ class Utilisateur implements UserInterface
      * @ORM\Column(type="boolean")
      */
     private $notifVeilleSortie;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $token;
 
     public function getId(): ?int
     {
@@ -213,7 +218,7 @@ class Utilisateur implements UserInterface
      */
     public function getUsername()
     {
-        // TODO: Implement getUsername() method.
+        return $this->mail;
     }
 
     /**
@@ -319,6 +324,18 @@ class Utilisateur implements UserInterface
     public function setNotifVeilleSortie(bool $notifVeilleSortie): self
     {
         $this->notifVeilleSortie = $notifVeilleSortie;
+
+        return $this;
+    }
+
+    public function getToken(): ?string
+    {
+        return $this->token;
+    }
+
+    public function setToken(?string $token): self
+    {
+        $this->token = $token;
 
         return $this;
     }

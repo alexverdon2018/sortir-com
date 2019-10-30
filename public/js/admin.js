@@ -66,4 +66,15 @@ document.addEventListener('DOMContentLoaded', () =>{
             });
         }
     });
+
+    const csvInput = document.querySelector("#import_users_file_csv");
+    const csvLabel = document.querySelector(".custom-file-label");
+    csvInput.addEventListener('change', evt => {
+        const { value } = evt.currentTarget;
+        if (value) {
+            const fileName = value.split("\\").pop() || value.split("/").pop();
+            csvLabel.innerHTML = fileName;
+        }
+    });
+
 }, false);

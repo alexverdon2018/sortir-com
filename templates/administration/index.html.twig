@@ -53,7 +53,7 @@
                             <table class="table table-striped">
                                 <thead class="thead-dark">
                                 <tr>
-
+                                    <th>Pseudo</th>
                                     <th>Prénom Nom</th>
                                     <th>Mail</th>
                                     <th>Téléphone</th>
@@ -63,22 +63,23 @@
                                 <tbody>
                                 {% for utilisateur in utilisateurs %}
                                     {% if utilisateur.actif == 1 %}
-                                       <tr>
+                                        <tr>
                                     {% else %}
                                         <tr class="table-danger">
                                     {% endif %}
-                                        <td>{{ utilisateur.prenom }} {{ utilisateur.nom }}</td>
-                                        <td>{{ utilisateur.mail }}</td>
-                                        <td>{{ utilisateur.telephone }}</td>
-                                        <td>
-                                            {% if utilisateur.actif == 1 %}
-                                            <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
-                                            {% else %}
-                                                <a href="{{ path('utilisateur_activer', {'id':utilisateur.id}) }}">Activer</a>
-                                            {% endif %}
-                                            <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
-                                        </td>
-                                    </tr>
+                                            <td><a href="{{ path('profil_detail',{'id':utilisateur.id}) }}">{{ utilisateur.pseudo }}</a></td>
+                                            <td><a href="{{ path('profil_detail',{'id':utilisateur.id}) }}">{{ utilisateur.prenom }} {{ utilisateur.nom }}</a></td>
+                                            <td><a href="mailto:{{ utilisateur.mail }}">{{ utilisateur.mail }}</a></td>
+                                            <td>{{ utilisateur.telephone }}</td>
+                                            <td>
+                                                {% if utilisateur.actif == 1 %}
+                                                <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
+                                                {% else %}
+                                                    <a href="{{ path('utilisateur_activer', {'id':utilisateur.id}) }}">Activer</a>
+                                                {% endif %}
+                                                <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
+                                            </td>
+                                        </tr>
                                 {% endfor %}
                                 </tbody>
                             </table>
@@ -90,46 +91,46 @@
                 {% else %}
                     <div class="tab-pane fade show" id="v-pills-villes">
                 {% endif %}
-                    <div class="row">
-                        <div class="col-lg-4">
-                            <input class="form-control" type="text" id="searchVille" placeholder="Chercher une ville...">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <input class="form-control" type="text" id="searchVille" placeholder="Chercher une ville...">
+                            </div>
                         </div>
-                    </div>
-                    <div class="row mt-3">
-                        <div class="col">
-                            <table class="table table-striped">
-                                <thead class="thead-dark">
-                                <tr>
-                                    <th>Nom</th>
-                                    <th>Code postal</th>
-                                    <th>Actions</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for ville in villes %}
+                        <div class="row mt-3">
+                            <div class="col">
+                                <table class="table table-striped">
+                                    <thead class="thead-dark">
                                     <tr>
-                                        <td>{{ ville.nom }}</td>
-                                        <td>{{ ville.codePostal }}</td>
+                                        <th>Nom</th>
+                                        <th>Code postal</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for ville in villes %}
+                                        <tr>
+                                            <td>{{ ville.nom }}</td>
+                                            <td>{{ ville.codePostal }}</td>
+                                            <td>
+                                                <a href="{{ path('ville_edit', {'id':ville.id}) }}">Modifier</a>
+    {#                                            <a href="{{ path('ville_delete', {'id':ville.id}) }}">- Supprimer</a>#}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    {{ form_start(formVille) }}
+                                    <tr>
+                                        <td>{{ form_widget(formVille.nom) }}</td>
+                                        <td>{{ form_widget(formVille.codePostal) }}</td>
                                         <td>
-                                            <a href="{{ path('ville_edit', {'id':ville.id}) }}">Modifier</a>
-{#                                            <a href="{{ path('ville_delete', {'id':ville.id}) }}">- Supprimer</a>#}
+                                            <button class="faux-lien" type="submit">Ajouter</button>
                                         </td>
                                     </tr>
-                                {% endfor %}
-                                {{ form_start(formVille) }}
-                                <tr>
-                                    <td>{{ form_widget(formVille.nom) }}</td>
-                                    <td>{{ form_widget(formVille.codePostal) }}</td>
-                                    <td>
-                                        <button class="faux-lien" type="submit">Ajouter</button>
-                                    </td>
-                                </tr>
-                                {{ form_end(formVille) }}
-                                </tbody>
-                            </table>
+                                    {{ form_end(formVille) }}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
-                </div>
                 {% if onglet_visible == 'Sites' %}
                     <div class="tab-pane fade show active" id="v-pills-sites">
                 {% else %}
@@ -137,39 +138,43 @@
                 {% endif %}
                         <div class="row">
                             <div class="col-lg-4">
-                                <input class="form-control" type="text" id="searchSite" placeholder="Chercher une ville...">
+                                <input class="form-control" type="text" id="searchSite" placeholder="Chercher un site...">
                             </div>
                         </div>
-                    <table class="table table-striped">
-                        <thead class="thead-dark">
-                        <tr>
-                            <th>Nom</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for site in sites %}
-                            <tr>
-                                <td>{{ site.nom }}</td>
-                                <td>
-                                    <a href="{{ path('site_edit', {'id':site.id}) }}">Modifier</a>
-{#                                    <a href="{{ path('site_delete', {'id':site.id}) }}">- Supprimer</a>#}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                            <tr>
-                                <td>Formulaire pour ajouter un site</td>
-                                <td>
-                                    <a href="">Ajouter</a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                        <div class="row mt-3">
+                            <div class="col">
+                                <table class="table table-striped">
+                                    <thead class="thead-dark">
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for site in sites %}
+                                        <tr>
+                                            <td>{{ site.nom }}</td>
+                                            <td>
+                                                <a href="{{ path('site_edit', {'id':site.id}) }}">Modifier</a>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    {{ form_start(formSite) }}
+                                    <tr>
+                                        <td>{{ form_widget(formSite.nom) }}</td>
+                                        <td>
+                                            <button class="faux-lien" type="submit">Ajouter</button>
+                                        </td>
+                                    </tr>
+                                    {{ form_end(formSite) }}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
 {% endblock %}
 
             {% block javascripts %}

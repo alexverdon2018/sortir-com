@@ -23,6 +23,13 @@
         </div>
         <div class="row justify-content-center mt-4">
             <div class="col-12 col-md-6 col-lg-4">
+                {{ form_row(formUser.pseudo) }}
+            </div>
+            <div class="col-12 col-md-6 col-lg-4">
+            </div>
+        </div>
+        <div class="row justify-content-center mt-2">
+            <div class="col-12 col-md-6 col-lg-4">
                 {{ form_row(formUser.nom) }}
             </div>
             <div class="col-12 col-md-6 col-lg-4">
@@ -50,6 +57,24 @@
                 {{ form_row(formUser.password) }}
             </div>
             <div class="col-12 col-md-6 col-lg-4">
+                <div class="row mt-4">
+                    <div class="col">
+                        {{ form_row(formUser.publicationParSite) }}
+                    </div>
+                    <div class="col">
+                        {{ form_row(formUser.OrganisateurInscriptionDesistement) }}
+                    </div>
+                </div>
+                {% if is_granted('ROLE_ADMIN') %}
+                    <div class="row mt-4">
+                        <div class="col">
+                            {{ form_row(formUser.administrateurPublication) }}
+                        </div>
+                        <div class="col">
+                            {{ form_row(formUser.administrationModification) }}
+                        </div>
+                    </div>
+                {% endif %}
             </div>
         </div>
         <div class="row justify-content-center mb-4">

@@ -22,7 +22,15 @@
         </div>
         <div class="row justify-content-center mt-4">
             <div class="col-12 col-md-6 col-lg-4 text-center">
-                <h4>{{ user_profil.prenom }} {{ user_profil.nom }}</h4>
+                <h4>{{ user_profil.pseudo }}</h4>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 col-md-6 col-lg-4 text-center">
+                Prénom : {{ user_profil.prenom }}</a>
+            </div>
+            <div class="col-12 col-md-6 col-lg-4 text-center">
+                Nom : {{ user_profil.nom }}</a>
             </div>
         </div>
         <div class="row justify-content-center mt-4">
@@ -43,6 +51,42 @@
                 {% endif %}
             </div>
         </div>
+        {% if app.user.id == user_profil.id  %}
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 col-md-6 col-lg-4 text-center">
+                    {% if user_profil.publicationParSite == 1 %}
+                        Notification pour le site : ✅
+                    {% else %}
+                        Notification pour le site : ❌
+                    {% endif %}
+                </div>
+                <div class="col-12 col-md-6 col-lg-4 text-center">
+                    {% if user_profil.OrganisateurInscriptionDesistement == 1 %}
+                        Notification inscriptions/désistements : ✅
+                    {% else %}
+                        Notification inscriptions/désistements : ❌
+                    {% endif %}
+                </div>
+            </div>
+            {% if is_granted('ROLE_ADMIN') %}
+                <div class="row justify-content-center mt-4">
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        {% if user_profil.administrateurPublication == 1 %}
+                            Notification administration des publications : ✅
+                        {% else %}
+                            Notification administration des publications : ❌
+                        {% endif %}
+                    </div>
+                    <div class="col-12 col-md-6 col-lg-4 text-center">
+                        {% if user_profil.administrationModification == 1 %}
+                            Notification administration des modifications : ✅
+                        {% else %}
+                            Notification administration des modifications : ❌
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endif %}
         {% if app.user.id == user_profil.id  %}
         <div class="row mt-5">
             <div class="col text-center">

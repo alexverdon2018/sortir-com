@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use DateInterval;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -18,14 +19,17 @@ class ClotureSortieCommand extends Command
     protected static $defaultName = 'app:cloture-sortie';
 
     protected $doctrine;
-    protected $mail;
+    protected $mailer;
     protected $emi;
+    protected $twig;
 
-    public function __construct(string $name = null, RegistryInterface $doctrine)
+    public function __construct(string $name = null, RegistryInterface $doctrine, \Twig_Environment $twig, EntityManagerInterface $emi, \Swift_Mailer $mailer)
     {
     parent::__construct($name);
         $this->doctrine = $doctrine;
-
+        $this->emi = $emi;
+        $this->mailer = $mailer;
+        $this->twig = $twig;
     }
 
     protected function configure()
@@ -120,7 +124,7 @@ class ClotureSortieCommand extends Command
 
             if($now == $nowMoin1Jour ){
 
-                $lesParticipants = $emi->getRepository(Rejoindre::class)->findBy(['sortie'=>$sortie]);
+                $lesParticipants = $this->emi->getRepository(Rejoindre::class)->findBy(['saSortie'=>$sortie]);
                 $lesMailsParticipants = [];
                 foreach ($lesParticipants as $participant) {
                     array_push($lesMailsParticipants, $participant->getMail());
@@ -130,13 +134,13 @@ class ClotureSortieCommand extends Command
                     ->setFrom('noreply@sortir.compu')
                     ->setTo($lesMailsParticipants)
                     ->setBody(
-                        $this->renderView(
-                            '<h1>Bientot une sortie !</h1>',
+                        $this->twig->renderView(
+                            'emails/veille_sortie.html.twig',
                             ['sortie' => $sortie]
                         ),
                         'text/html'
                     );
-                $mailer->send($message);
+                $this->mailer->send($message);
 
             }
 

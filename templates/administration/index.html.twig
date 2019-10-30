@@ -41,11 +41,16 @@
                         <div class="col-lg-4 border-right">
                             <input class="form-control" type="text" id="searchUser" placeholder="Chercher un utilisateur...">
                         </div>
-                        <div class="col">
+                        <div class="col text-center border-right">
                             <a class="btn btn-success" href="{{ path('admin_addUser') }}">Ajouter un utilisateur</a>
                         </div>
                         <div class="col">
-                            {{ form(formImportFile) }}
+                            {{ form_start(formImportFile) }}
+                            {{ form_row(formImportFile.file_csv) }}
+                        </div>
+                        <div class="col">
+                            {{ form_row(formImportFile.Importer) }}
+                            {{ form_end(formImportFile) }}
                         </div>
                     </div>
                     <div class="row mt-3">
@@ -72,12 +77,14 @@
                                             <td><a href="mailto:{{ utilisateur.mail }}">{{ utilisateur.mail }}</a></td>
                                             <td>{{ utilisateur.telephone }}</td>
                                             <td>
-                                                {% if utilisateur.actif == 1 %}
-                                                <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
-                                                {% else %}
-                                                    <a href="{{ path('utilisateur_activer', {'id':utilisateur.id}) }}">Activer</a>
+                                                {% if utilisateur.id != app.user.id %}
+                                                    {% if utilisateur.actif == 1 %}
+                                                        <a href="{{ path('utilisateur_desactiver', {'id':utilisateur.id}) }}">Désactiver</a>
+                                                    {% else %}
+                                                        <a href="{{ path('utilisateur_activer', {'id':utilisateur.id}) }}">Activer</a>
+                                                    {% endif %}
+                                                    <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
                                                 {% endif %}
-                                                <a href="{{ path('utilisateur_delete', {'id':utilisateur.id}) }}">- Supprimer</a>
                                             </td>
                                         </tr>
                                 {% endfor %}

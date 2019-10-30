@@ -107,7 +107,7 @@ class ClotureSortieCommand extends Command
 
             }
 
-            $dateArchiveSortie = $dateFinSortie->add(new \DateInterval( "PT30S"));
+            $dateArchiveSortie = $dateFinSortie->add(new \DateInterval( "PT1M"));
 
             // ETAT ARCHIVEE
             // Si la date de fin est passé de 30 secondes AND la Sortie est à l'état 'Terminée' OR à l'état 'Annulée')

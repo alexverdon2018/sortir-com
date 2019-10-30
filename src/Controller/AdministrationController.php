@@ -79,7 +79,7 @@ class AdministrationController extends AbstractController
                 $user->setNom($csvuser[1]); // str
                 $user->setPrenom($csvuser[2]); //str
                 if ($csvuser[3] == "NULL") {
-                    $user->setTelephone(NULL);
+                    $user->setTelephone("");
                 }
                 $user->setTelephone($csvuser[3]);  //str nullable
                 $user->setMail($csvuser[4]); //str

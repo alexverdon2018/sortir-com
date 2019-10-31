@@ -16,17 +16,13 @@ class VilleType extends AbstractType
             ->add('nom', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Nom',
-                    'attr' => [
-                        'maxlength' => 50
-                    ]
+                    'maxlength' => 50
                 ]
             ])
             ->add('codePostal', TextType::class, [
                 'attr' => [
                     'placeholder' => 'Code Postal',
-                    'attr' => [
-                        'maxlength' => 6
-                    ]
+                    'maxlenght' => 6
                 ]
             ])
         ;

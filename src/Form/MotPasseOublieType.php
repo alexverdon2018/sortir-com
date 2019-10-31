@@ -18,10 +18,16 @@ class MotPasseOublieType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'first_options' => [
-                    'label' => 'Nouveau mot de passe :'
+                    'label' => 'Nouveau mot de passe :',
+                    'attr' => [
+                        'maxlength' => 50
+                    ]
                 ],
                 'second_options' => [
-                    'label' => 'Confirmation :'
+                    'label' => 'Confirmation :',
+                    'attr' => [
+                        'maxlength' => 50
+                    ]
                 ]
             ]);
         ;

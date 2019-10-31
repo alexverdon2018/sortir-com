@@ -23,22 +23,34 @@ class UpdateUtilisateurType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom :'
+                'label' => 'Nom :',
+                'attr' => [
+                    'maxlength' => 50
+                ]
             ])
             ->add('prenom', TextType::class, [
-                'label' => 'Prénom :'
+                'label' => 'Prénom :',
+                'attr' => [
+                    'maxlength' => 50
+                ]
             ])
             ->add('telephone', TextType::class, [
                 'label' => 'Téléphone :',
-                'required' => false
+                'required' => false,
+                'attr' => [
+                    'maxlength' => 10
+                ]
             ])
             ->add('mail', EmailType::class, [
-                'label' => 'Mail :'
+                'label' => 'Mail :',
+                'attr' => [
+                    'maxlength' => 50
+                ]
             ])
             ->add('site', EntityType::class, [
-            'label' => 'Site :',
-            'class' => Site::class,
-            'choice_label' => 'nom'
+                'label' => 'Site :',
+                'class' => Site::class,
+                'choice_label' => 'nom'
             ]);
 
         if($options['form_action'] != 'addUser') {
@@ -67,14 +79,23 @@ class UpdateUtilisateurType extends AbstractType
                 ->add('password', RepeatedType::class, [
                     'type' => PasswordType::class,
                     'first_options' => [
-                        'label' => 'Nouveau mot de passe :'
+                        'label' => 'Nouveau mot de passe :',
+                        'attr' => [
+                            'maxlength' => 50
+                        ]
                     ],
                     'second_options' => [
-                        'label' => 'Confirmation :'
+                        'label' => 'Confirmation :',
+                        'attr' => [
+                            'maxlength' => 50
+                        ]
                     ]
                 ])
                 ->add('pseudo', TextType::class, [
-                    'label' => 'Pseudo :'
+                    'label' => 'Pseudo :',
+                    'attr' => [
+                        'maxlength' => 50
+                    ]
                 ])
                 ->add('publicationParSite', CheckboxType::class, [
                     'label' => 'Nouvelles publications sur mon site',

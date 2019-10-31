@@ -25,12 +25,18 @@ class  SortieType extends AbstractType
 
         if ($options['form_annuler'] == 'annuler') {
             $builder->add('motif', TextareaType::class, [
-                    'label' => 'Motif :'
+                    'label' => 'Motif :',
+                    'attr' => [
+                        'maxlength' => 255
+                    ]
             ]);
         } else {
             $builder
                 ->add('nom', TextType::class, [
-                    'label' => 'Nom de la sortie :'
+                    'label' => 'Nom de la sortie :',
+                    'attr' => [
+                        'maxlength' => 50
+                    ]
                 ])
                 ->add('dateHeureDebut', DateTimeType::class, [
                     'label' => 'Date et heure de la sortie :',
@@ -57,7 +63,10 @@ class  SortieType extends AbstractType
                 ])
                 ->add('commentaire', TextareaType::class, [
                     'label' => 'Description et infos :',
-                    'required' => 'false'
+                    'required' => 'false',
+                    'attr' => [
+                        'maxlength' => 255
+                    ]
                 ])
                 ->add('lieu', EntityType::class, [
                     'label' => 'Lieu :',

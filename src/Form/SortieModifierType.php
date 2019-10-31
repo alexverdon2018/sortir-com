@@ -20,7 +20,10 @@ class SortieModifierType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class, [
-                'label' => 'Nom de la sortie :'
+                'label' => 'Nom de la sortie :',
+                'attr' => [
+                    'maxlength' => 50
+                ]
             ])
             ->add('dateHeureDebut', DateTimeType::class, [
                 'label' => 'Date et heure de la sortie :',
@@ -47,7 +50,10 @@ class SortieModifierType extends AbstractType
             ])
             ->add('commentaire', TextareaType::class, [
                 'label' => 'Description et infos :',
-                'required' => 'false'
+                'required' => 'false',
+                'attr' => [
+                    'maxlength' => 255
+                ]
             ])
             ->add('lieu', EntityType::class, [
                 'label' => 'Lieu :',

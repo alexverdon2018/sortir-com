@@ -98,15 +98,8 @@
                     </tr>
                     </thead>
                     <tbody>
-                    {% for sortie in sortiesPhone %}
-                        <tr class="show-phone-tr">
-                            <td><a href="{{ path('sortie_detail', {'id':sortie.id}) }}">{{ sortie.nom }}</a></td>
-                            <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
-                            <td>{{ sortie.lieu.ville.nom }}</td>
-                        </tr>
-                    {% endfor %}
                     {% for sortie in sortiesCreees %}
-                        <tr class="hide-phone">
+                        <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
@@ -141,7 +134,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <tr class="hide-phone">
+                        <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
@@ -183,7 +176,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <tr class="hide-phone">
+                        <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
@@ -218,7 +211,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <tr class="hide-phone">
+                        <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
@@ -248,7 +241,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <tr class="hide-phone">
+                        <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
@@ -276,7 +269,7 @@
                             {% endif %}
                         {% endfor %}
 
-                        <tr class="hide-phone">
+                        <tr>
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateHeureDebut | date('d/m/Y H:i') }}</td>
                             <td>{{ sortie.lieu.ville.nom }}</td>
@@ -308,7 +301,7 @@
                                 {% endif %}
                             {% endfor %}
 
-                            <tr class="table-secondary hide-phone">
+                            <tr class="table-secondary">
                                 <td>{{ sortie.nom }}</td>
                                 <td>{{ sortie.dateHeureDebut | date('d/m/Y h:i') }}</td>
                                 <td>{{ sortie.lieu.ville.nom }}</td>

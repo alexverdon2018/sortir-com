@@ -25,8 +25,6 @@ class ImportUsersType extends AbstractType
                 'constraints' => [
                     new File([
                         'maxSize' => '5000k',
-
-
                     ])
                 ]
             ])->add('Importer', SubmitType::class, [

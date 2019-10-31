@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function(){
         filteredTrs = filteredTrs.map((tr) => {
             tr.style.display = 'table-row';
             const showSelfOrga = evt.currentTarget.checked;
-            const userName = document.querySelector("#orga_full_name").textContent;
+            const userName = document.querySelector("#orga_pseudo").textContent;
             const trOrga = tr.children[5].textContent;
             if (showSelfOrga && (userName === trOrga)) {
                 tr.style.display = 'table-row';
